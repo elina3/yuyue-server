@@ -59,3 +59,9 @@ typings/
 
 # next.js build output
 .next
+
+server/node_modules
+manager_web/lib
+manager_web/node_modules
+manager_web/bower_components
+manager_web/www/dist

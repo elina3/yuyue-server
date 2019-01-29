@@ -1,0 +1,731 @@
+<z-header></z-header>
+<div class="ee-user-manager">
+    <div class="ee-banner">
+        <div class="ee-wrapper">
+            <div class="row ee-title">
+                <div class="col-xs-6">
+                    <span ng-hide="user.role==='card_manager'" class="ee-banner-back" ng-click="goBack()">< </span>
+                    <span class="ee-banner-content">用户管理</span>
+                </div>
+                <div class="col-xs-6">
+                    <div class="handle-button" ng-click="goState('card_order_statistic')">
+                        <span>消费统计</span>
+                    </div>
+                    <div class="handle-button" ng-click="goState('hospitalized')">
+                        <span>入住信息管理</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="ee-user-manager-body">
+        <div class="ee-wrapper">
+            <div class="ee-tag-panel">
+                <ul class="ee-tag-header">
+                    <li ng-show="user.role==='admin'" ng-class="{'current': pageConfig.currentTag === 'platform-user'}" ng-click="changeTag('platform-user')">平台用户</li>
+                    <li ng-show="user.role==='admin'" ng-class="{'current': pageConfig.currentTag === 'client-user'}" ng-click="changeTag('client-user')">客户端用户</li>
+                    <li ng-show="user.role==='admin' || user.role === 'card_manager'|| user.role === 'normal_card_manager'|| user.role === 'staff_card_manager'" class="last" ng-class="{'current': pageConfig.currentTag === 'card-user'}" ng-click="changeTag('card-user')">饭卡</li>
+                </ul>
+                <div class="ee-tag-body">
+                    <div class="ee-tag-view" ng-show="user.role==='admin'" ng-class="pageConfig.currentTag === 'client-user' || pageConfig.currentTag === 'card-user' ? 'move-left' : ''">
+                        <div class="ee-search-bar row">
+                            <div class="left-panel col-xs-6"></div>
+                            <div class="right-panel col-xs-6">
+                                <div class="add-user" ng-click="editUser()">
+                                    <img src="images/user_manager/single_add.png"/>
+                                    <span>添加用户</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="ee-table-list">
+                            <div class="content">
+                                <div class="row list-header">
+                                    <div class="col-xs-2">
+                                        <span>用户名</span>
+                                    </div>
+                                    <div class="col-xs-2">
+                                        <span>昵称</span>
+                                    </div>
+                                    <div class="col-xs-2">
+                                        <span>手机号</span>
+                                    </div>
+                                    <div class="col-xs-1">
+                                        <span>角色</span>
+                                    </div>
+
+                                    <div class="col-xs-1">
+                                        <span>性别</span>
+                                    </div>
+
+                                    <div class="col-xs-1">
+                                        <span>组别</span>
+                                    </div>
+                                    <div class="col-xs-2">
+                                        <span>操作</span>
+                                    </div>
+                                </div>
+                                <div class="row list-info" ng-repeat="user in pageConfig.plat_user_panel.users">
+                                    <div class="col-xs-2">
+                                        <span>{{user.username}}</span>
+                                    </div>
+                                    <div class="col-xs-2">
+                                        <span>{{user.nickname}}</span>
+                                    </div>
+                                    <div class="col-xs-2">
+                                        <span>{{user.mobile_phone}}</span>
+                                    </div>
+                                    <div class="col-xs-1">
+                                        <span class="type">
+                                            {{user.role.text}}
+                                        </span>
+                                    </div>
+                                    <div class="col-xs-1">
+                                        <span class="type">
+                                            {{user.sex.text}}
+                                        </span>
+                                    </div>
+                                    <div class="col-xs-1">
+                                        <span class="type">
+                                            {{user.group.text}}
+                                        </span>
+                                    </div>
+                                    <div class="col-xs-2">
+                                        <div class="handle edit" ng-click="editUser(user)">
+                                            <img class="gif" ng-src="images/global/edit.gif"/>
+                                            <img class="normal" ng-src="images/global/edit.png"/>
+                                        </div>
+                                        <div class="handle stop" ng-click="deleteUser(user)">
+                                            <img class="gif" ng-src="images/global/stop.gif"/>
+                                            <img class="normal" ng-src="images/global/stop.png"/>
+                                        </div>
+                                        <div class="handle" ng-click="scanUser(user)">
+                                            <img class="gif" ng-src="images/global/scan.gif"/>
+                                            <img class="normal" ng-src="images/global/scan.png"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <z-pagination config="pageConfig.plat_user_panel.pagination"></z-pagination>
+                        </div>
+                    </div>
+                    <div class="ee-tag-view" ng-show="user.role==='admin'" ng-class="pageConfig.currentTag === 'card-user' ? 'move-left': ''">
+                        <div class="ee-search-bar row">
+                            <div class="left-panel col-xs-6"></div>
+                            <div class="right-panel col-xs-6">
+                                <div class="add-user" ng-click="editClient()">
+                                    <img src="images/user_manager/single_add.png"/>
+                                    <span>添加用户</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="ee-table-list">
+                            <div class="content">
+                                <div class="row list-header">
+                                    <div class="col-xs-2">
+                                        <span>用户名</span>
+                                    </div>
+                                    <div class="col-xs-2">
+                                        <span>昵称</span>
+                                    </div>
+                                    <div class="col-xs-2">
+                                        <span>手机号</span>
+                                    </div>
+                                    <div class="col-xs-2">
+                                        <span>角色</span>
+                                    </div>
+
+                                    <div class="col-xs-1">
+                                        <span>性别</span>
+                                    </div>
+                                    <div class="col-xs-2">
+                                        <span>操作</span>
+                                    </div>
+                                </div>
+                                <div class="row list-info" ng-repeat="client in pageConfig.plat_client_panel.client_users">
+                                    <div class="col-xs-2">
+                                        <span>{{client.username}}</span>
+                                    </div>
+                                    <div class="col-xs-2">
+                                        <span>{{client.nickname}}</span>
+                                    </div>
+                                    <div class="col-xs-2">
+                                        <span>{{client.mobile_phone}}</span>
+                                    </div>
+                                    <div class="col-xs-2">
+                                        <span class="type">
+                                            {{client.role.text}}
+                                        </span>
+                                    </div>
+                                    <div class="col-xs-1">
+                                        <span class="type">
+                                            {{client.sex.text}}
+                                        </span>
+                                    </div>
+                                    <div class="col-xs-2">
+                                        <div class="handle edit" ng-click="editClient(client)">
+                                            <img class="gif" ng-src="images/global/edit.gif"/>
+                                            <img class="normal" ng-src="images/global/edit.png"/>
+                                        </div>
+                                        <div class="handle stop" ng-click="deleteClient(client)">
+                                            <img class="gif" ng-src="images/global/stop.gif"/>
+                                            <img class="normal" ng-src="images/global/stop.png"/>
+                                        </div>
+                                        <div class="handle" ng-click="scanClient(client)">
+                                            <img class="gif" ng-src="images/global/scan.gif"/>
+                                            <img class="normal" ng-src="images/global/scan.png"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <z-pagination config="pageConfig.plat_client_panel.pagination"></z-pagination>
+                        </div>
+                    </div>
+                    <div class="ee-tag-view" ng-show="user.role==='admin' || user.role === 'card_manager'|| user.role === 'normal_card_manager'|| user.role === 'staff_card_manager'">
+                        <div class="ee-search-bar row">
+                            <div class="left-panel col-xs-6">
+                                <div class='pull-left'>
+                                    <label class="info-name">查询:</label>
+                                    <input placeholder="请输入证件号" type="text"   ng-model="pageConfig.plat_card_panel.keyword.registration_id" ng-change="searchCards()" />
+                                    <input placeholder="请输入卡号" type="text" ng-keyup="myKeyup($event)" ng-model="pageConfig.plat_card_panel.keyword.card_number" ng-blur="searchCards()" />
+                                    <input placeholder="请输入昵称" type="text" ng-keyup="myKeyup($event)" ng-model="pageConfig.plat_card_panel.keyword.nickname" ng-blur="searchCards()" />
+                                    <select ng-change="searchCards()" ng-if="user.role==='admin' || user.role === 'card_manager'" ng-model="pageConfig.plat_card_panel.keyword.type"><option value="">全部（卡类型）</option><option value="normal">普通</option><option value="staff">员工</option><option value="expert">专家</option></select>
+                                </div>
+                            </div>
+                            <div class="right-panel col-xs-6">
+                                <div class="card-balance">
+                                    <label title="包含已开通和已冻结卡的余额">总余额：</label>
+                                    <span>{{pageConfig.plat_card_panel.totalCardBalance.toFixed(3)}}元</span>
+                                </div>
+                                <div class="card-history" ng-click="goState('card_statistic')">
+                                    <span>查看统计</span>
+                                </div>
+                                <div class="card-history" ng-click="goState('card_history')">
+                                    <span>查看历史</span>
+                                </div>
+                                <div class="card-history" ng-hide="user.role === 'normal_card_manager'" ng-click="showBatchRechargePanel()">
+                                    批量充值
+                                </div>
+                                <div class="add-user" ng-click="editCard()">
+                                    <img src="images/user_manager/single_add.png"/>
+                                    <span>添加饭卡</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="ee-table-list">
+                            <div class="content">
+                                <div class="row list-header">
+                                    <div class="col-xs-2">
+                                        <span>证件号</span>
+                                    </div>
+                                    <div class="col-xs-3">
+                                        <span>卡类型：卡号</span>
+                                    </div>
+                                    <div class="col-xs-1"><span>昵称</span></div>
+                                    <div class="col-xs-1">
+                                        <span>余额</span>
+                                    </div>
+                                    <div class="col-xs-1">
+                                        <span>状态</span>
+                                    </div>
+                                    <div class="col-xs-1">
+                                        <span>生成时间</span>
+                                    </div>
+                                    <div class="col-xs-3">
+                                        <span>操作</span>
+                                    </div>
+                                </div>
+                                <div class="row list-info" ng-repeat="card in pageConfig.plat_card_panel.cards">
+                                    <div class="col-xs-2" title="{{card.id_number}}">
+                                        <span>{{card.id_number}}</span>
+                                    </div>
+                                    <div class="col-xs-3" title="{{card.card_number}}">
+                                        <span>{{card.type.text}}：{{card.card_number}}</span>
+                                    </div>
+                                    <div class="col-xs-1">{{card.nickname || '--'}}</div>
+                                    <div class="col-xs-1">
+                                        <span>{{card.amount | number: 3}}</span>
+                                    </div>
+                                    <div class="col-xs-1">
+                                        <span>{{card.status_display}}</span>
+                                    </div>
+                                    <div class="col-xs-1">
+                                        <span>{{card.create_time | date: 'yy-MM-dd hh:mm'}}</span>
+                                    </div>
+                                    <div class="col-xs-3">
+                                        <div class="handle edit" ng-click="editCard(card)">
+                                            <img class="gif" ng-src="images/global/edit.gif"/>
+                                            <img class="normal" ng-src="images/global/edit.png"/>
+                                        </div>
+                                        <div class="handle stop" ng-click="deleteCard(card)">
+                                            <img class="gif" ng-src="images/global/stop.gif"/>
+                                            <img class="normal" ng-src="images/global/stop.png"/>
+                                        </div>
+                                        <div class="handle text" ng-click="closeCard(card)">
+                                            <span>退卡</span>
+                                        </div>
+                                        <div class="handle text" ng-click="changeCardStatus(card)">
+                                            <span ng-show="card.status !== 'frozen'">挂失</span>
+                                            <span ng-show="card.status ==='frozen'">取消挂失</span>
+                                        </div>
+                                        <div class="handle text" ng-click="replaceCard(card)">
+                                            <span>补卡</span>
+                                        </div>
+                                        <div class="handle text" ng-click="cardPasswordConfig.show(card)">
+                                            <span>改密</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <z-pagination config="pageConfig.plat_card_panel.pagination"></z-pagination>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="ee-pop-mask" ng-show="pageConfig.popMaskShow">
+    <div class="ee-pop-wrapper">
+        <div class="ee-pop-panel" ng-show="pageConfig.clientScanType === 'scan'">
+            <div class="ee-pop-header">
+                <div class="ee-pop-title">
+                    <span>{{pageConfig.plat_client_panel.currentEditClient.nickname}}</span>
+                    <div class="close" ng-click="closePopMask()"></div>
+                </div>
+                <div class="ee-pop-title-detail">
+                    <div class="detail-row">
+
+                        <div class="ee-detail-info-one">
+                            <span>用户名</span>
+                            <strong>{{pageConfig.plat_client_panel.currentEditClient.username}}</strong>
+                        </div>
+                        <div class="ee-detail-info-two">
+                            <span>手机号</span>
+                            <strong>{{pageConfig.plat_client_panel.currentEditClient.mobile_phone}}</strong>
+                        </div>
+                    </div>
+                    <div class="detail-row">
+                        <div class="ee-detail-info-one">
+                            <span>性别</span>
+                            <strong>{{pageConfig.plat_client_panel.currentEditClient.sex.text}}</strong>
+                        </div>
+                        <div class="ee-detail-info-two">
+                            <span>角色</span>
+                            <strong>{{pageConfig.plat_client_panel.currentEditClient.role.text}}</strong>
+                        </div>
+                    </div>
+                    <div class="detail-row">
+                        <div class="ee-detail-info-two">
+                            <span>证件号</span>
+                            <strong>{{pageConfig.plat_client_panel.currentEditClient.description}}</strong>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="ee-pop-body">
+                <div class="photo-container">
+                    <div class="photo">
+                        <img src="images/global/default_user.png"/>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="ee-pop-panel" ng-show="(pageConfig.clientScanType === 'edit' || pageConfig.clientScanType === 'create') && pageConfig.plat_client_panel.show_plat">
+            <div class="ee-pop-header">
+                <div class="ee-pop-title">
+                    <span>{{pageConfig.clientScanType === 'edit' ? '编辑':'新增'}}客户端用户</span>
+                    <div class="close" ng-click="closePopMask()"></div>
+                </div>
+            </div>
+            <div class="ee-pop-body"x>
+                <div class="ee-user-manager-view-new-user">
+                    <div class="info-item">
+                        <span class="info-name">用户名</span>
+                        <div class="info-value">
+                            <input ng-disabled="pageConfig.clientScanType === 'edit'"  placeholder="请输入用户名" type="text" ng-model="pageConfig.plat_client_panel.currentEditClient.username"/>
+                        </div>
+                        <div class="info-tip" ng-class="{'error': pageConfig.plat_client_panel.errorInfo.username}">(必填项，手机号)</div>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-name">{{pageConfig.clientScanType === 'edit'?'修改':''}}密码</span>
+                        <div class="info-value" ng-class="{'info-value-select':pageConfig.clientScanType === 'edit'}">
+                            <input ng-show="pageConfig.clientScanType === 'edit'" class="address-check-box" ng-model="pageConfig.plat_client_panel.passwordModify" type="checkbox"/>
+                            <input class="password-input" ng-show="pageConfig.clientScanType === 'create' || (pageConfig.clientScanType === 'edit'&& pageConfig.plat_client_panel.passwordModify)" placeholder="请输入密码（至少6位数字）" type="password" ng-model="pageConfig.plat_client_panel.currentEditClient.password"/>
+                        </div>
+                        <div class="info-tip" ng-class="{'error': pageConfig.plat_client_panel.errorInfo.password}">(必填项,至少六个字符)</div>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-name">昵称</span>
+                        <div class="info-value">
+                            <input placeholder="请输入昵称" type="text" ng-model="pageConfig.plat_client_panel.currentEditClient.nickname"/>
+                        </div>
+                        <div class="info-tip" ng-class="{'error': pageConfig.plat_client_panel.errorInfo.nickname}">(必填项)</div>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-name">性别</span>
+                        <div class="info-value">
+                            <z-dropdown z-dropdown-model="pageConfig.plat_client_panel.currentEditClient.sex"
+                                        z-dropdown-options="pageConfig.sexs"
+                                        z-dropdown-label="请选择性别"
+                                    >
+                            </z-dropdown>
+                        </div>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-name">手机号</span>
+                        <div class="info-value">
+                            <input placeholder="请输入手机号" type="text" ng-model="pageConfig.plat_client_panel.currentEditClient.mobile_phone"/>
+                        </div>
+                        <div class="info-tip" ng-class="{'error': pageConfig.plat_client_panel.errorInfo.mobile_phone}">(必填项)</div>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-name">角色</span>
+                        <div class="info-value">
+                            <z-dropdown z-dropdown-model="pageConfig.plat_client_panel.currentEditClient.role"
+                                        z-dropdown-options="pageConfig.clientRoles"
+                                        z-dropdown-label="请选择角色"
+                                    >
+                            </z-dropdown>
+                        </div>
+                        <div class="info-tip" ng-class="{'error': pageConfig.plat_client_panel.errorInfo.role}">(必选项)</div>
+                    </div>
+                    <div class="handle">
+
+                        <div class="sure" ng-click="addOrEditClient()">{{pageConfig.clientScanType === 'edit'?'确定':'添加'}}</div>
+
+                        <div class="cancel" ng-click="cancelClient()">取消</div>
+
+                        <div class="reset" ng-click="resetClient()" ng-show="pageConfig.clientScanType === 'create'">重置</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="ee-pop-panel" ng-show="pageConfig.scanType === 'scan'">
+            <div class="ee-pop-header">
+                <div class="ee-pop-title">
+                    <span>{{pageConfig.plat_user_panel.currentEditUser.nickname}}</span>
+                    <!--<strong ng-show="pageConfig.currentPOI.is_chain">连锁</strong>-->
+                    <div class="close" ng-click="closePopMask()"></div>
+                </div>
+                <div class="ee-pop-title-detail">
+                    <div class="detail-row">
+
+                        <div class="ee-detail-info-one">
+                            <span>用户名</span>
+                            <strong>{{pageConfig.plat_user_panel.currentEditUser.username}}</strong>
+                        </div>
+                        <div class="ee-detail-info-two">
+                            <span>手机号</span>
+                            <strong>{{pageConfig.plat_user_panel.currentEditUser.mobile_phone}}</strong>
+                        </div>
+                    </div>
+                    <div class="detail-row">
+                        <div class="ee-detail-info-one">
+                            <span>性别</span>
+                            <strong>{{pageConfig.plat_user_panel.currentEditUser.sex.text}}</strong>
+                        </div>
+                        <div class="ee-detail-info-two">
+                            <span>角色</span>
+                            <strong>{{pageConfig.plat_user_panel.currentEditUser.role.text}}</strong>
+                        </div>
+                    </div>
+                    <div class="detail-row">
+                        <div class="ee-detail-info-one">
+                            <span>组别</span>
+                            <strong>{{pageConfig.plat_user_panel.currentEditUser.group.text}}</strong>
+                        </div>
+                        <div class="ee-detail-info-two">
+                            <span>证件号</span>
+                            <strong>{{pageConfig.plat_user_panel.currentEditUser.description}}</strong>
+                        </div>
+                    </div>
+
+
+                </div>
+            </div>
+            <div class="ee-pop-body">
+                <div class="photo-container">
+                    <div class="photo">
+                        <img src="images/global/default_user.png"/>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="ee-pop-panel" ng-show="(pageConfig.scanType === 'edit' || pageConfig.scanType === 'create') && pageConfig.plat_user_panel.show_plat">
+            <div class="ee-pop-header">
+                <div class="ee-pop-title">
+                    <span>{{pageConfig.scanType === 'edit' ? '编辑':'新增'}}平台用户</span>
+                    <div class="close" ng-click="closePopMask()"></div>
+                </div>
+            </div>
+            <div class="ee-pop-body">
+                <div class="ee-user-manager-view-new-user">
+                    <div class="info-item">
+                        <span class="info-name">用户名</span>
+                        <div class="info-value">
+                            <input ng-disabled="pageConfig.scanType === 'edit'" placeholder="请输入用户名" type="text" ng-model="pageConfig.plat_user_panel.currentEditUser.username"/>
+                        </div>
+                        <div class="info-tip" ng-class="{'error': pageConfig.plat_user_panel.errorInfo.username}">(必填项，员工号)</div>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-name">{{pageConfig.scanType === 'edit'?'修改':''}}密码</span>
+                        <div class="info-value" ng-class="{'info-value-select':pageConfig.scanType === 'edit'}">
+                            <input ng-show="pageConfig.scanType === 'edit'" class="address-check-box" ng-model="pageConfig.plat_user_panel.passwordModify" type="checkbox"/>
+                            <input class="password-input" ng-show="pageConfig.scanType === 'create' || (pageConfig.scanType === 'edit'&& pageConfig.plat_user_panel.passwordModify)" placeholder="请输入密码（至少6位数字）" type="password" ng-model="pageConfig.plat_user_panel.currentEditUser.password"/>
+                        </div>
+                        <div class="info-tip" ng-class="{'error': pageConfig.plat_user_panel.errorInfo.password}">(必填项,至少六个字符)</div>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-name">昵称</span>
+                        <div class="info-value">
+                            <input placeholder="请输入昵称" type="text" ng-model="pageConfig.plat_user_panel.currentEditUser.nickname"/>
+                        </div>
+                        <div class="info-tip" ng-class="{'error': pageConfig.plat_user_panel.errorInfo.nickname}">(必填项)</div>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-name">性别</span>
+                        <div class="info-value">
+                            <z-dropdown z-dropdown-model="pageConfig.plat_user_panel.currentEditUser.sex"
+                                        z-dropdown-options="pageConfig.sexs"
+                                        z-dropdown-label="请选择性别"
+                                    >
+                            </z-dropdown>
+                        </div>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-name">手机号</span>
+                        <div class="info-value">
+                            <input placeholder="请输入手机号" type="text" ng-model="pageConfig.plat_user_panel.currentEditUser.mobile_phone"/>
+                        </div>
+                        <div class="info-tip" ng-class="{'error': pageConfig.plat_user_panel.errorInfo.mobile_phone}">(必填项)</div>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-name">组别</span>
+                        <div class="info-value">
+                            <z-dropdown z-dropdown-model="pageConfig.plat_user_panel.currentEditUser.group"
+                                        z-dropdown-options="pageConfig.groups"
+                                        z-dropdown-label="请选择组别"
+                                    >
+                            </z-dropdown>
+                        </div>
+                        <div class="info-tip" ng-class="{'error': pageConfig.plat_user_panel.errorInfo.group}">(必选项)</div>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-name">角色</span>
+                        <div class="info-value">
+                            <z-dropdown z-dropdown-model="pageConfig.plat_user_panel.currentEditUser.role"
+                                        z-dropdown-options="pageConfig.roles"
+                                        z-dropdown-label="请选择角色"
+                                    >
+                            </z-dropdown>
+                        </div>
+                        <div class="info-tip" ng-class="{'error': pageConfig.plat_user_panel.errorInfo.role}">(必选项)</div>
+                    </div>
+                    <div class="handle">
+
+                        <div class="sure" ng-click="addOrEditUser()">{{pageConfig.scanType === 'edit'?'确定':'添加'}}</div>
+
+                        <div class="cancel" ng-click="cancel()">取消</div>
+
+                        <div class="reset" ng-click="reset()" ng-show="pageConfig.scanType === 'create'">重置</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="ee-pop-panel" ng-show="(pageConfig.scanType === 'replace_card' || pageConfig.scanType === 'edit' || pageConfig.scanType === 'create') && pageConfig.plat_card_panel.show_plat">
+            <div class="ee-pop-header">
+                <div class="ee-pop-title">
+                    <span ng-show="pageConfig.scanType !== 'replace_card'">{{pageConfig.scanType === 'edit' ? '编辑':'新增'}}饭卡</span>
+                    <span ng-show="pageConfig.scanType === 'replace_card'">补卡</span>
+                    <div class="close" ng-click="closePopMask()"></div>
+                </div>
+            </div>
+            <div class="ee-pop-body">
+                <div class="ee-user-manager-view-new-user">
+                    <div class="info-item" ng-show="pageConfig.scanType==='create'">
+                        <span class="info-name">饭卡号码</span>
+                        <div class="info-value">
+                            <input placeholder="请输入饭卡号码" type="text" ng-model="pageConfig.plat_card_panel.currentEditCard.card_number"/>
+                        </div>
+                        <div class="info-tip" ng-class="{'error': pageConfig.plat_card_panel.errorInfo.card_number}">(必填项，饭卡号)</div>
+                    </div>
+
+                    <div class="info-item" ng-show="pageConfig.scanType==='create'">
+                        <span class="info-name">证件号</span>
+                        <div class="info-value">
+                            <input placeholder="请输入证件号" type="text" ng-model="pageConfig.plat_card_panel.currentEditCard.id_number"/>
+                        </div>
+                        <div class="info-tip" ng-class="{'error': pageConfig.plat_card_panel.errorInfo.id_number}">(必填项，证件号)</div>
+                    </div>
+
+                    <div class="info-item" ng-show = "pageConfig.scanType === 'create'">
+                        <span class="info-name">类型</span>
+                        <div class="info-value">
+                            <z-dropdown z-dropdown-model="pageConfig.plat_card_panel.currentEditCard.type"
+                                        z-dropdown-options="pageConfig.cardTypes"
+                                        z-dropdown-label="请选择类型"
+                                    >
+                            </z-dropdown>
+                        </div>
+                        <div class="info-tip" ng-class="{'error': pageConfig.plat_card_panel.errorInfo.type}">(必选)</div>
+                    </div>
+
+
+
+                    <div class="info-item" ng-show="pageConfig.scanType==='edit' || pageConfig.scanType === 'replace_card'">
+                        <span class="info-name">饭卡号: </span>
+                        <div class="info-value">
+                            {{pageConfig.plat_card_panel.currentEditCard.card_number}}
+                        </div>
+                    </div>
+
+
+                    <div class="info-item" ng-show="pageConfig.scanType==='edit' || pageConfig.scanType === 'replace_card'">
+                        <span class="info-name">证件号: </span>
+                        <div class="info-value">
+                            {{pageConfig.plat_card_panel.currentEditCard.id_number}}
+                        </div>
+                    </div>
+
+                    <div class="info-item" ng-show="pageConfig.scanType==='edit' || pageConfig.scanType === 'replace_card'">
+                        <span class="info-name">类型: </span>
+                        <div class="info-value">
+                            {{pageConfig.plat_card_panel.currentEditCard.type.text}}
+                        </div>
+                    </div>
+
+
+                    <div class="info-item" ng-show="pageConfig.scanType==='edit' || pageConfig.scanType === 'replace_card'">
+                        <span class="info-name">卡内余额: </span>
+                        <div class="info-value">
+                            {{pageConfig.plat_card_panel.currentEditCard.amount | number: 3}}
+                        </div>
+                    </div>
+
+                    <div class="info-item" ng-show="pageConfig.scanType==='create'||pageConfig.scanType==='edit' ">
+                        <span class="info-name">昵称</span>
+                        <div class="info-value">
+                            <input placeholder="请输入昵称" type="text" ng-model="pageConfig.plat_card_panel.currentEditCard.nickname"/>
+                        </div>
+                    </div>
+
+                    <div class="info-item" ng-show="pageConfig.scanType==='edit'">
+                        <span class="info-name">充值类型</span>
+                        <div class="info-value">
+                            <z-dropdown z-dropdown-model="pageConfig.plat_card_panel.currentEditCard.recharge_type"
+                                        z-dropdown-options="pageConfig.rechargeTypes"
+                                        z-dropdown-label="充值类型"
+                                    >
+                            </z-dropdown>
+                        </div>
+                    </div>
+
+                    <div class="info-item" ng-show="pageConfig.scanType==='edit'">
+                        <span class="info-name">添加金额: </span>
+                        <div class="info-value">
+                            <input placeholder="请添加金额（单位：元）" type="number" ng-model="pageConfig.plat_card_panel.add_money"/>
+                        </div>
+                    </div>
+
+                    <div class="info-item" ng-show="pageConfig.scanType==='replace_card'">
+                        <span class="info-name">新饭卡号: </span>
+                        <div class="info-value">
+                            <input placeholder="请输入新卡号" type="text" ng-model="pageConfig.plat_card_panel.new_card_number"/>
+                        </div>
+                    </div>
+
+                    <div class="handle">
+
+                        <div class="sure" ng-show="pageConfig.scanType !== 'replace_card'"  ng-click="addOrEditCard()">{{pageConfig.scanType === 'edit'?'确定':'添加'}}</div>
+
+                        <div class="cancel" ng-show="pageConfig.scanType !== 'replace_card'"  ng-click="cancel()">取消</div>
+
+                        <div class="reset" ng-click="reset()" ng-show="pageConfig.scanType === 'create'">重置</div>
+                        <div class="sure" ng-show="pageConfig.scanType === 'replace_card'" ng-click="saveReplaceCard()">补卡</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="ee-pop-panel" ng-if="batchRechargeShow">
+            <div class="ee-pop-header">
+                <div class="ee-pop-title">
+                    <span>批量充值员工卡</span>
+                    <div class="close" ng-click="closePopMask()"></div>
+                </div>
+            </div>
+
+            <div class="ee-pop-body">
+                <div class="ee-user-manager-view-new-user">
+                    <div class="info-item">
+                        <span class="info-name">充值金额: </span>
+                        <div class="info-value">
+                            <input placeholder="请充值金额（单位：元）" type="number" ng-model="pageConfig.plat_card_panel.batchRechargeCardAmount"/>
+                        </div>
+                    </div>
+
+                    <div class="message-result">{{batchRechargeMessage}}</div>
+
+                    <div class="handle">
+                        <div class="sure" ng-click="batchRechargeCard()">批量充值</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="ee-pop-panel" ng-show="cardPasswordConfig.isShow">
+            <div class="ee-pop-header">
+                <div class="ee-pop-title">
+                    <span>重置密码</span>
+                    <div class="close" ng-click="cardPasswordConfig.hide()"></div>
+                </div>
+            </div>
+
+            <div class="ee-pop-body">
+                <div class="ee-user-manager-view-new-user">
+                    <div class="info-item">
+                        <span class="info-name">卡号: </span>
+                        <div class="info-value">
+                            <span>{{cardPasswordConfig.currentCard.card_number}}</span>
+                        </div>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-name">证件号: </span>
+                        <div class="info-value">
+                            <span>{{cardPasswordConfig.currentCard.id_number}}</span>
+                        </div>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-name">昵称: </span>
+                        <div class="info-value">
+                            <span>{{cardPasswordConfig.currentCard.nickname}}</span>
+                        </div>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-name">状态: </span>
+                        <div class="info-value">
+                            <span>{{cardPasswordConfig.currentCard.nickname}}</span>
+                        </div>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-name">新密码: </span>
+                        <div class="info-value">
+                            <input placeholder="请输入密码（至少六位有效字符）" type="password" ng-model="cardPasswordConfig.currentPassword"/>
+                        </div>
+                    </div>
+
+                    <div class="message-result" ng-class="{'error': cardPasswordConfig.errorMessage}" ng-show="cardPasswordConfig.errorMessage">{{cardPasswordConfig.errorMessage}}</div>
+
+                    <div class="handle">
+                        <div class="sure" ng-click="cardPasswordConfig.sure()">保存</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="ee-footer">
+    <span>技术支持：茼蒿科技</span>
+</div>
