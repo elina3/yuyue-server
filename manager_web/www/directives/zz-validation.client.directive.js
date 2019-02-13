@@ -1,5 +1,5 @@
 'use strict';
-angular.module('EWeb').directive('zzValidation', function ($parse) {
+angular.module('YYWeb').directive('zzValidation', function ($parse) {
   var _isMobile = /^\d{11}$/;
   var _integer = /\D/g;
   var _number = /[^\d{1}\.\d{1}|\d{1}]/g;

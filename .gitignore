@@ -61,7 +61,11 @@ typings/
 .next
 
 server/node_modules
-manager_web/lib
+manager_web/www/lib
 manager_web/node_modules
 manager_web/bower_components
 manager_web/www/dist
+
+.idea/
+.idea/vcs.xml
+

@@ -2,7 +2,7 @@
 /**
  * Created by elina on 15/6/24.
  */
-angular.module('EWeb').directive('eFileSelect', ['$parse', '$timeout',
+angular.module('YYWeb').directive('eFileSelect', ['$parse', '$timeout',
     function ($parse, $timeout) {
         return function (scope, elem, attr) {
             var fn = $parse(attr.eFileSelect);

@@ -1,5 +1,5 @@
 'use strict';
-angular.module('EWeb').directive('zzAlertDialog', function () {
+angular.module('YYWeb').directive('zzAlertDialog', function () {
     return {
         restrict: 'EA',
         template: '<div class="mask" ng-show="pageConfig.show"><div class="zz-alert">' +
