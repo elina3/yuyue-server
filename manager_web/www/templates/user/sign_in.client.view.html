@@ -1,29 +1,30 @@
 <div class="sign-in-page-view">
-    <div class="sign-in-bg">
 
-        <div class="wrapper">
-            <div class="sign-in-header">
-                <div class="logo"><img src="images/global/logo-white.png"/></div>
-                <div class="logo-title"><span>瑞金医院古北分院</span></div>
-                <div class="logo-title-tip"><span>预约后台登录</span></div>
-            </div>
-            <div class="sign-in-area">
-                <form class="sign-in-container">
-                    <div class="container-title">
-                        <span>预约后台登录</span>
-                    </div>
-                    <div class="sign-in-data">
-                        <div class="input-box"><img src="images/sign_in/username.png"/><input type="text" ng-model="signInObject.username" placeholder="账户名"/></div>
-                        <div class="input-box"><img src="images/sign_in/password.png"/><input type="password" ng-model="signInObject.password" placeholder="密码"/></div>
-                    </div>
-                    <div class="sign-in-handle">
-                        <button type="submit" style="width:100%;" class="sign-in-button" ng-click="signIn()">登录</button>
-                    </div>
-                </form>
-            </div>
+
+    <div class="sign-in-container">
+        <div class="hospital-logo">
+            <img src="../../images/global/logo-red.png "/>
         </div>
-
-        <div class="copy-right">后台管理员登录|<a ng-click="goToClientIndex()">工作人员登录</a>｜<a ng-click="goToClientPersonal()">个人登录</a></div>
+        <div class="hospital-name">
+            <p>瑞金医院古北分院</p>
+        </div>
+        <div class="system-name">
+            <p>民航华东地区管理局航空人员体检鉴定中心预约系统</p>
+        </div>
+        <div class="sign-in-area">
+            <form ng-submit="signIn()">
+                <select ng-model="signInObject.client">
+                    <option value="1">后台管理</option>
+                    <option value="2">医生端</option>
+                    <option value="3">取号端</option>
+                </select>
+                <input placeholder="请输入账户名" ng-model="signInObject.username" type="text"/>
+                <input placeholder="请输入密码" ng-model="signInObject.password" type="password" />
+                <button type="submit">登录</button>
+            </form>
+        </div>
     </div>
+
+
 </div>
 

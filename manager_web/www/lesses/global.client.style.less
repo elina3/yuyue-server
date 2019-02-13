@@ -10,6 +10,22 @@ body {
   input, button, textarea, a {
     outline: none;
   }
+  select{
+    -webkit-appearance: none;
+    -webkit-border-radius: 0px;
+    outline:none;
+    background-color: #fff;
+    border-color: @border-normal-color;
+    color: @font-content-color;
+  }
+  input{
+    border: 1px solid @border-normal-color;
+    color: @font-content-color;
+
+  }
+  input::-webkit-input-placeholder{
+    color: @font-light-color;
+  }
 }
 
 html {
