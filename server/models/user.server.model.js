@@ -3,67 +3,74 @@
  */
 'use strict';
 
-
 var mongoLib = require('../libraries/mongoose');
 var appDb = mongoLib.appDb;
 
 var mongoose = require('mongoose'),
-  Schema = mongoose.Schema,
-  timestamps = require('mongoose-timestamp'),
-  crypto = require('crypto');
-
+    Schema = mongoose.Schema,
+    timestamps = require('mongoose-timestamp'),
+    crypto = require('crypto');
 
 var UserSchema = new Schema({
-  object:{
-    type:String,
-    default:'User'
-  },
-  username: {
+  object: {
     type: String,
-    trim: true
+    default: 'User',
+  },
+  username: {//工号
+    type: String,
+    trim: true,
+    required: true,
+  },
+  nickname: {
+    type: String,
   },
   password: {
     type: String,
-    default: ''
-  },
-  role: {
-    type: String,
-    enum: ['admin', 'card_manager','normal_card_manager','staff_card_manager', 'cooker', 'delivery', 'nurse', 'registrar', 'supermarket_manager']//管理员，饭卡管理员, 普通饭卡管理员, 员工专家饭卡管理员, 厨师，配送员，,护士, 登记员,超市管理员
-  },
-  nickname: {
-    type: String
-  },
-  group: {
-    type: Schema.Types.ObjectId,
-    ref: 'Group'
-  },
-  hospital: {
-    type: Schema.Types.ObjectId,
-    ref: 'Hospital'
+    trim: true,
+    required: true,
   },
   sex: {
     type: String,
     enum: ['male', 'female', 'unknown'],
-    default: 'unknown'
+    default: 'unknown',
   },
   mobile_phone: {
-    type: String
+    type: String,
   },
   head_photo: {
-    type: String
+    type: String,
+  },
+  role: {
+    type: String,
+    enum: ['admin'],//管理员
+  },
+  terminalType: {
+    type: String,
+    enum: ['management', 'doctor', 'pick-up'],//管理端，医生端，取号端
+  },
+  hospital: {
+    type: Schema.Types.ObjectId,
+    ref: 'Hospital',
+  },
+  department: {
+    type: Schema.Types.ObjectId,
+    ref: 'Department'
+  },
+  jobTitle: {
+    type: Schema.Types.ObjectId,
+    ref: 'JobTitle'
   },
   salt: {
     type: String,
-    default: 'secret'
+    default: 'secret',
   },
   deleted_status: {
     type: Boolean,
-    default: false
+    default: false,
   }
 });
 
-
-UserSchema.methods.hashPassword = function (password) {
+UserSchema.methods.hashPassword = function(password) {
   if (this.salt && password) {
     return crypto.pbkdf2Sync(password, this.salt, 10000, 64).toString('base64');
   } else {
@@ -71,13 +78,13 @@ UserSchema.methods.hashPassword = function (password) {
   }
 };
 
-UserSchema.methods.authenticate = function (password) {
+UserSchema.methods.authenticate = function(password) {
   return this.password === this.hashPassword(password);
 };
 
 UserSchema.plugin(timestamps, {
   createdAt: 'create_time',
-  updatedAt: 'update_time'
+  updatedAt: 'update_time',
 });
 
 appDb.model('User', UserSchema);

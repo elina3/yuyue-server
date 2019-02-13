@@ -21,9 +21,9 @@ console.log('enviroment:', process.env.NODE_ENV);
 console.log('YUYUE-SYSTEM application started on address ' + config.serverAddress);
 console.log('YUYUE-SYSTEM application started on port ' + config.port);
 
-// console.log('init default data');
-// var initData = require('./config/initData');
-// initData.createDefaultGroup();
+console.log('init default data');
+var initData = require('./config/initData');
+initData.createDefaultHospital();
 
 
 

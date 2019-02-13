@@ -8,20 +8,8 @@ var mongoLib = require('../libraries/mongoose');
 var appDb = mongoLib.appDb;
 var User = appDb.model('User');
 
-
-
-exports.signUp = function(userInfo, callback){
-  Group.findOne({_id: userInfo.group_id})
-    .exec(function(err, group){
-      if(err){
-        return callback({err: systemError.internal_system_error});
-      }
-
-      if(!group){
-        return callback({err: userError.group_not_exist});
-      }
-
-      User.findOne({username: userInfo.username})
+exports.createUser = function(userInfo, callback){
+      User.findOne({hospital: userInfo.hospitalId, username: userInfo.username})
         .exec(function(err, user){
           if(err){
             return callback({err: systemError.internal_system_error});
@@ -32,18 +20,24 @@ exports.signUp = function(userInfo, callback){
           }
 
           if(!user){
-            user = new User();
+            user = new User({
+              username: userInfo.username
+            });
           }
-          user.username = userInfo.username ? userInfo.username : '';
-          user.password = userInfo.password ? user.hashPassword(userInfo.password) : '';
+          user.password = userInfo.password;
           user.nickname = userInfo.nickname;
           user.role = userInfo.role;
-          user.group = userInfo.group_id;
-          user.hospital = group.hospital;
+          user.terminalType = userInfo.terminalType || 'management';
+
+          user.hospital = userInfo.hospitalId;
+          user.department = userInfo.departmentId;
+          user.job_title = userInfo.jobTitleId;
+
           user.sex = !userInfo.sex ? 'unknown':userInfo.sex;
           user.mobile_phone = userInfo.mobile_phone;
           user.head_photo = userInfo.head_photo;
           user.description = userInfo.description;
+          user.deleted_status = false;
           user.save(function(err, newUser){
             if(err || !newUser){
               return callback({err: systemError.database_save_error});
@@ -52,7 +46,7 @@ exports.signUp = function(userInfo, callback){
             return callback(null, newUser);
           });
         });
-    });
+
 };
 
 exports.modifyUser = function(userInfo, callback){

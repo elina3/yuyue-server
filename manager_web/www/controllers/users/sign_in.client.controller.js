@@ -21,6 +21,8 @@ angular.module('YYWeb').controller('UserSignInController',
           return;
         }
 
+        $state.go('user_index');
+        return;
         UserService.signIn($scope.signInObject, function(err, user){
           if (err) {
             $scope.$emit(GlobalEvent.onShowAlert, err);

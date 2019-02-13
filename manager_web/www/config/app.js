@@ -18,7 +18,6 @@ yyWeb.config(['$stateProvider', '$urlRouterProvider', function ($stateProvider, 
       templateUrl: 'templates/user/sign_in.client.view.html',
       controller: 'UserSignInController'
     })
-    
     .state('user_manager', {
       url: '/user/manager:panel_type',
       templateUrl: 'templates/user/user_manager.client.view.html',
@@ -26,7 +25,7 @@ yyWeb.config(['$stateProvider', '$urlRouterProvider', function ($stateProvider, 
     })
     .state('user_index', {
       url: '/user/index',
-      templateUrl: 'templates/user/user_index.client.view.html',
+      templateUrl: 'templates/management/user_index.client.view.html',
       controller: 'UserIndexController'
     });
 

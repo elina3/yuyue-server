@@ -69,7 +69,7 @@ angular.module('YYWeb').directive('zHeader',
                     };
 
                     if(!scope.user){
-                        $state.go('user_sign_in');
+                       // $state.go('user_sign_in');
                         return;
                     }
 
@@ -77,7 +77,7 @@ angular.module('YYWeb').directive('zHeader',
                         scope.menuOpened = false;
                         Auth.setUser(null);
                         Auth.setToken('');
-                        $state.go('user_sign_in');
+                       // $state.go('user_sign_in');
                         //console.log('quit：' + scope.menuOpened);
                         //scope.$emit(GlobalEvent.onShowAlertConfirm, {content: '您真的要退出吗？'}, function (status) {
                         //    if (status) {
@@ -93,7 +93,7 @@ angular.module('YYWeb').directive('zHeader',
 
                     scope.backHome = function () {
                         if(!scope.user){
-                            return $state.go('sign_in');
+                           // return $state.go('sign_in');
                         }
 
                         if(scope.user.role === 'admin'){
