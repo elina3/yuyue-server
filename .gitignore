@@ -69,3 +69,5 @@ manager_web/www/dist
 .idea/
 .idea/vcs.xml
 
+server/package-lock.json
+
