@@ -25,7 +25,7 @@ exports.requireAdmin = function(req, res, next){
     return res.send({err: systemError.invalid_access_token});
   }
 
-  userLogic.getValidUserById(token._id, function(err, user){
+  userLogic.getUserById(token._id, function(err, user){
     if(err){
       return next(err);
     }
@@ -35,6 +35,9 @@ exports.requireAdmin = function(req, res, next){
     }
 
     req.admin = user;
+    req.user = user;
+
+    req.body.hospital_id = req.user.hospital;
     next();
   });
 };
@@ -58,12 +61,13 @@ exports.requireUser = function(req, res, next){
     return res.send({err: systemError.invalid_access_token});
   }
 
-  userLogic.getValidUserById(token._id, function(err, user){
+  userLogic.getUserById(token._id, function(err, user){
     if(err){
       return next(err);
     }
 
     req.user = user;
+    req.body.hospital_id = req.user.hospital;
     next();
   });
 };

@@ -31,6 +31,34 @@ exports.createDepartment = function(departmentInfo, callback) {
       });
 };
 
+exports.modifyDepartment = function(departmentId, departmentInfo, callback){
+  DepartmentModel.update({_id: departmentId}, {$set: {name: departmentInfo.name, description: departmentInfo.description || '', update_time: new Date()}}, function(err){
+    if(err){
+      return callback({err: systemError.database_update_error});
+    }
+
+    return callback();
+  });
+};
+exports.deleteDepartment = function(departmentId, callback){
+  DepartmentModel.update({_id: departmentId}, {$set: {deleted_status: true, delete_time: new Date()}}, function(err){
+    if(err){
+      return callback({err: systemError.database_update_error});
+    }
+
+    return callback();
+  });
+};
+exports.getDepartmentList = function(hospitalId, callback){
+  DepartmentModel.find({hospital: hospitalId, deleted_status: false}, function(err, list){
+    if(err){
+      return callback({err: systemError.database_query_error});
+    }
+
+    return callback(null, list);
+  });
+};
+
 exports.getDepartmentDetail = function(departmentId, callback) {
   DepartmentModel.findOne({ _id: departmentId }).exec(function(err, hospital) {
     if (err) {

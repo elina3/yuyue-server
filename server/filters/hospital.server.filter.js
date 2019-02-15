@@ -3,7 +3,9 @@
  */
 'use strict';
 var hospitalError = require('../errors/hospital');
-var hospitalLogic = require('../logics/hospital');
+var hospitalLogic = require('../logics/hospital'),
+departmentLogic = require('../logics/department'),
+jobTitleLogic = require('../logics/job_title');
 
 exports.requireHospital = function(req, res, next){
   var hospitalId = req.body.hospital_id || req.query.hospital_id;
@@ -23,7 +25,7 @@ exports.requireHospital = function(req, res, next){
 
 exports.requireDepartment = function(req, res, next){
   var departmentId = req.body.department_id || req.query.department_id;
-  hospitalLogic.getDepartmentDetail(departmentId, function(err, department){
+  departmentLogic.getDepartmentDetail(departmentId, function(err, department){
     if(err){
       return next(err);
     }
@@ -33,6 +35,21 @@ exports.requireDepartment = function(req, res, next){
     }
 
     req.department = department;
+    next();
+  });
+};
+exports.requireJobTitle = function(req, res, next){
+  var jobTitleId = req.body.job_title_id || req.query.job_title_id;
+  jobTitleLogic.getJobTitleDetail(jobTitleId, function(err, jobTitle){
+    if(err){
+      return next(err);
+    }
+
+    if(!jobTitle){
+      return next({err: hospitalError.job_title_not_exists});
+    }
+
+    req.job_title = jobTitle;
     next();
   });
 };

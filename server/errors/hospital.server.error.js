@@ -10,4 +10,8 @@ module.exports = _.extend(exports, {
   job_title_exists: {type: 'job_title_exists', message: 'The hospital job title is exists', zh_message: '该医院职称已存在！'},
   job_title_not_exists: {type: 'job_title_not_exists', message: 'The hospital job title is not exists', zh_message: '该医院职称不存在！'},
 
+  param_name_null: {type: 'param_name_null', message: 'The param of name is null', zh_message: '参数name为空'},
+
+
+
 });

@@ -30,6 +30,13 @@ var jobTitleSchema = new Schema({
   description: {
     type: String,
     default: ''
+  },
+  deleted_status: {
+    type: Boolean,
+    default: false,
+  },
+  delete_time: {
+    type: Date
   }
 });
 

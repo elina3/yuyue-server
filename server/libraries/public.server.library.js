@@ -50,6 +50,10 @@ Date.prototype.Format = function (fmt) {
   return fmt;
 };
 
+exports.formatPaginationNumber = function(numberString){
+  return parseInt(numberString) || 0
+};
+
 exports.isNullOrEmpty = function (value) {
   return (value === undefined || value === null || value === '');
 };

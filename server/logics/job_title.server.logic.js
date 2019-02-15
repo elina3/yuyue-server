@@ -34,6 +34,27 @@ exports.createJobTitle = function(jobTitleInfo, callback) {
       });
 };
 
+exports.getJobTitleList = function(hospitalId, callback){
+  JobTitleModel.find({ hospital: hospitalId, deleted_status: false})
+  .exec(function(err, jobTitle) {
+    if (err) {
+      return callback({ err: systemError.database_query_error });
+    }
+
+    return callback(null, jobTitle);
+  });
+};
+
+exports.modifyJobTitle = function(jobTitleId, jobTitleInfo, callback){
+  JobTitleModel.update({_id: jobTitleId}, {$set: {name: jobTitleInfo.name, description: jobTitleInfo.description || '', update_time: new Date()}}, function(err){
+    if(err){
+      return callback({err: systemError.database_update_error});
+    }
+
+    return callback();
+  });
+};
+
 exports.getJobTitleDetail = function(jobTitleId, callback) {
   JobTitleModel.findOne({ _id: jobTitleId }).exec(function(err, jobTitle) {
     if (err) {

@@ -7,43 +7,6 @@ var cryptoLib = require('../libraries/crypto'),
 var userLogic  = require('../logics/user');
 var systemError = require('../errors/system');
 
-exports.createGroup = function(req, res, next){
-  var groupInfo = req.body.group_info || req.query.group_info || {};
-  if(!groupInfo.name){
-    return next({err: systemError.param_null_error});
-  }
-  userLogic.createGroup(groupInfo, function(err, newGroup){
-    if(err){
-      return next(err);
-    }
-
-    req.data = {
-      group: newGroup
-    };
-    return next();
-  });
-};
-
-exports.getGroups = function(req, res, next){
-  var user = req.user;
-  var currentPage = publicLib.parsePositiveIntNumber(req.query.current_page) || 1; //解析正整数
-  var limit = publicLib.parsePositiveIntNumber(req.query.limit) || -1; //解析正整数
-  var skipCount = publicLib.parseNonNegativeIntNumber(req.query.skip_count) || -1; //解析正整数和0
-  var query = {
-    hospital: user.hospital
-  };
-  userLogic.getGroupList(query, currentPage, limit, skipCount, function(err, groups){
-    if(err){
-      return next(err);
-    }
-
-    req.data = {
-      group_list: groups
-    };
-    return next();
-  });
-};
-
 exports.signIn = function(req, res, next){
   var username = req.body.username || req.query.username || '';
   var password = req.body.password || req.query.password || '';
