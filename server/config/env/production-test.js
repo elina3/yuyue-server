@@ -8,6 +8,6 @@ module.exports = {
   app: {
     title: 'YUYUE-SYSTEM - Production Test Environment'
   },
-  serverAddress:'https://localhost:3302/',
-  port: process.env.PORT || 3302
+  serverAddress:'https://localhost:7001/',
+  port: process.env.PORT || 7001
 };
