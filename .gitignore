@@ -66,8 +66,13 @@ manager_web/node_modules
 manager_web/bower_components
 manager_web/www/dist
 
+client_web/www/dist
+
 .idea/
 .idea/vcs.xml
 
 server/package-lock.json
+
+
+.DS_Store
 
