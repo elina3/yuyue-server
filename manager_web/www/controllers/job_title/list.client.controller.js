@@ -2,7 +2,7 @@
  * Created by elinaguo on 16/3/14.
  */
 'use strict';
-angular.module('YYWeb').controller('DepartmentListController',
+angular.module('YYWeb').controller('JobTitleListController',
   ['$window', '$rootScope', '$scope', 'GlobalEvent', '$state', 'UserService', 'Auth',
     function ($window, $rootScope, $scope, GlobalEvent, $state, UserService, Auth) {
       var user = Auth.getUser();
@@ -12,12 +12,12 @@ angular.module('YYWeb').controller('DepartmentListController',
       }
 
       function loadDepartmentList(callback){
-        $scope.pageConfig.departmentList = [
-          {id: '1', name: '信息科', description: '心内科', opened: false},
-          {id: '2', name: '呼吸内科', description: '呼吸内科', opened: true},
-          {id: '3', name: '内科', description: '呼吸内科', opened: true},
-          {id: '4', name: '眼科', description: '呼吸内科', opened: true},
-          {id: '5', name: '儿科', description: '财务', opened: true},
+        $scope.pageConfig.jobTitleList = [
+          {id: '1', name: '信息科主任', description: '心内科'},
+          {id: '2', name: '护士', description: '呼吸内科'},
+          {id: '3', name: '副主任医师', description: '呼吸内科'},
+          {id: '4', name: '主任医师', description: '呼吸内科'},
+          {id: '5', name: '院长', description: '医院院长管理医院所有事务'},
         ];
 
         $scope.pageConfig.pagination.totalCount = 5;
@@ -27,8 +27,8 @@ angular.module('YYWeb').controller('DepartmentListController',
       }
 
       $scope.pageConfig = {
-        navIndexes: [1, 1],
-        departmentList: [],
+        navIndexes: [1, 2],
+        jobTitleList: [],
         pagination: {
           currentPage: 1,
           limit: 2,

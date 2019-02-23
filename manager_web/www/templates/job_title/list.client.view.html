@@ -3,48 +3,42 @@
 <div class="ee-admin-index user-detail-page  ee-body">
     <div class="option-entry-warp">
 
-        <h2>科室管理</h2>
+        <h2>职称管理</h2>
 
         <div class="yy-whiter-board">
                 <div class="yy-panel-item row">
                     <div class="yy-search-bar">
                         <form>
-                            <input placeholder="名称" type="text" class="yy-search-bar-input"/>
+                            <input placeholder="职称名称" type="text" class="yy-search-bar-input"/>
                             <input type="submit" value="筛选" onclick="alert('search')"/>
                             <span class="yy-search-bar-icon"></span>
                         </form>
                     </div>
-                    <a href="#/department/add" class="yy-green-button">添加科室</a>
+                    <a href="#/department/add" class="yy-green-button">添加职称</a>
                 </div>
                 <div class="yy-panel-item">
                     <div class="ee-table-list">
                         <div class="content">
                             <div class="row list-header">
                                 <div class="col-xs-2">
-                                    <span>科室名称</span>
+                                    <span>职称名称</span>
                                 </div>
                                 <div class="col-xs-4">
-                                    <span>科室简介</span>
-                                </div>
-                                <div class="col-xs-2">
-                                    <span>对外可见</span>
+                                    <span>职称简介</span>
                                 </div>
                                 <div class="col-xs-2">
                                     <span>操作</span>
                                 </div>
                             </div>
-                            <div class="row list-info" ng-repeat="department in pageConfig.departmentList">
+                            <div class="row list-info" ng-repeat="jobTitle in pageConfig.jobTitleList">
                                 <div class="col-xs-2">
-                                    <span>{{department.name}}</span>
+                                    <span>{{jobTitle.name}}</span>
                                 </div>
                                 <div class="col-xs-4">
-                                    <span>{{department.description}}</span>
-                                </div>
-                                <div class="col-xs-2">
-                                    <span>{{department.opened ? '开放' : '关闭'}}</span>
+                                    <span>{{jobTitle.description}}</span>
                                 </div>
                                 <div class="col-xs-2 handle">
-                                    <a href="#/user/detail{{ user.id }}">查看</a>
+                                    <a href="#/job_title/detail{{ jobTitle.id }}">查看</a>
                                 </div>
                             </div>
                         </div>
