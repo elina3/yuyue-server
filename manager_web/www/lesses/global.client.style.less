@@ -81,7 +81,7 @@ body {
       }
       .yy-search-bar{
         overflow: hidden;
-        //width: 310px;
+        width: 350px;
         height: 33px;
         form input{
           display: inline-block;
@@ -109,6 +109,16 @@ body {
           overflow: hidden;
           margin: 10px 0;
 
+          &.has-select{
+            overflow: visible;
+            >label, >div{
+              display: inline-block;
+            }
+            >div{
+              min-width: 150px;
+            }
+          }
+
           >label, >span, >p, >img{
             display: inline-block;
             float: left;
@@ -117,8 +127,12 @@ body {
           >label{
             width: 100px;
             margin: 0;
+            &.blank{
+              display: inline-block;
+              height: 33px;
+            }
           }
-          >input[type=text], >input[type=password]{
+          >input[type=text], >input[type=password], >input[type=number]{
             padding: 0 5px;
             height: 33px;
             width: 400px;
@@ -138,9 +152,13 @@ body {
           }
           >textarea{
             width: 400px;
-            min-height: 66px;
-            height: auto;
-            overflow-y: hidden;
+            min-height: 100px;
+            overflow-y: auto;
+            padding: 5px;
+            margin-top: 5px;
+            resize:none;
+
+            border-color: @border-normal-color;
 
             &[disabled]{
               border: none;
@@ -149,10 +167,67 @@ body {
           }
         }
       }
+
+      ul.yy-checkbox{
+        min-width: 400px;
+        display: block;
+        overflow: hidden;
+        text-decoration: none;
+        >li{
+          display: inline-block;
+          float: left;
+          min-width: 50px;
+          margin-right: 10px;
+          &:hover{
+            cursor: pointer;
+          }
+          &.selected{
+            >span{
+              color: @icon-green-color;
+            }
+            >label{
+              &:hover{
+                cursor: pointer;
+              }
+              background-image: url('../../images/global/checkbox_selected.png');;
+            }
+          }
+          >label, >span{
+            display: inline-block;
+            float: left;
+          }
+          >label{
+            width: 20px;
+            height: 20px;
+            
+            background: url('../../images/global/checkbox.png') top left no-repeat;
+            background-size: contain;
+            margin: 5px 5px 0 0;
+          }
+          >span{
+            line-height: 30px;
+          }
+        }
+      }
     }
   }
   .root-ui-wiew{
     height: 100%;
+  }
+}
+
+.yy-green-button{
+  display: inline-block;
+  border: none;
+  width: 120px;
+  height: 33px;
+  line-height: 33px;
+  text-align: center;
+  background: @icon-green-color;
+  color: #fff;
+  &:hover{
+    text-decoration: none;
+    color: #fff;
   }
 }
 
