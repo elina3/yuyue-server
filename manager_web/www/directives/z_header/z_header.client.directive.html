@@ -1,4 +1,4 @@
-<div class="z-header-view" ng-if="user">
+<div class="z-header-view">
     <div class="z-header-wrap">
         <div class="row z-header-content">
             <div class="left col-xs-6">
@@ -10,9 +10,11 @@
             </div>
             <div class="right col-xs-6">
                 <div class="user">
-                    <span ng-bind="user.nickname"></span>
+                    <span>{{ user.nickname }}</span>
                     <span>|</span>
-                    <span ng-bind="translateRole(user.role)"></span>
+                    <span>{{ translateRole(user.role) }}</span>
+                    <span>|</span>
+                    <span class="quit" ng-click="changePassword()">修改密码</span>
                     <span>|</span>
                     <span class="quit" ng-click="quit($event)">退出</span>
                 </div>

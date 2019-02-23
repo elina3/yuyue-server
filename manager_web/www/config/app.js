@@ -25,10 +25,15 @@ yyWeb.config(['$stateProvider', '$urlRouterProvider', function ($stateProvider, 
     })
     .state('user_index', {
       url: '/user/index',
-      templateUrl: 'templates/management/user_index.client.view.html',
-      controller: 'UserIndexController'
+      templateUrl: 'templates/appointment/list.client.view.html',
+      controller: 'AppointmentListController'
     })
-    .state('department_list', {
+    .state('appointment_detail', {
+      url: '/appointment/detail:id',
+      templateUrl: 'templates/appointment/detail.client.view.html',
+      controller: 'AppointmentDetailController'
+    })
+   .state('department_list', {
       url: '/department/list',
       templateUrl: 'templates/department/list.client.view.html',
       controller: 'DepartmentListController'

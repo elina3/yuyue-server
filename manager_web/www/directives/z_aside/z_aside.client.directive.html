@@ -10,9 +10,12 @@
                     <img ng-src="{{nav.current ? nav.currentIcon : nav.defaultIcon}}"/>
                     <span>{{ nav.name }}</span>
                 </span>
+
                 <ul ng-if="nav.children && nav.children.length > 0">
                     <li ng-click="clickItem(child)" ng-class="child.current ? 'current' : ''" ng-repeat="child in nav.children"><a ng-href="{{ child.routeUrl }}">{{ child.name }}</a></li>
                 </ul>
+
+                <label class="line"></label>
             </li>
             <!--<li>-->
                 <!--<a href="#/user/index">-->

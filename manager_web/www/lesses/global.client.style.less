@@ -28,10 +28,106 @@ body {
   }
 
   .ee-body{
-    margin-left: 250px;
+    padding-left: 250px;
     padding-top: @header-bar-height + 10 * 2;
     >div{
-      padding: 40px 0 80px;
+      padding: 20px 0 80px;
+
+      h2{
+        height: 40px;
+        line-height: 40px;
+        font-weight: 400 !important;
+        font-size: 26px;
+      }
+
+      .yy-breadcrumb{
+        height: 40px;
+        line-height: 40px;
+        ul >li{
+          display: inline-block;
+          float: left;
+          a{
+            text-decoration: none;
+            color: @icon-green-color;
+            line-height: 40px;
+            span{
+              margin: 0 10px;
+              line-height: 40px;
+            }
+            &:hover{
+              text-decoration: none;
+            }
+          }
+          &:nth-last-child(1){
+            a span{
+              display: none;
+            }
+          }
+        }
+      }
+
+      .yy-whiter-board{
+        background: #fff;
+        margin: 20px 0;
+        width: 95%;
+
+        .yy-panel-item{
+          padding: 20px;
+        }
+      }
+
+      .yy-panel-item{
+        padding: 20px 0;
+      }
+      .yy-search-bar{
+        overflow: hidden;
+        //width: 310px;
+        height: 33px;
+        form input{
+          display: inline-block;
+          float: left;
+          height: 33px;
+
+          line-height: 33px;
+        }
+        form input[type=text]{
+          width: 260px;
+          padding: 0 5px;
+        }
+        form input[type=submit]{
+          margin-left: 10px;
+          width: 60px;
+          border: none;
+          background: @icon-green-color;
+          color: #fff;
+        }
+      }
+      .yy-form{
+        overflow: hidden;
+        .yy-form-item{
+          display: block;
+          overflow: hidden;
+          margin: 10px 0;
+
+          >label, >span{
+            display: inline-block;
+            float: left;
+            line-height: 33px;
+          }
+          >label{
+            width: 100px;
+            margin: 0;
+          }
+          >input[type=text], >input[type=password]{
+            padding: 0 5px;
+            height: 33px;
+            width: 400px;
+            &[disabled]{
+              border: none;
+            }
+          }
+        }
+      }
     }
   }
   .root-ui-wiew{
@@ -261,41 +357,44 @@ ul{
     overflow: hidden;
     .list-header, .list-info {
       text-align: left;
-      border-bottom: 1px solid @border-normal-color;
-
     }
     .list-header {
+      background: #F6F8F9;
       font-size: @font-sub-title-size;
-      color: @font-light-color;
+      color: @icon-grey-color;
       span {
         line-height: 50px;
+        padding: 0 10px;
       }
     }
     .list-info {
+      border-bottom: 1px solid @border-normal-color;
       font-size: @font-content-size;
       color: @font-content-color;
-      div {
-        padding: 10px 0;
+      >div {
+        padding: 10px;
+        overflow: hidden;
+        a{
+          text-decoration: none;
+          line-height: 24px;
+          color: @button-pass-color;
+          &:hover{
+            text-decoration: none;
+            color: @button-pass-hover-color;
+          }
+          &:active{
+            color: @button-pass-active-color;
+          }
+        }
       }
       span {
         line-height: 24px;
-        &.status {
-          color: @font-hight-light-color
-        }
-        &.public {
-          color: @background-normal-color;
-        }
-        &.collection {
-          color: @background-other-color;
-        }
-        &.type {
-          letter-spacing: 2px;
-        }
       }
       .handle {
         cursor: pointer;
         display: inline;
-        padding: 5px 12px;
+
+        line-height: 24px;
         .gif {
           display: none;
         }

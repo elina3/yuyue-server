@@ -15,9 +15,10 @@
         display: block;
         overflow: hidden;
         min-height: 60px;
-        >a{
+        >.line{
+          display: block;
+          margin: 0 80px 0 66px;
           border-bottom: 1px solid @border-normal-color;
-
         }
         >a, >span{
           display: block;
@@ -64,6 +65,12 @@
             &.current a{
               color: @icon-green-color;
             }
+          }
+        }
+
+        &:nth-last-child(1){
+          .line{
+            display: none;
           }
         }
       }

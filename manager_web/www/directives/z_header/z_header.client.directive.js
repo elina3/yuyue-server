@@ -16,62 +16,18 @@ angular.module('YYWeb').directive('zHeader',
                 },
                 link: function (scope, element, attributes) {
                     scope.user = Auth.getUser();
-                    scope.mainMenuOpened = false;
-                    scope.menuOpened = false;
-                    scope.toggleMenuOpen = function (event) {
-                        scope.menuOpened = true;
-                        console.log('mouse：' + scope.menuOpened);
-                        if (event) {
-                            event.stopPropagation();
-                        }
-                    };
+                    console.log('scope.user:', scope.user);
 
-                    scope.hideMenuOpen = function (event) {
-                        scope.menuOpened = false;
-                        console.log('mouse hide：' + scope.menuOpened);
-                        if (event) {
-                            event.stopPropagation();
-                        }
-                    };
+                  if(!scope.user){
+                    $state.go('user_sign_in');
+                    return;
+                  }
 
-                    scope.toggleMainMenuOpen = function (event) {
-                        scope.mainMenuOpened = true;
-                        console.log(scope.mainMenuOpened);
-                        if (event) {
-                            event.stopPropagation();
-                        }
-                    };
-
-                    scope.hideMainMenuOpen = function (event) {
-                        scope.mainMenuOpened = false;
-                        console.log(scope.mainMenuOpened);
-                        if (event) {
-                            event.stopPropagation();
-                        }
-                    };
-
-                    scope.goToView = function (type) {
-                        scope.mainMenuOpened = false;
-                        switch (type) {
-                            case 'user_manager':
-                                return $state.go('user_manager');
-                            case 'restaurant':
-                                return $state.go('goods_manager', {goods_type: 'dish'});
-                            case 'supermarket':
-                                return $state.go('goods_manager', {goods_type: 'goods'});
-                            default :
-                                return;
-                        }
-                    };
 
                     scope.translateRole = function(role){
                         return UserService.translateUserRole(role);
                     };
 
-                    if(!scope.user){
-                       $state.go('user_sign_in');
-                        return;
-                    }
 
                     scope.quit = function () {
                         scope.$emit(GlobalEvent.onShowAlertConfirm, {content: '您真的要退出吗？', callback: function (status) {
@@ -80,18 +36,16 @@ angular.module('YYWeb').directive('zHeader',
                         }});
                     };
 
+                    scope.changePassword = function(){
+                        alert('changePassword');
+                    };
+
                     scope.backHome = function () {
                         if(!scope.user){
                            return $state.go('sign_in');
                         }
 
-                        if(scope.user.role === 'admin'){
-                            $state.go('user_index');
-                        }else if(scope.user.role === 'delivery'){
-                            $state.go('goods_order');
-                        }else if(scope.user.role === 'nurse'){
-                            $state.go('meal_setting');
-                        }
+                        $state.go('user_index');
                     };
                 }
             };

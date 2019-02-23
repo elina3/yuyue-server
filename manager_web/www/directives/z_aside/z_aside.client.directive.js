@@ -41,9 +41,9 @@ angular.module('YYWeb').directive('zAside',
                           {name: '用户管理',routeUrl: '#/sign_in'},
                           {name: '科室管理',routeUrl: '#/department/list'},
                           {name: '职称管理',routeUrl: '#/job_title/list'},
-                          {name: '号源设置',routeUrl: '#/source_number/setting'},
-                          {name: '预约管理',routeUrl: '#/appointment/list'},
-                          {name: '病人管理',routeUrl: '#/sicker/list'},
+                          {name: '排班管理',routeUrl: '#/source_number/setting'},
+                          {name: '账单管理',routeUrl: '#/appointment/list'},
+                          {name: '就诊卡管理',routeUrl: '#/sicker/list'},
                           {name: '页面管理',routeUrl: '#/page/list'}
                         ]}
                     ];
