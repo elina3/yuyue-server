@@ -28,6 +28,16 @@ yyWeb.config(['$stateProvider', '$urlRouterProvider', function ($stateProvider, 
       templateUrl: 'templates/appointment/list.client.view.html',
       controller: 'AppointmentListController'
     })
+    .state('user_list', {
+      url: '/user/list',
+      templateUrl: 'templates/user/list.client.view.html',
+      controller: 'UserListController'
+    })
+    .state('user_detail', {
+      url: '/user/detail:id',
+      templateUrl: 'templates/user/detail.client.view.html',
+      controller: 'UserDetailController'
+    })
     .state('appointment_detail', {
       url: '/appointment/detail:id',
       templateUrl: 'templates/appointment/detail.client.view.html',

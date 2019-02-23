@@ -43,7 +43,11 @@ var UserSchema = new Schema({
   },
   role: {
     type: String,
-    enum: ['admin'],//管理员
+    enum: ['admin', 'doctor'],//管理员
+  },
+  outpatient_type: {
+    type: String,
+    enum: ['expert', 'normal'],//专家/普通
   },
   terminalType: {
     type: String,
@@ -60,6 +64,12 @@ var UserSchema = new Schema({
   jobTitle: {
     type: Schema.Types.ObjectId,
     ref: 'JobTitle'
+  },
+  goodAt: {
+    type: String
+  },
+  brief: {
+    type: String
   },
   salt: {
     type: String,

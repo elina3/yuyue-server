@@ -109,7 +109,7 @@ body {
           overflow: hidden;
           margin: 10px 0;
 
-          >label, >span{
+          >label, >span, >p, >img{
             display: inline-block;
             float: left;
             line-height: 33px;
@@ -124,6 +124,27 @@ body {
             width: 400px;
             &[disabled]{
               border: none;
+            }
+          }
+          >p{
+            padding-top: 5px;
+            width: 400px;
+            line-height: 20px;
+          }
+          >img{
+            padding-top: 5px;
+            width: 100px;
+            height: auto;
+          }
+          >textarea{
+            width: 400px;
+            min-height: 66px;
+            height: auto;
+            overflow-y: hidden;
+
+            &[disabled]{
+              border: none;
+              overflow: auto;
             }
           }
         }
@@ -344,8 +365,7 @@ ul{
 }
 
 .ee-table-list {
-  width: 95%;
-  margin: 10px auto;
+  width: 100%;
   div {
     padding: 0;
     margin: 0;
