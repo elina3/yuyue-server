@@ -2,7 +2,7 @@
  * Created by elinaguo on 16/3/14.
  */
 'use strict';
-angular.module('YYWeb').controller('UserIndex2Controller',
+angular.module('YYWeb').controller('UserIndexController',
   ['$window', '$rootScope', '$scope', 'GlobalEvent', '$state', 'UserService', 'Auth',
     function ($window, $rootScope, $scope, GlobalEvent, $state, UserService, Auth) {
       var user = Auth.getUser();

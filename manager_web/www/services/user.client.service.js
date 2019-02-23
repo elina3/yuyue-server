@@ -110,7 +110,6 @@ angular.module('YYWeb').factory('UserService',
               return callback(SystemError.network_error);
             });
         },
-        signOut: function(){},
         translateUserRole: function(role){
           switch(role){
             case 'admin':

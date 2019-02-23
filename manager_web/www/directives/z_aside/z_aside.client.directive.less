@@ -1,0 +1,124 @@
+
+.z-aside-view {
+  float: none;
+  transition: margin .3s,width .3s;
+  position: absolute;
+  width: 250px;
+  padding-top: 80px;
+
+  .z-aside-wrap {
+    padding: 40px 0 80px;
+    >ul{
+      display: block;
+      overflow: hidden;
+      >li{
+        display: block;
+        overflow: hidden;
+        min-height: 60px;
+        >a{
+          border-bottom: 1px solid @border-normal-color;
+
+        }
+        >a, >span{
+          display: block;
+          overflow: hidden;
+          margin-left: 36px;
+          line-height: 60px;
+          font-size: 20px;
+
+          &.current span{
+            color: @icon-green-color;
+          }
+          &:hover{
+            text-decoration: none;
+          }
+          >img, >span{
+            display: inline-block;
+            float: left;
+          }
+          >img{
+            width: 20px;
+            height: auto;
+            margin-top: 20px;
+          }
+          >span{
+            line-height: 60px;
+            color: @font-dark-color;
+            margin-left: 10px;
+          }
+
+        }
+        >ul{
+          padding-left: 70px;
+          line-height: 40px;
+
+          >li a{
+            color: @font-dark-color;
+
+            &:hover{
+              text-decoration: none;
+            }
+
+          }
+          >li{
+            &.current a{
+              color: @icon-green-color;
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+
+@media (max-width: @media-min-screen) {
+  .z-header-view {
+
+    .right{
+      width: 20%;
+
+      .icon{
+        display: none !important;
+      }
+
+      .user span{
+        display: none !important;
+      }
+      .z-header-menu{
+        display: inline-block;
+      }
+    }
+    .left{
+
+      width: 80%;
+      .z-header-menu{
+        display: none !important;
+      }
+
+    }
+  }
+}
+
+
+@media (max-width: @media-min-screen) {
+  .z-header-view {
+    .right{
+      width: 20%;
+      .icon{
+        display: none !important;
+      }
+      .user span{
+        display: none !important;
+      }
+      .z-header-menu{
+        display: inline-block;
+      }
+    }
+    .left{
+      .z-header-menu{
+        display: none !important;
+      }
+    }
+  }
+}

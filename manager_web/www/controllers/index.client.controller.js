@@ -5,6 +5,8 @@
 angular.module('YYWeb').controller('IndexController',
   ['$rootScope', '$scope', 'GlobalEvent', 'Auth', 'EventError', '$state',
       function ($rootScope, $scope, GlobalEvent, Auth, EventError, $state) {
+
+
           $scope.showLoading = false;
           $rootScope.$on(GlobalEvent.onShowLoading, function (event, bo) {
               $scope.showLoading = bo;

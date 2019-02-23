@@ -2,7 +2,7 @@
  * Created by elinaguo on 16/3/14.
  */
 'use strict';
-angular.module('YYWeb').controller('UserIndex2Controller',
+angular.module('YYWeb').controller('DepartmentListController',
   ['$window', '$rootScope', '$scope', 'GlobalEvent', '$state', 'UserService', 'Auth',
     function ($window, $rootScope, $scope, GlobalEvent, $state, UserService, Auth) {
       var user = Auth.getUser();
@@ -13,7 +13,7 @@ angular.module('YYWeb').controller('UserIndex2Controller',
 
 
       $scope.pageConfig = {
-        navIndexes: [0],
+        navIndexes: [1,1],
         groupList: []
       };
 
