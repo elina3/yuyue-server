@@ -57,6 +57,16 @@ yyWeb.config(['$stateProvider', '$urlRouterProvider', function ($stateProvider, 
       url: '/job_title/list',
       templateUrl: 'templates/job_title/list.client.view.html',
       controller: 'JobTitleListController'
+    })
+   .state('pay_list', {
+      url: '/pay/list',
+      templateUrl: 'templates/pay/list.client.view.html',
+      controller: 'PayListController'
+    })
+   .state('pay_detail', {
+      url: '/pay/detail:id',
+      templateUrl: 'templates/pay/detail.client.view.html',
+      controller: 'PayDetailController'
     });
 
   $urlRouterProvider.otherwise('/user/sign_in');
