@@ -21,6 +21,8 @@ body {
   input{
     border: 1px solid @border-normal-color;
     color: @font-content-color;
+    height: 33px;
+    padding: 0 5px;
 
   }
   input::-webkit-input-placeholder{
@@ -40,7 +42,7 @@ body {
     }
   }
 
-  .ee-body, .ee-body-max{
+  .ee-body, .ee-body-max, .ee-body-xx{
     h2{
       height: 40px;
       line-height: 40px;
@@ -63,6 +65,36 @@ body {
       }
     }
   }
+  .ee-body-xx{
+    padding-top: 20px;
+    background: #fff;
+    >div{
+      padding: 20px 0 80px;
+
+      h3{
+        width: 95%;
+        text-align: center;
+        margin: 0 auto;
+      }
+      .yy-whiter-board{
+        width: 95%;
+        margin: 0 auto;
+      }
+      .no-border{
+        border: none !important;
+      }
+      .no-background{
+        background: #fff !important;
+      }
+      .bottom-border{
+        border-bottom: 1px solid @border-normal-color;
+      }
+      .table-min-height{
+        height: 200px;
+      }
+    }
+  }
+
   .root-ui-wiew{
     height: 100%;
   }
@@ -249,6 +281,23 @@ ul.yy-checkbox{
     text-decoration: none;
     color: #fff;
     background: @button-pass-hover-color;
+  }
+}
+
+.yy-default-button{
+  display: inline-block;
+  border: none;
+  min-width: 60px;
+  height: 33px;
+  line-height: 31px;
+  text-align: center;
+  border: 1px solid @border-normal-color;
+  color: @font-content-color;
+  &:hover{
+    cursor: pointer;
+    text-decoration: none;
+    border-color: @icon-green-color;
+    color: @icon-green-color;
   }
 }
 

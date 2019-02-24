@@ -1,0 +1,91 @@
+.pickup-page{
+    width: 100%;
+
+    .yy-panel-item{
+        width: 100%;
+        overflow: hidden;
+        &.no-top{
+            padding-top:0;
+        }
+        >label{
+            margin: 0;
+            font-weight: 400;
+            margin-right: 10px;
+
+            >input[type=text]{
+                width: 300px;
+            }
+        }
+        >label, >input[type=button]{
+            display: inline-block;
+            float: left;
+        }
+        .yy-green-button{
+            display: inline-block;
+            float: right;
+        }
+
+        ul.yy-card-list{
+            display: block;
+            list-style: none;
+            overflow: hidden;
+
+            li.yy-card-item{
+                display: block;
+                overflow: hidden;
+                width: 100%;
+                padding: 20px 0;
+                border-bottom: 1px solid @border-normal-color;
+                .yy-card-left, .yy-card-right{
+                    display: inline-block;
+                    float: left;
+                }
+                
+                .yy-card-left{
+                    width: 85%;
+
+                }
+                .yy-card-right{
+                    width: 15%;
+
+                    .status{
+                        display: inline-block;
+                        float: left;
+                        color: #fff;
+                        width: 80px;
+                        height: 60px;
+                        text-align: center;
+                        line-height: 60px;
+                        margin-right: 10px;
+                        margin-bottom: 10px;
+                        &.paid{
+                            background: @icon-green-color;
+                        }
+                        &.unpaid{
+                            background: @font-color-red;
+                        }
+                        &.booked{
+                            background: @background-normal-color;
+                        }
+                    }
+                    button{
+                        display: inline-block;
+                        float: left;
+                        width: 80px;
+                        height: 60px;
+                    }
+                }
+            }
+        }
+
+        .print-info{
+            >label{
+                font-weight: 400;
+                line-height: 25px;
+                margin: 0;
+            }
+        }
+
+
+    }
+}

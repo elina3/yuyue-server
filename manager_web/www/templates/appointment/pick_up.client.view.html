@@ -1,0 +1,121 @@
+<z-header></z-header>
+<div class="pickup-page ee-body-max">
+    <div class="yy-wrapper">
+        <div class="yy-whiter-board">
+            <form>
+
+                <div class="yy-panel-item">
+                    <label>身份证号码：<input type="text" placeholder="" /></label>
+                    <input type="button" class="yy-default-button" value="读取"/>
+                </div>
+                <div class="yy-panel-item no-top">
+                    <label>预约患者号：<input type="text" placeholder="" /></label>
+                    <input class="yy-green-button" onclick="alert('change!');" value="查询" type="submit"></input>
+                </div>
+
+            </form>
+        </div>
+        <div class="yy-whiter-board">
+            <div class="yy-panel-item">
+                <ul class="yy-card-list">
+                    <li class="yy-card-item">
+                        <div class="yy-card-left">
+                            <div class="yy-card-info row">
+                                <label class="col-xs-4">姓名：<span>张艺兴</span></label>
+                                <label class="col-xs-4">预约号：<span>14207369231</span></label>
+                                <label class="col-xs-4">就诊卡号：<span>3u2fewfewqre3423</span></label>
+                            </div>
+                            <div class="yy-card-info row">
+                                <label class="col-xs-8">身份证号：<span>410825198766553212</span></label>
+                                <label class="col-xs-4">联系电话：<span>17659235222</span></label>
+                            </div>
+                            <div class="yy-card-info row">
+                                <label class="col-xs-4">预约科室：<span>心脏内科</span></label>
+                                <label class="col-xs-4">医生：<span>张医生</span></label>
+                                <label class="col-xs-4">门诊类型：<span>专家门诊</span></label>
+                            </div>
+                            <div class="yy-card-info row">
+                                <label class="col-xs-8">预约时间:<span>2019/10/1 12:00-24:00</span></label>
+                                <label class="col-xs-4">支付方式:<span>微信支付</span></label>
+                            </div>
+                        </div>
+                        <div class="yy-card-right">
+                             <span class="status paid">已交费</span>   
+                             <button class="yy-default-bit-button">取号</button>
+                        </div>
+                    </li>
+                    <li class="yy-card-item">
+                        <div class="yy-card-left">
+                            <div class="yy-card-info row">
+                                <label class="col-xs-4">姓名：<span>张艺兴</span></label>
+                                <label class="col-xs-4">预约号：<span>14207369231</span></label>
+                                <label class="col-xs-4">就诊卡号：<span>3u2fewfewqre3423</span></label>
+                            </div>
+                            <div class="yy-card-info row">
+                                <label class="col-xs-8">身份证号：<span>410825198766553212</span></label>
+                                <label class="col-xs-4">联系电话：<span>17659235222</span></label>
+                            </div>
+                            <div class="yy-card-info row">
+                                <label class="col-xs-4">预约科室：<span>心脏内科</span></label>
+                                <label class="col-xs-4">医生：<span>张医生</span></label>
+                                <label class="col-xs-4">门诊类型：<span>专家门诊</span></label>
+                            </div>
+                            <div class="yy-card-info row">
+                                <label class="col-xs-8">预约时间:<span>2019/10/1 12:00-24:00</span></label>
+                                <label class="col-xs-4">支付方式:<span>微信支付</span></label>
+                            </div>
+                        </div>
+                        <div class="yy-card-right">
+                             <span class="status unpaid">未交费</span>   
+                             <button class="yy-default-bit-button">取号</button>
+                        </div>
+                    </li>
+                    <li class="yy-card-item">
+                        <div class="yy-card-left">
+                            <div class="yy-card-info row">
+                                <label class="col-xs-4">姓名：<span>张艺兴</span></label>
+                                <label class="col-xs-4">预约号：<span>14207369231</span></label>
+                                <label class="col-xs-4">就诊卡号：<span>3u2fewfewqre3423</span></label>
+                            </div>
+                            <div class="yy-card-info row">
+                                <label class="col-xs-8">身份证号：<span>410825198766553212</span></label>
+                                <label class="col-xs-4">联系电话：<span>17659235222</span></label>
+                            </div>
+                            <div class="yy-card-info row">
+                                <label class="col-xs-4">预约科室：<span>心脏内科</span></label>
+                                <label class="col-xs-4">医生：<span>张医生</span></label>
+                                <label class="col-xs-4">门诊类型：<span>专家门诊</span></label>
+                            </div>
+                            <div class="yy-card-info row">
+                                <label class="col-xs-8">预约时间:<span>2019/10/1 12:00-24:00</span></label>
+                                <label class="col-xs-4">支付方式:<span>微信支付</span></label>
+                            </div>
+                        </div>
+                        <div class="yy-card-right">
+                             <span class="status booked">已预约</span>   
+                             <button class="yy-default-bit-button" ng-click="goPrint()">打印</button>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="dialog-mask input-pop-panel" ng-show="pageConfig.popBox.show">
+    <div class="dialog-content">
+        <div class="dialog-header">{{pageConfig.popBox.currentSchedule ? '编辑' :
+            '增加'}}{{pageConfig.popBox.dateString}}号源</div>
+        <div class="dialog-body">
+            <label>开始时间<input ng-model="pageConfig.popBox.startTime.hour" type="number" placeholder="HH" min=0 max=23 /><span>:</span><input
+                    type="number" ng-model="pageConfig.popBox.startTime.minute" placeholder="mm" min=0 max=59 /></label>
+            <label>结束时间<input ng-model="pageConfig.popBox.endTime.hour" type="number" placeholder="HH" min=0 max=23 /><span>:</span><input
+                    type="number" ng-model="pageConfig.popBox.endTime.minute" placeholder="mm" min=0 max=59 /></label>
+            <label>号源数量<input ng-model="pageConfig.popBox.inputNumber" type="number" min=0 /></label>
+            <div class="dialog-footer">
+                <p class="sure" ng-click="pageConfig.popBox.sure()">保存</p>
+                <p class="cancel" ng-click="pageConfig.popBox.cancel()">取消</p>
+            </div>
+        </div>
+    </div>
+</div>

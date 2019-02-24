@@ -48,6 +48,16 @@ yyWeb.config(['$stateProvider', '$urlRouterProvider', function ($stateProvider, 
       templateUrl: 'templates/appointment/detail.client.view.html',
       controller: 'AppointmentDetailController'
     })
+    .state('appointment_pickup', {
+      url: '/appointment/pickup',
+      templateUrl: 'templates/appointment/pick_up.client.view.html',
+      controller: 'AppointmentPickUpController'
+    })
+    .state('appointment_print', {
+      url: '/appointment/print/:id',
+      templateUrl: 'templates/appointment/print.client.view.html',
+      controller: 'AppointmentPrintController'
+    })
    .state('department_list', {
       url: '/department/list',
       templateUrl: 'templates/department/list.client.view.html',
