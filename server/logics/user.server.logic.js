@@ -29,7 +29,8 @@ exports.createUser = function(userInfo, callback) {
             : '';
         user.nickname = userInfo.nickname;
         user.role = userInfo.role;
-        user.terminal_types = userInfo.terminal_types || ['manager', 'doctor', 'pick_up'];
+        user.terminal_types = userInfo.terminal_types ||
+            ['manager', 'doctor', 'pick_up'];
 
         user.hospital = userInfo.hospitalId;
         user.department = userInfo.departmentId;
@@ -41,13 +42,13 @@ exports.createUser = function(userInfo, callback) {
         user.deleted_status = false;
         user.good_at = userInfo.good_at;
         user.brief = userInfo.brief;
-        if(userInfo.permission){
-          for (var prop in userInfo.permission){
-            userInfo.permission[prop].forEach(item=>{
+        if (userInfo.permission) {
+          for (var prop in userInfo.permission) {
+            userInfo.permission[prop].forEach(item => {
               delete item.$$hashKey;
             });
           }
-          user.permission = userInfo.permission ;
+          user.permission = userInfo.permission;
         }
         user.save(function(err, newUser) {
           if (err || !newUser) {
@@ -126,16 +127,15 @@ exports.modifyUser = function(userId, userInfo, callback) {
 exports.queryUsers = function(filter, pagination, callback) {
   var query = { deleted_status: false };
   if (filter.searchKey) {
-    query.$or = [{
-      mobile_phone: { $regex: filter.searchKey, $options: '$i' },
-      IDCard: { $regex: filter.searchKey, $options: '$i' },
-      name: { $regex: filter.searchKey, $options: '$i' },
-      username: { $regex: filter.searchKey, $options: '$i' }
-    }];
-    query.mobile_phone = { $regex: filter.searchKey, $options: '$i' };
+    query.$or = [
+      { mobile_phone: { $regex: filter.searchKey, $options: '$i' } },
+      { IDCard: { $regex: filter.searchKey, $options: '$i' } },
+      { nickname: { $regex: filter.searchKey, $options: '$i' } },
+      { username: { $regex: filter.searchKey, $options: '$i' } },
+    ];
   }
   User.count(query, function(err, totalCount) {
-    if (err) {
+      if (err) {
       return callback({ err: systemError.database_query_error });
     }
 
@@ -143,10 +143,10 @@ exports.queryUsers = function(filter, pagination, callback) {
       return callback(null, { totalCount: 0, users: [] });
     }
 
-    if(pagination.limit === -1){
+    if (pagination.limit === -1) {
       pagination.limit = 10;
     }
-    if(pagination.skip_count === -1){
+    if (pagination.skip_count === -1) {
       pagination.skip_count = pagination.limit * (pagination.current_page - 1);
     }
 
@@ -166,13 +166,27 @@ exports.queryUsers = function(filter, pagination, callback) {
   });
 };
 
-exports.getUserById = function(userId, callback){
+exports.getUserById = function(userId, callback) {
   User.findOne({ _id: userId }).exec(function(err, user) {
     if (err) {
       return callback({ err: systemError.internal_system_error });
     }
 
-    if(!user || user.deleted_status){
+    if (!user || user.deleted_status) {
+      return callback(userError.user_not_exist);
+    }
+
+    return callback(null, user);
+  });
+};
+exports.getUserDetailById = function(userId, callback) {
+  User.findOne({ _id: userId })
+  .populate('department job_title').exec(function(err, user) {
+    if (err) {
+      return callback({ err: systemError.internal_system_error });
+    }
+
+    if (!user || user.deleted_status) {
       return callback(userError.user_not_exist);
     }
 

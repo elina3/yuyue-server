@@ -71,3 +71,17 @@ exports.requireUser = function(req, res, next){
     next();
   });
 };
+
+exports.requireUserDetailById = function(req, res, next){
+  var userId = req.body.user_id || req.query.user_id;
+  userLogic.getUserDetailById(userId, function(err, user){
+    if(err){
+      return next(err);
+    }
+
+
+    req.detail_user = user;
+    req.body.hospital_id = req.detail_user.hospital;
+    next();
+  });
+};

@@ -8,7 +8,6 @@ angular.module('YYWeb').controller('UserListController',
           return;
         }
 
-
         function loadUserList(callback){
           UserService.getUsers({
             search_key: $scope.pageConfig.searchKey,
@@ -19,24 +18,22 @@ angular.module('YYWeb').controller('UserListController',
               $scope.$emit(GlobalEvent.onShowAlert, err);
             }
 
-            if(data.users && data.users.length > 0){
-              $scope.pageConfig.userList = data.users.map(item => {
-                return {
-                  username: item.username,
-                  nickname: item.nickname,
-                  department: item.department.name,
-                  jobTitle: item.job_title.name,
-                  role: UserService.translateUserRole(item.role)
-                };
-              });
+            data.users = data.users || [];
+            $scope.pageConfig.userList = data.users.map(item => {
+              return {
+                _id: item._id,
+                username: item.username,
+                nickname: item.nickname,
+                department: item.department.name,
+                jobTitle: item.job_title.name,
+                role: UserService.translateUserRole(item.role)
+              };
+            });
 
 
-              $scope.pageConfig.pagination.totalCount = data.total_count;
-              $scope.pageConfig.pagination.pageCount = Math.ceil($scope.pageConfig.pagination.totalCount / $scope.pageConfig.pagination.limit);
-              return callback();
-            }else{
-              return callback();
-            }
+            $scope.pageConfig.pagination.totalCount = data.total_count;
+            $scope.pageConfig.pagination.pageCount = Math.ceil($scope.pageConfig.pagination.totalCount / $scope.pageConfig.pagination.limit);
+            return callback();
           });
         }
 
@@ -49,25 +46,24 @@ angular.module('YYWeb').controller('UserListController',
             limit: 10,
             totalCount: 0,
             isShowTotalInfo: true,
-            onCurrentPageChanged: function (callback) {
-
+            onCurrentPageChanged: function () {
               $scope.$emit(GlobalEvent.onShowLoading, true);
               loadUserList(()=>{
                 $scope.$emit(GlobalEvent.onShowLoading, false);
               });
             }
-          },
-          groupList: []
+          }
         };
 
-
-        $scope.goBack = function () {
-          $window.history.back();
+        $scope.search = function () {
+          $scope.$emit(GlobalEvent.onShowLoading, true);
+          loadUserList(()=>{
+            $scope.$emit(GlobalEvent.onShowLoading, false);
+          });
         };
 
 
         function init() {
-
           $scope.$emit(GlobalEvent.onShowLoading, true);
           loadUserList(()=>{
             $scope.$emit(GlobalEvent.onShowLoading, false);

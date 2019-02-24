@@ -10,23 +10,44 @@ angular.module('YYWeb').controller('UserDetailController',
 
 
         function loadUser(callback){
-          $scope.pageConfig.user = {
-            id: '3',
-            staffNumber: '201893421345',
-            name: '刘医生',
-            IDCard: '320825198805177833',
-            mobile: '18321119877',
-            department: '心外科',
-            role: '医生',
-            outpatientType: '专家门诊',
-            jobTitle: '副主任医师',
-            clients: ['后台管理端', '取号端'],
-            modules: [['用户管理', '科室管理'], ['取号']],
-            goodAt: '诊疗特色为低位直肠癌保肛术，熟练掌握普通外科疾病，尤其是胃肠道及肛门良、恶性疾病的诊断和治疗。擅长结直肠肿瘤（结肠癌、直肠癌、低位直肠癌、肛管癌、小肠间质瘤、结直肠间质瘤）、胃癌（胃间质瘤）、食管癌、胰腺癌、腹壁疝、炎症性肠病（溃疡性结肠炎、克罗恩氏病）、便秘、肠瘘的外科治疗，肛门良性病（痔疮、肛裂、肛周脓肿、肛瘘）等手术治疗和微创治疗',
-            brief: '牛二，外科学博士，中山大学附属第六医院副研究员，医学百事通志愿者医师，外科学硕士生导师，美国营养学会 (ASN)会员，美国微生物学会 (ASM)会员，“广东省医学会肠外肠内营养学分会青年委员会”委员，中山大学“百人计划”引进人才。为Ann Surg，Am J Clin Nutr, Infect Immun, Aliment Pharmacol Ther等多个SCI杂志审稿人。',
-            headUrl: '../../images/global/default_user.png'
-          };
-          return callback();
+          UserService.getUserDetail({user_id: $scope.pageConfig.user_id}, function(err, data){
+            if(err){
+              return $scope.$emit(GlobalEvent.onShowAlert, err);
+            }
+
+            console.log(data.user);
+            if(data.user){
+
+
+              var modules = [];
+              for(var prop in data.user.permission){
+                var module = data.user.permission[prop];
+                if(module && module.length > 0){
+                  modules.push(module.filter(item => {return item.selected;}).map(item=>{return item.text;}));
+                }
+              }
+
+              $scope.pageConfig.user = {
+                username:  data.user.username,
+                nickname: data.user.nickname,
+                IDCard: data.user.IDCard || '--',
+                mobile_phone: data.user.mobile_phone,
+                department: data.user.department.name,
+                role: UserService.translateUserRole(data.user.role),
+                outpatientType:  UserService.translateOutpatientType(data.user.outpatient_type),
+                jobTitle: data.user.job_title.name,
+                clients: data.user.terminal_types.map(item => {
+                  return UserService.translateTerminalType(item);
+                }),
+                modules: modules,//[['用户管理', '科室管理'], ['取号']],
+                goodAt: data.user.good_at || '--',
+                brief: data.user.brief || '--',
+                headUrl: '../../images/global/default_user.png'
+              };
+
+              return callback();
+            }
+          });
         }
 
         $scope.pageConfig = {
@@ -68,9 +89,7 @@ angular.module('YYWeb').controller('UserDetailController',
         };
 
         function init() {
-          console.log('params.id:', $stateParams.id);
-
-
+          $scope.pageConfig.user_id = $stateParams.id;
           $scope.$emit(GlobalEvent.onShowLoading, true);
           loadUser(()=>{
             $scope.$emit(GlobalEvent.onShowLoading, false);

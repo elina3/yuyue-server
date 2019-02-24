@@ -68,6 +68,10 @@ exports.getList = function(req, res, next){
     return next();
   });
 };
+exports.getUserDetail = function(req, res, next){
+  req.data = {user: req.detail_user};
+  return next();
+};
 
 exports.modifyUser = function(req, res, next){
   var user = req.admin;

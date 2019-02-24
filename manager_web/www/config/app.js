@@ -34,7 +34,7 @@ yyWeb.config(['$stateProvider', '$urlRouterProvider', function ($stateProvider, 
       controller: 'UserListController'
     })
     .state('user_detail', {
-      url: '/user/detail:id',
+      url: '/user/detail/:id',
       templateUrl: 'templates/user/detail.client.view.html',
       controller: 'UserDetailController'
     })

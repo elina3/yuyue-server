@@ -8,7 +8,7 @@
                 <div class="yy-search-bar">
                     <form>
                         <input placeholder="员工号/姓名/手机号/身份证号" ng-model="pageConfig.searchKey" type="text" class="yy-search-bar-input"/>
-                        <input type="submit" value="筛选" onclick="alert('search')"/>
+                        <input type="submit" value="筛选" ng-click="search()"/>
                         <span class="yy-search-bar-icon"></span>
                     </form>
                 </div>
@@ -54,7 +54,7 @@
                                 <span>{{user.role}}</span>
                             </div>
                             <div class="col-xs-2 handle">
-                                <a href="#/user/detail{{ user.id }}">查看</a>
+                                <a href="#/user/detail/{{ user._id }}">查看</a>
                             </div>
                         </div>
                     </div>
