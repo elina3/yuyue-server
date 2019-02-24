@@ -30,21 +30,40 @@ exports.signIn = function(req, res, next){
   });
 };
 
-exports.signUp = function(req, res, next){
-  var user = req.user;
+exports.createUser = function(req, res, next){
+  var admin = req.admin;
   var userInfo = req.body.user_info || req.query.user_info || {};
-  if(!userInfo.group_id || !userInfo.username || !userInfo.password){
+  if(!userInfo.username || !userInfo.password || !userInfo.role){
     return next({err: systemError.param_null_error});
   }
-  userInfo.hospital_id = user.hospital;
+  if(!userInfo.mobile_phone){
+    return next({err: systemError.param_null_error});
+  }
 
-  userLogic.signUp(userInfo, function(err, user){
+  userInfo.hospitalId = admin.hospital;
+  userInfo.departmentId = req.department._id;
+  userInfo.jobTitleId = req.job_title._id;
+  userLogic.createUser(userInfo, function(err, user){
     if(err){
       return next(err);
     }
 
     req.data = {
       user: user
+    };
+    return next();
+  });
+};
+
+exports.getList = function(req, res, next){
+  userLogic.queryUsers({searchKey: req.query.search_key, hospitalId: req.hospital_id}, req.pagination, function(err, result){
+    if(err){
+      return next(err);
+    }
+
+    req.data = {
+      total_count: result.totalCount,
+      users: result.users
     };
     return next();
   });
@@ -84,26 +103,6 @@ exports.deleteUser = function(req, res, next){
 
     req.data = {
       user: user
-    };
-    return next();
-  });
-};
-
-exports.getNormalUsers = function(req, res, next){
-  var admin = req.admin;
-  var currentPage = publicLib.parsePositiveIntNumber(req.query.current_page) || 1; //解析正整数
-  var limit = publicLib.parsePositiveIntNumber(req.query.limit) || -1; //解析正整数
-  var skipCount = publicLib.parseNonNegativeIntNumber(req.query.skip_count) || -1; //解析正整数和0
-
-  userLogic.getNormalUsers(admin, currentPage, limit, skipCount, function(err, result){
-    if(err){
-      return next(err);
-    }
-
-    req.data = {
-      total_count: result.totalCount,
-      limit: result.limit,
-      users: result.users
     };
     return next();
   });

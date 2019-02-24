@@ -151,7 +151,7 @@ exports.getJobTitleList = function(req, res, next) {
     }
 
     req.data = {
-      jobTitles: list.map(item => {return { name: item.name, _id: item._id };}),
+      job_titles: list.map(item => {return { name: item.name, _id: item._id };}),
     };
     return next();
   });

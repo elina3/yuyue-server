@@ -7,7 +7,7 @@
             <div class="yy-panel-item row">
                 <div class="yy-search-bar">
                     <form>
-                        <input placeholder="姓名/就诊卡号/身份证号/预约号" type="text" class="yy-search-bar-input"/>
+                        <input placeholder="员工号/姓名/手机号/身份证号" ng-model="pageConfig.searchKey" type="text" class="yy-search-bar-input"/>
                         <input type="submit" value="筛选" onclick="alert('search')"/>
                         <span class="yy-search-bar-icon"></span>
                     </form>
@@ -39,10 +39,10 @@
                         </div>
                         <div class="row list-info" ng-repeat="user in pageConfig.userList">
                             <div class="col-xs-2">
-                                <span>{{user.staffNumber}}</span>
+                                <span>{{user.username}}</span>
                             </div>
                             <div class="col-xs-2">
-                                <span>{{user.name}}</span>
+                                <span>{{user.nickname}}</span>
                             </div>
                             <div class="col-xs-2">
                                 <span>{{user.department}}</span>

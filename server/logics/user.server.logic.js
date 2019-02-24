@@ -29,7 +29,7 @@ exports.createUser = function(userInfo, callback) {
             : '';
         user.nickname = userInfo.nickname;
         user.role = userInfo.role;
-        user.terminalType = userInfo.terminalType || 'management';
+        user.terminal_types = userInfo.terminal_types || ['manager', 'doctor', 'pick_up'];
 
         user.hospital = userInfo.hospitalId;
         user.department = userInfo.departmentId;
@@ -38,8 +38,17 @@ exports.createUser = function(userInfo, callback) {
         user.sex = !userInfo.sex ? 'unknown' : userInfo.sex;
         user.mobile_phone = userInfo.mobile_phone;
         user.head_photo = userInfo.head_photo;
-        user.description = userInfo.description;
         user.deleted_status = false;
+        user.good_at = userInfo.good_at;
+        user.brief = userInfo.brief;
+        if(userInfo.permission){
+          for (var prop in userInfo.permission){
+            userInfo.permission[prop].forEach(item=>{
+              delete item.$$hashKey;
+            });
+          }
+          user.permission = userInfo.permission ;
+        }
         user.save(function(err, newUser) {
           if (err || !newUser) {
             return callback({ err: systemError.database_save_error });
@@ -116,8 +125,14 @@ exports.modifyUser = function(userId, userInfo, callback) {
 
 exports.queryUsers = function(filter, pagination, callback) {
   var query = { deleted_status: false };
-  if (filter.mobile_phone) {
-    query.mobile_phone = { $regex: filter.mobile_phone, $options: '$i' };
+  if (filter.searchKey) {
+    query.$or = [{
+      mobile_phone: { $regex: filter.searchKey, $options: '$i' },
+      IDCard: { $regex: filter.searchKey, $options: '$i' },
+      name: { $regex: filter.searchKey, $options: '$i' },
+      username: { $regex: filter.searchKey, $options: '$i' }
+    }];
+    query.mobile_phone = { $regex: filter.searchKey, $options: '$i' };
   }
   User.count(query, function(err, totalCount) {
     if (err) {
@@ -139,6 +154,7 @@ exports.queryUsers = function(filter, pagination, callback) {
         sort({ update_time: -1 }).
         skip(pagination.skip_count).
         limit(pagination.limit).
+        populate('department job_title').
         exec(function(err, users) {
           if (err) {
             return callback({ err: systemError.database_query_error });

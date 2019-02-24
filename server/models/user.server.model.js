@@ -5,6 +5,9 @@
 
 var mongoLib = require('../libraries/mongoose');
 var appDb = mongoLib.appDb;
+var enumLib = require('../enums/business');
+var roleEnums = enumLib.user_roles.enums;
+var outpatientTypeEnums = enumLib.outpatient_types.enums;
 
 var mongoose = require('mongoose'),
     Schema = mongoose.Schema,
@@ -43,15 +46,12 @@ var UserSchema = new Schema({
   },
   role: {
     type: String,
-    enum: ['admin', 'doctor'],//管理员
+    enum: roleEnums,
+    default: 'admin'
   },
   outpatient_type: {
     type: String,
-    enum: ['expert', 'normal'],//专家/普通
-  },
-  terminalType: {
-    type: String,
-    enum: ['management', 'doctor', 'pick-up'],//管理端，医生端，取号端
+    enum: outpatientTypeEnums,//专家门诊，普通门诊
   },
   hospital: {
     type: Schema.Types.ObjectId,
@@ -61,11 +61,11 @@ var UserSchema = new Schema({
     type: Schema.Types.ObjectId,
     ref: 'Department'
   },
-  jobTitle: {
+  job_title: {
     type: Schema.Types.ObjectId,
     ref: 'JobTitle'
   },
-  goodAt: {
+  good_at: {
     type: String
   },
   brief: {
@@ -81,6 +81,50 @@ var UserSchema = new Schema({
   },
   delete_time: {
     type: Date
+  },
+  terminal_types: [{
+    type: String,
+    enum: ['manager', 'doctor', 'pick_up'],//管理端，医生端，取号端
+  }],
+  IDCard: {
+    type: String//身份证号
+  },
+
+  //例子：permission:
+    // {manager: [
+    //   {id: '1a', text: '首页', selected: true},
+    //   {id: '1b', text: '用户管理', selected: true},
+    //   {id: '1c', text: '科室管理', selected: true},
+    //   {id: '1d', text: '职称管理', selected: true},
+    //   {id: '1e', text: '账单管理', selected: true},
+    //   {id: '1f', text: '就诊卡管理', selected: true},
+    //   {id: '1g', text: '页面管理', selected: true},
+    // ],
+    // doctor: [
+    //   {id: '2a', text: '排班管理', selected: true}
+    // ],
+    // pick_up: [
+    //   {id: '3a', text: '取号打印', selected: true}
+    // ]}
+  permission: {
+    type: Schema.Types.Mixed,
+    default: {
+      manager: [
+        {id: '1a', text: '首页', selected: true},
+        {id: '1b', text: '用户管理', selected: true},
+        {id: '1c', text: '科室管理', selected: true},
+        {id: '1d', text: '职称管理', selected: true},
+        {id: '1e', text: '账单管理', selected: true},
+        {id: '1f', text: '就诊卡管理', selected: true},
+        {id: '1g', text: '页面管理', selected: true},
+      ],
+      doctor: [
+        {id: '2a', text: '排班管理', selected: true}
+      ],
+      pick_up: [
+        {id: '3a', text: '取号打印', selected: true}
+      ]
+    }
   }
 });
 

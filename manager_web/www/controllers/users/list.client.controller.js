@@ -10,31 +10,50 @@ angular.module('YYWeb').controller('UserListController',
 
 
         function loadUserList(callback){
-          $scope.pageConfig.userList = [
-            {id: '1', staffNumber: 'staff001', name: '牛二', department: '心内科', jobTitle: '护士', role: '护士'},
-            {id: '2', staffNumber: 'staff002', name: '王二小', department: '呼吸内科', jobTitle: '副主任医师', role: '医生'},
-            {id: '3', staffNumber: 'staff003', name: '辛加', department: '呼吸内科', jobTitle: '主任医师', role: '医生'},
-            {id: '4', staffNumber: 'staff004', name: '张主任', department: '呼吸内科', jobTitle: '信息科主任', role: '管理员'},
-            {id: '5', staffNumber: 'staff005', name: '小李', department: '财务', jobTitle: '财务', role: '财务人员'},
-          ];
+          UserService.getUsers({
+            search_key: $scope.pageConfig.searchKey,
+            current_page: $scope.pageConfig.pagination.currentPage,
+            limit: $scope.pageConfig.pagination.limit
+          }, function(err, data){
+            if(err){
+              $scope.$emit(GlobalEvent.onShowAlert, err);
+            }
 
-          $scope.pageConfig.pagination.totalCount = 5;
-          $scope.pageConfig.pagination.limit = 2;
-          $scope.pageConfig.pagination.pageCount = Math.ceil($scope.pageConfig.pagination.totalCount / $scope.pageConfig.pagination.limit);
-          return callback();
+            if(data.users && data.users.length > 0){
+              $scope.pageConfig.userList = data.users.map(item => {
+                return {
+                  username: item.username,
+                  nickname: item.nickname,
+                  department: item.department.name,
+                  jobTitle: item.job_title.name,
+                  role: UserService.translateUserRole(item.role)
+                };
+              });
+
+
+              $scope.pageConfig.pagination.totalCount = data.total_count;
+              $scope.pageConfig.pagination.pageCount = Math.ceil($scope.pageConfig.pagination.totalCount / $scope.pageConfig.pagination.limit);
+              return callback();
+            }else{
+              return callback();
+            }
+          });
         }
 
         $scope.pageConfig = {
           navIndexes: [1, 0],
           userList: [],
+          searchKey: '',
           pagination: {
             currentPage: 1,
-            limit: 2,
+            limit: 10,
             totalCount: 0,
             isShowTotalInfo: true,
             onCurrentPageChanged: function (callback) {
+
+              $scope.$emit(GlobalEvent.onShowLoading, true);
               loadUserList(()=>{
-                alert('page changed!');
+                $scope.$emit(GlobalEvent.onShowLoading, false);
               });
             }
           },
@@ -51,7 +70,6 @@ angular.module('YYWeb').controller('UserListController',
 
           $scope.$emit(GlobalEvent.onShowLoading, true);
           loadUserList(()=>{
-            $scope.pageConfig.pagination.totalCount = 3;
             $scope.$emit(GlobalEvent.onShowLoading, false);
           });
         }

@@ -4,12 +4,15 @@
 'use strict';
 
 var userController = require('../controllers/user');
-var authFilter = require('../filters/auth');
+var authFilter = require('../filters/auth'),
+  hospitalFilter = require('../filters/hospital'),
+  paginationFilter = require('../filters/pagination');
 
 module.exports = function (app) {
 
-  // app.route('/users/list').get(authFilter.requireAdmin, userController.getNormalUsers);
+  app.route('/user/list').get(authFilter.requireUser, paginationFilter.requirePagination, userController.getList);
   app.route('/user/sign_in').post(userController.signIn);
+  app.route('/user/create').post(authFilter.requireAdmin, hospitalFilter.requireDepartment, hospitalFilter.requireJobTitle, userController.createUser);
   // app.route('/user/sign_up').post(authFilter.requireUser, userController.signUp);
   // app.route('/user/modify').post(authFilter.requireAdmin, userController.modifyUser);
   // app.route('/user/delete').post(authFilter.requireAdmin, userController.deleteUser);

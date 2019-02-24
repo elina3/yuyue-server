@@ -14,15 +14,20 @@
                 <div class="yy-form">
                     <div class="yy-form-item">
                         <label>工号</label>
-                        <input type="text" ng-model="pageConfig.user.staffNumber" type="text"/>
+                        <input type="text" ng-model="pageConfig.user.username" />
                     </div>
                     <div class="yy-form-item">
+                        <label>密码</label>
+                        <input type="password" ng-model="pageConfig.user.password"/>
+                    </div>
+
+                    <div class="yy-form-item">
                         <label>姓名</label>
-                        <input type="text" ng-model="pageConfig.user.name" type="text"/>
+                        <input type="text" ng-model="pageConfig.user.nickname" />
                     </div>
                     <div class="yy-form-item">
                         <label>身份证号</label>
-                        <input type="text" ng-model="pageConfig.user.IDCard" type="text"/>
+                        <input type="text" ng-model="pageConfig.user.IDCard" />
                     </div>
                     <div class="yy-form-item has-select">
                         <label>科室</label>
@@ -51,13 +56,17 @@
                         </z-dropdown>
                     </div>
 
-                    <div class="yy-form-item">
+                    <div class="yy-form-item has-select">
                         <label>门诊类型</label>
-                        <input type="text" ng-model="pageConfig.user.outpatientType" type="text"/>
+                        <z-dropdown z-dropdown-model="pageConfig.user.outpatientType"
+                                    z-dropdown-options="pageConfig.outpatient_types"
+                                    z-dropdown-label="请选择门诊类型"
+                        >
+                        </z-dropdown>
                     </div>
                     <div class="yy-form-item">
                         <label>电话</label>
-                        <input type="number" ng-model="pageConfig.user.mobile" type="text"/>
+                        <input type="number" ng-model="pageConfig.user.mobile_phone" />
                     </div>
                     <div class="yy-form-item">
                         <label>可访问端</label>

@@ -38,6 +38,10 @@ var departmentSchema = new Schema({
   },
   delete_time: {
     type: Date
+  },
+  opened: {//对外展示（微信可见）
+    type: Boolean,
+    default: false
   }
 });
 

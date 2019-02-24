@@ -7,8 +7,8 @@ angular.module('YYWeb').factory('UserService',
   ['Auth', 'RequestSupport', 'SystemError',
     function (Auth, RequestSupport, SystemError) {
       return {
-        getGroups: function(param, callback){
-          RequestSupport.executeGet('/user_groups', {
+        getDepartments: function(param, callback){
+          RequestSupport.executeGet('/department/list', {
             current_page: param.currentPage,
             limit: param.limit,
             skip_count: param.skipCount
@@ -28,10 +28,8 @@ angular.module('YYWeb').factory('UserService',
               return callback(SystemError.network_error);
             });
         },
-        signUp: function (param, callback) {
-          RequestSupport.executePost('/user/sign_up', {
-            user_info: param
-          })
+        createUser: function (param, callback) {
+          RequestSupport.executePost('/user/create', param)
             .then(function (data) {
               if (!callback) {
                 return data;
@@ -114,37 +112,43 @@ angular.module('YYWeb').factory('UserService',
           switch(role){
             case 'admin':
               return '管理员';
-            case 'waiter':
-              return '服务员';
-            case 'cashier':
-              return '收银员';
-            case 'card_manager':
-              return '饭卡管理员';
-            case 'normal_card_manager':
-              return '普通饭卡管理员';
-            case 'staff_card_manager':
-              return '员工专家饭卡管理员';
-            case 'delivery':
-              return '配送员';
-            case 'cooker':
-              return '厨师';
-            case 'nurse':
-              return '护士';
-            case 'registrar':
-              return '登记员';
-            case 'supermarket_manager':
-              return '超市管理员';
+            case 'pick_up':
+              return '取号人员';
+            case 'doctor':
+              return '医生';
+            case 'financial':
+              return '财务专员';
+            default:
+              return '未知';
+
+          }
+        },
+        translateTerminalType: function(type){
+          switch(type){
+            case 'manager':
+              return '管理端';
+            case 'pick_up':
+              return '取号端';
+            case 'doctor':
+              return '医生端';
+            default:
+              return '未知';
+
+          }
+        },
+        translateOutpatientType: function(type){
+          switch(type){
+            case 'expert':
+              return '专家门诊';
+            case 'normal':
+              return '普通门诊';
             default:
               return '未知';
 
           }
         },
         getUsers: function(param, callback){
-          RequestSupport.executeGet('/users/list', {
-            current_page: param.currentPage,
-            limit: param.limit,
-            skip_count: param.skipCount
-          })
+          RequestSupport.executeGet('/user/list', param)
             .then(function (data) {
               if (!callback) {
                 return data;

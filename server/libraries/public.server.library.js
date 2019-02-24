@@ -51,7 +51,10 @@ Date.prototype.Format = function (fmt) {
 };
 
 exports.formatPaginationNumber = function(numberString){
-  return parseInt(numberString) || 0
+  if(numberString === undefined || numberString === null || numberString === ''){
+    numberString = -1;
+  }
+  return parseInt(numberString) || 0;
 };
 
 exports.isNullOrEmpty = function (value) {
