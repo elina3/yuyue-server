@@ -154,15 +154,17 @@ angular.module('YYWeb').controller('ScheduleSettingController',
               };
             },
             open: function(schedule){
-              console.log('open',$scope.pageConfig.calendar.currentDateItem.number);
+              console.log(schedule);
               this.dateString = $scope.pageConfig.calendar.currentDateItem.number;
               if(schedule){
+                console.log(schedule.startTime.split(':')[0]);
+                console.log(schedule.startTime.split(':')[1]);
                 this.inputNumber = schedule.numberCount;
                 this.currentSchedule = schedule;
-                this.startTime.hour = schedule.startTime.split(':')[0];
-                this.startTime.minute = schedule.startTime.split(':')[1];
-                this.endTime.hour = schedule.endTime.split(':')[0];
-                this.endTime.minute = schedule.endTime.split(':')[1];
+                this.startTime.hour = parseInt(schedule.startTime.split(':')[0]);
+                this.startTime.minute = parseInt(schedule.startTime.split(':')[1]);
+                this.endTime.hour = parseInt(schedule.endTime.split(':')[0]);
+                this.endTime.minute = parseInt(schedule.endTime.split(':')[1]);
               }
               this.show = true;
             },
@@ -206,6 +208,10 @@ angular.module('YYWeb').controller('ScheduleSettingController',
 
         $scope.addDoctorSchedule = function(){
           $scope.pageConfig.popBox.open();
+        };
+
+        $scope.editDoctorSchedule = function(schedule){
+          $scope.pageConfig.popBox.open(schedule);
         };
 
 

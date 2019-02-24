@@ -56,24 +56,24 @@
                                     <span>操作</span>
                                 </div>
                             </div>
-                            <div class="row list-info" ng-repeat="appointment in pageConfig.appointmentList">
+                            <div class="row list-info" ng-repeat="schedule in pageConfig.doctorSchedules">
                                 <div class="col-xs-2">
-                                    <span>{{appointment.orderNumber}}</span>
-                                </div>
-                                <div class="col-xs-1">
-                                    <span>{{appointment.name}}</span>
-                                </div>
-                                <div class="col-xs-3">
-                                    <span>{{appointment.IDCard}}</span>
+                                    <span>{{schedule.startTime}}</span>
                                 </div>
                                 <div class="col-xs-2">
-                                    <span>{{appointment.cardType}}</span>
+                                    <span>{{schedule.endTime}}</span>
                                 </div>
                                 <div class="col-xs-2">
-                                    <span>{{appointment.cardNumber}}</span>
+                                    <span>{{schedule.numberCount}}</span>
                                 </div>
-                                <div class="col-xs-1 handle">
-                                    <a href="#/appointment/detail{{ appointment.id }}">查看</a>
+                                <div class="col-xs-2">
+                                    <span>{{schedule.booked}}</span>
+                                </div>
+                                <div class="col-xs-2">
+                                    <span>{{schedule.numberCount - schedule.booked}}</span>
+                                </div>
+                                <div class="col-xs-2 handle">
+                                    <a  ng-click="editDoctorSchedule(schedule)">编辑</a>
                                 </div>
                             </div>
                         </div>
@@ -86,7 +86,7 @@
 
 <div class="dialog-mask input-pop-panel" ng-show="pageConfig.popBox.show">
     <div class="dialog-content">
-        <div class="dialog-header">增加{{pageConfig.popBox.dateString}}号源</div>
+        <div class="dialog-header">{{pageConfig.popBox.currentSchedule ? '编辑' : '增加'}}{{pageConfig.popBox.dateString}}号源</div>
         <div class="dialog-body">
             <label>开始时间<input ng-model="pageConfig.popBox.startTime.hour" type="number" placeholder="HH" min=0 max=23 /><span>:</span><input type="number" ng-model="pageConfig.popBox.startTime.minute" placeholder="mm" min=0 max=59 /></label>
             <label>结束时间<input ng-model="pageConfig.popBox.endTime.hour" type="number" placeholder="HH" min=0 max=23 /><span>:</span><input type="number" ng-model="pageConfig.popBox.endTime.minute" placeholder="mm" min=0 max=59 /></label>
