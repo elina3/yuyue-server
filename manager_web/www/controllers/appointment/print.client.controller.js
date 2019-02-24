@@ -45,7 +45,9 @@ angular.module('YYWeb').controller('AppointmentPrintController',
         loadAppointment(()=>{
           $scope.$emit(GlobalEvent.onShowLoading, false);
 
-          window.print();
+          setTimeout(() => {
+            window.print();
+          }, 1000);
         });
       }
 
