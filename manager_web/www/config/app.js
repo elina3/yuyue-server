@@ -69,7 +69,7 @@ yyWeb.config(['$stateProvider', '$urlRouterProvider', function ($stateProvider, 
       controller: 'DepartmentAddController'
     })
    .state('department_detail', {
-      url: '/department/detail:id',
+      url: '/department/detail/:id',
       templateUrl: 'templates/department/detail.client.view.html',
       controller: 'DepartmentDetailController'
     })
@@ -84,7 +84,7 @@ yyWeb.config(['$stateProvider', '$urlRouterProvider', function ($stateProvider, 
       controller: 'JobTitleAddController'
     })
    .state('job_title_detail', {
-      url: '/job_title/detail:id',
+      url: '/job_title/detail/:id',
       templateUrl: 'templates/job_title/detail.client.view.html',
       controller: 'JobTitleDetailController'
     })

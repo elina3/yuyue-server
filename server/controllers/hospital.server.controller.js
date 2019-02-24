@@ -1,4 +1,5 @@
 'use strict';
+var publicLib = require('../libraries/public');
 var systemError = require('../errors/system'),
     hospitalError = require('../errors/hospital'),
     hospitalLogic = require('../logics/hospital'),
@@ -44,7 +45,8 @@ exports.createDepartment = function(req, res, next) {
       {
         name: departmentName,
         hospitalId: req.user.hospital,
-        description: req.body.description,
+        description: req.body.description || '',
+        opened: publicLib.isTrue(req.body.opened) || false
       },
       function(err, newDepartment) {
         if (err) {
@@ -95,10 +97,16 @@ exports.getDepartmentList = function(req, res, next) {
     }
 
     req.data = {
-      departments: list.map(item => {return { name: item.name, _id: item._id };}),
+      departments: list,
     };
     return next();
   });
+};
+exports.getDepartmentDetail = function(req, res, next) {
+  req.data = {
+    department: req.department
+  };
+  return next();
 };
 
 exports.createJobTitle = function(req, res, next) {
@@ -151,8 +159,14 @@ exports.getJobTitleList = function(req, res, next) {
     }
 
     req.data = {
-      job_titles: list.map(item => {return { name: item.name, _id: item._id };}),
+      job_titles: list
     };
     return next();
   });
+};
+exports.getJobTitleDetail = function(req, res, next){
+  req.data = {
+    job_title: req.job_title
+  };
+  return next();
 };

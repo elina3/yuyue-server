@@ -20,7 +20,8 @@ exports.createDepartment = function(departmentInfo, callback) {
         department = new DepartmentModel({
           name: departmentInfo.name,
           hospital: departmentInfo.hospitalId,
-          description: departmentInfo.description
+          description: departmentInfo.description,
+          opened: departmentInfo.opened
         });
         department.save(function(err, saved) {
           if (err) {

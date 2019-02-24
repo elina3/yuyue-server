@@ -3,8 +3,8 @@
  */
 'use strict';
 angular.module('YYWeb').controller('DepartmentListController',
-  ['$window', '$rootScope', '$scope', 'GlobalEvent', '$state', 'UserService', 'Auth',
-    function ($window, $rootScope, $scope, GlobalEvent, $state, UserService, Auth) {
+  ['$window', '$rootScope', '$scope', 'GlobalEvent', '$state', 'UserService', 'Auth', 'HospitalService',
+    function ($window, $rootScope, $scope, GlobalEvent, $state, UserService, Auth, HospitalService) {
       var user = Auth.getUser();
       if (!user) {
         $state.go('user_sign_in');
@@ -12,18 +12,30 @@ angular.module('YYWeb').controller('DepartmentListController',
       }
 
       function loadDepartmentList(callback){
-        $scope.pageConfig.departmentList = [
-          {id: '1', name: '信息科', description: '心内科', opened: false},
-          {id: '2', name: '呼吸内科', description: '呼吸内科', opened: true},
-          {id: '3', name: '内科', description: '呼吸内科', opened: true},
-          {id: '4', name: '眼科', description: '呼吸内科', opened: true},
-          {id: '5', name: '儿科', description: '财务', opened: true},
-        ];
+        HospitalService.getDepartments({
+          current_page: $scope.pageConfig.pagination.currentPage,
+          limit: $scope.pageConfig.pagination.limit
+        }, function(err, data){
+          if(err){
+            return $scope.$emit(GlobalEvent.onShowAlert, err);
+          }
 
-        $scope.pageConfig.pagination.totalCount = 5;
-        $scope.pageConfig.pagination.limit = 2;
-        $scope.pageConfig.pagination.pageCount = Math.ceil($scope.pageConfig.pagination.totalCount / $scope.pageConfig.pagination.limit);
-        return callback();
+          data.departments = data.departments || [];
+          console.log(data.departments);
+
+          $scope.pageConfig.departmentList = data.departments.map(item => {
+            return {
+              _id: item._id,
+              name: item.name,
+              description: item.description || '--',
+              opened: item.opened || false
+            };
+          });
+          // $scope.pageConfig.pagination.totalCount = data.total_count;
+          // $scope.pageConfig.pagination.pageCount = Math.ceil($scope.pageConfig.pagination.totalCount / $scope.pageConfig.pagination.limit);
+          return callback();
+
+        });
       }
 
       $scope.pageConfig = {
@@ -31,12 +43,14 @@ angular.module('YYWeb').controller('DepartmentListController',
         departmentList: [],
         pagination: {
           currentPage: 1,
-          limit: 2,
+          limit: 20000,
           totalCount: 0,
           isShowTotalInfo: true,
           onCurrentPageChanged: function (callback) {
+
+            $scope.$emit(GlobalEvent.onShowLoading, true);
             loadDepartmentList(()=>{
-              alert('page changed!');
+              $scope.$emit(GlobalEvent.onShowLoading, false);
             });
           }
         },
@@ -47,7 +61,6 @@ angular.module('YYWeb').controller('DepartmentListController',
       function init() {
         $scope.$emit(GlobalEvent.onShowLoading, true);
         loadDepartmentList(()=>{
-          $scope.pageConfig.pagination.totalCount = 3;
           $scope.$emit(GlobalEvent.onShowLoading, false);
         });
       }
