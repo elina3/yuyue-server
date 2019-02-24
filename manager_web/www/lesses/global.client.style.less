@@ -33,186 +33,206 @@ body {
     >div{
       padding: 20px 0 80px;
 
-      h2{
-        height: 40px;
-        line-height: 40px;
-        font-weight: 400 !important;
-        font-size: 26px;
-      }
-
-      .yy-breadcrumb{
-        height: 40px;
-        line-height: 40px;
-        ul >li{
-          display: inline-block;
-          float: left;
-          a{
-            text-decoration: none;
-            color: @icon-green-color;
-            line-height: 40px;
-            span{
-              margin: 0 10px;
-              line-height: 40px;
-            }
-            &:hover{
-              text-decoration: none;
-            }
-          }
-          &:nth-last-child(1){
-            a span{
-              display: none;
-            }
-          }
-        }
-      }
-
       .yy-whiter-board{
-        background: #fff;
         margin: 20px 0;
+      }
+      
+    }
+  }
+
+  .ee-body, .ee-body-max{
+    h2{
+      height: 40px;
+      line-height: 40px;
+      font-weight: 400 !important;
+      font-size: 26px;
+    }
+  }
+
+  .ee-body-max{
+    padding-top: @header-bar-height + 10 * 2;
+    >div{
+      padding: 20px 0 80px;
+
+      h2{
         width: 95%;
-
-        .yy-panel-item{
-          padding: 20px;
-        }
+        margin: 0 auto;
       }
-
-      .yy-panel-item{
-        padding: 20px 0;
-      }
-      .yy-search-bar{
-        overflow: hidden;
-        width: 350px;
-        height: 33px;
-        form input{
-          display: inline-block;
-          float: left;
-          height: 33px;
-
-          line-height: 33px;
-        }
-        form input[type=text]{
-          width: 260px;
-          padding: 0 5px;
-        }
-        form input[type=submit]{
-          margin-left: 10px;
-          width: 60px;
-          border: none;
-          background: @icon-green-color;
-          color: #fff;
-        }
-      }
-      .yy-form{
-        overflow: hidden;
-        .yy-form-item{
-          display: block;
-          overflow: hidden;
-          margin: 10px 0;
-
-          &.has-select{
-            overflow: visible;
-            >label, >div{
-              display: inline-block;
-            }
-            >div{
-              min-width: 150px;
-            }
-          }
-
-          >label, >span, >p, >img{
-            display: inline-block;
-            float: left;
-            line-height: 33px;
-          }
-          >label{
-            width: 100px;
-            margin: 0;
-            &.blank{
-              display: inline-block;
-              height: 33px;
-            }
-          }
-          >input[type=text], >input[type=password], >input[type=number]{
-            padding: 0 5px;
-            height: 33px;
-            width: 400px;
-            &[disabled]{
-              border: none;
-            }
-          }
-          >p{
-            padding-top: 5px;
-            width: 400px;
-            line-height: 20px;
-          }
-          >img{
-            padding-top: 5px;
-            width: 100px;
-            height: auto;
-          }
-          >textarea{
-            width: 400px;
-            min-height: 100px;
-            overflow-y: auto;
-            padding: 5px;
-            margin-top: 5px;
-            resize:none;
-
-            border-color: @border-normal-color;
-
-            &[disabled]{
-              border: none;
-              overflow: auto;
-            }
-          }
-        }
-      }
-
-      ul.yy-checkbox{
-        min-width: 400px;
-        display: block;
-        overflow: hidden;
-        text-decoration: none;
-        >li{
-          display: inline-block;
-          float: left;
-          min-width: 50px;
-          margin-right: 10px;
-          &:hover{
-            cursor: pointer;
-          }
-          &.selected{
-            >span{
-              color: @icon-green-color;
-            }
-            >label{
-              &:hover{
-                cursor: pointer;
-              }
-              background-image: url('../../images/global/checkbox_selected.png');;
-            }
-          }
-          >label, >span{
-            display: inline-block;
-            float: left;
-          }
-          >label{
-            width: 20px;
-            height: 20px;
-            
-            background: url('../../images/global/checkbox.png') top left no-repeat;
-            background-size: contain;
-            margin: 5px 5px 0 0;
-          }
-          >span{
-            line-height: 30px;
-          }
-        }
+      .yy-whiter-board{
+        margin: 20px auto;
       }
     }
   }
   .root-ui-wiew{
     height: 100%;
+  }
+}
+
+.yy-breadcrumb{
+  height: 40px;
+  line-height: 40px;
+  ul >li{
+    display: inline-block;
+    float: left;
+    a{
+      text-decoration: none;
+      color: @icon-green-color;
+      line-height: 40px;
+      span{
+        margin: 0 10px;
+        line-height: 40px;
+      }
+      &:hover{
+        text-decoration: none;
+      }
+    }
+    &:nth-last-child(1){
+      a span{
+        display: none;
+      }
+    }
+  }
+}
+
+.yy-whiter-board{
+  background: #fff;
+  width: 95%;
+  .yy-panel-item{
+    padding: 20px;
+  }
+}
+
+.yy-panel-item{
+  padding: 20px 0;
+}
+.yy-search-bar{
+  overflow: hidden;
+  width: 350px;
+  height: 33px;
+  form input{
+    display: inline-block;
+    float: left;
+    height: 33px;
+
+    line-height: 33px;
+  }
+  form input[type=text]{
+    width: 260px;
+    padding: 0 5px;
+  }
+  form input[type=submit]{
+    margin-left: 10px;
+    width: 60px;
+    border: none;
+    background: @icon-green-color;
+    color: #fff;
+  }
+}
+.yy-form{
+  overflow: hidden;
+  .yy-form-item{
+    display: block;
+    overflow: hidden;
+    margin: 10px 0;
+
+    &.has-select{
+      overflow: visible;
+      >label, >div{
+        display: inline-block;
+      }
+      >div{
+        min-width: 150px;
+      }
+    }
+
+    >label, >span, >p, >img{
+      display: inline-block;
+      float: left;
+      line-height: 33px;
+    }
+    >label{
+      width: 100px;
+      margin: 0;
+      &.blank{
+        display: inline-block;
+        height: 33px;
+      }
+    }
+    >input[type=text], >input[type=password], >input[type=number]{
+      padding: 0 5px;
+      height: 33px;
+      width: 400px;
+      &[disabled]{
+        border: none;
+      }
+    }
+    >p{
+      padding-top: 5px;
+      width: 400px;
+      line-height: 20px;
+    }
+    >img{
+      padding-top: 5px;
+      width: 100px;
+      height: auto;
+    }
+    >textarea{
+      width: 400px;
+      min-height: 100px;
+      overflow-y: auto;
+      padding: 5px;
+      margin-top: 5px;
+      resize:none;
+
+      border-color: @border-normal-color;
+
+      &[disabled]{
+        border: none;
+        overflow: auto;
+      }
+    }
+  }
+}
+
+ul.yy-checkbox{
+  min-width: 400px;
+  display: block;
+  overflow: hidden;
+  text-decoration: none;
+  >li{
+    display: inline-block;
+    float: left;
+    min-width: 50px;
+    margin-right: 10px;
+    &:hover{
+      cursor: pointer;
+    }
+    &.selected{
+      >span{
+        color: @icon-green-color;
+      }
+      >label{
+        &:hover{
+          cursor: pointer;
+        }
+        background-image: url('../../images/global/checkbox_selected.png');;
+      }
+    }
+    >label, >span{
+      display: inline-block;
+      float: left;
+    }
+    >label{
+      width: 20px;
+      height: 20px;
+      
+      background: url('../../images/global/checkbox.png') top left no-repeat;
+      background-size: contain;
+      margin: 5px 5px 0 0;
+    }
+    >span{
+      line-height: 30px;
+    }
   }
 }
 
@@ -228,6 +248,7 @@ body {
   &:hover{
     text-decoration: none;
     color: #fff;
+    background: @button-pass-hover-color;
   }
 }
 
@@ -490,6 +511,9 @@ ul{
         display: inline;
 
         line-height: 24px;
+        a{
+          margin-right: 5px;
+        }
         .gif {
           display: none;
         }
@@ -789,6 +813,29 @@ ul{
       overflow: hidden;
       overflow-y: visible;
 
+    }
+  }
+}
+
+.input-pop-panel{
+  .dialog-content .dialog-body{
+    height: auto !important;
+
+    min-height: 80px !important;
+    >label{
+      display: block;
+      line-height: 33px;
+      padding: 10px 20px;
+      margin: 0;
+      font-weight: normal;
+      
+      >input{
+        margin-left: 20px;
+        padding: 0 5px;
+      }
+      >span{
+        margin-left: 20px;
+      }
     }
   }
 }

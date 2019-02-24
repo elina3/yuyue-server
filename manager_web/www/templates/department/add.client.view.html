@@ -1,0 +1,118 @@
+<z-header></z-header>
+<z-aside current-indexes="pageConfig.navIndexes"></z-aside>
+<div class="yy-detail-page user-add-page ee-body">
+    <div class="yy-wrapper">
+        <h2>科室管理</h2>
+        <div class="yy-breadcrumb">
+            <ul>
+                <li><a href="#/user/list">科室管理<span>> </span></a></li>
+                <li><span>添加科室</span></li>
+            </ul>
+        </div>
+        <div class="yy-whiter-board">
+            <div class="yy-panel-item">
+                <div class="yy-form">
+                    <div class="yy-form-item">
+                        <label>工号</label>
+                        <input type="text" ng-model="pageConfig.user.staffNumber" type="text"/>
+                    </div>
+                    <div class="yy-form-item">
+                        <label>姓名</label>
+                        <input type="text" ng-model="pageConfig.user.name" type="text"/>
+                    </div>
+                    <div class="yy-form-item">
+                        <label>身份证号</label>
+                        <input type="text" ng-model="pageConfig.user.IDCard" type="text"/>
+                    </div>
+                    <div class="yy-form-item has-select">
+                        <label>科室</label>
+                        <div>
+                            <z-dropdown z-dropdown-model="pageConfig.user.department"
+                                    z-dropdown-options="pageConfig.departments"
+                                    z-dropdown-label="请选择科室"
+                            >
+                            </z-dropdown>
+                        </div>
+                    </div>
+                    <div class="yy-form-item has-select">
+                        <label>职称</label>
+                        <z-dropdown z-dropdown-model="pageConfig.user.jobTitle"
+                                z-dropdown-options="pageConfig.jobTitles"
+                                z-dropdown-label="请选择职称"
+                        >
+                        </z-dropdown>
+                    </div>
+                    <div class="yy-form-item has-select">
+                        <label>角色</label>
+                        <z-dropdown z-dropdown-model="pageConfig.user.role"
+                                z-dropdown-options="pageConfig.roles"
+                                z-dropdown-label="请选择角色"
+                        >
+                        </z-dropdown>
+                    </div>
+
+                    <div class="yy-form-item">
+                        <label>门诊类型</label>
+                        <input type="text" ng-model="pageConfig.user.outpatientType" type="text"/>
+                    </div>
+                    <div class="yy-form-item">
+                        <label>电话</label>
+                        <input type="number" ng-model="pageConfig.user.mobile" type="text"/>
+                    </div>
+                    <div class="yy-form-item">
+                        <label>可访问端</label>
+                        <ul class="yy-checkbox" >
+                            <li ng-repeat="client in pageConfig.clients" ng-class="client.selected ? 'selected' : ''" ng-click="toggleClient(client)">
+                                <label></label>
+                                <span>
+                                    {{client.text}}
+                                </span>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="yy-form-item">
+                        <label>功能模块</label>
+                        <ul  class="yy-checkbox">
+                                <li ng-if="pageConfig.user.selectedClientIds.indexOf('manager') >= 0" ng-repeat="module in pageConfig.modulesDic.manager" ng-class="module.selected ? 'selected' : ''" ng-click="toggleModule('manager', module)">
+                                    <label></label>
+                                    <span>
+                                        {{module.text}}
+                                    </span>
+                                </li>
+                                <li ng-if="pageConfig.user.selectedClientIds.indexOf('doctor') >= 0" ng-repeat="module in pageConfig.modulesDic.doctor" ng-class="module.selected ? 'selected' : ''" ng-click="toggleModule('manager', module)">
+                                    <label></label>
+                                    <span>
+                                        {{module.text}}
+                                    </span>
+                                </li>
+                                <li ng-if="pageConfig.user.selectedClientIds.indexOf('pick-up') >= 0" ng-repeat="module in pageConfig.modulesDic['pick-up']" ng-class="module.selected ? 'selected' : ''" ng-click="toggleModule('manager', module)">
+                                    <label></label>
+                                    <span>
+                                        {{module.text}}
+                                    </span>
+                                </li>
+                        </ul>
+                    </div>
+                    <div class="yy-form-item">
+                        <label>擅长</label>
+                        <textarea ng-bind="pageConfig.user.goodAt"></textarea>
+                    </div>
+                    <div class="yy-form-item">
+                        <label>简介</label>
+                        <textarea ng-bind="pageConfig.user.brief"></textarea>
+                    </div>
+                    <div class="yy-form-item">
+                        <label>头像</label>
+                        <img src="../../images/global/default_user.png"/>
+                        <!--<input type="text" ng-model="pageConfig.user.headUrl" disabled type="text"/>-->
+                    </div>
+
+                    <div class="yy-form-item">
+                        <button class="yy-green-button" ng-click="saveUser()">保存</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

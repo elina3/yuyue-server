@@ -1,0 +1,68 @@
+<z-header></z-header>
+<z-aside current-indexes="pageConfig.navIndexes"></z-aside>
+<div class="yy-detail-page  ee-body">
+    <div class="yy-wrapper">
+        <h2>职称管理</h2>
+        <div class="yy-breadcrumb">
+            <ul>
+                <li><a href="#/user/list">职称管理<span>> </span></a></li>
+                <li><span>职称详情</span></li>
+            </ul>
+        </div>
+        <div class="yy-whiter-board">
+            <div class="yy-panel-item">
+                <div class="yy-form disabled">
+                    <div class="yy-form-item">
+                        <label>工号</label>
+                        <input type="text" ng-model="pageConfig.user.staffNumber" disabled type="text"/>
+                    </div>
+                    <div class="yy-form-item">
+                        <label>姓名</label>
+                        <input type="text" ng-model="pageConfig.user.name" disabled type="text"/>
+                    </div>
+                    <div class="yy-form-item">
+                        <label>身份证号</label>
+                        <input type="text" ng-model="pageConfig.user.IDCard" disabled type="text"/>
+                    </div>
+                    <div class="yy-form-item">
+                        <label>科室</label>
+                        <input type="text" ng-model="pageConfig.user.department" disabled type="text"/>
+                    </div>
+                    <div class="yy-form-item">
+                        <label>职称</label>
+                        <input type="text" ng-model="pageConfig.user.jobTitle" disabled type="text"/>
+                    </div>
+                    <div class="yy-form-item">
+                        <label>门诊类型</label>
+                        <input type="text" ng-model="pageConfig.user.outpatientType" disabled type="text"/>
+                    </div>
+                    <div class="yy-form-item">
+                        <label>电话</label>
+                        <input type="text" ng-model="pageConfig.user.mobile" disabled type="text"/>
+                    </div>
+                    <div class="yy-form-item">
+                        <label>可访问端</label>
+                        <span>{{ pageConfig.user.clients.join(',') }}</span>
+                    </div>
+                    <div class="yy-form-item">
+                        <label>功能模块</label>
+                        <span>{{ pageConfig.user.modules.join(',') }}</span>
+                    </div>
+                    <div class="yy-form-item">
+                        <label>擅长</label>
+                        <p>{{ pageConfig.user.goodAt }}</p>
+                    </div>
+                    <div class="yy-form-item">
+                        <label>简介</label>
+                        <p>{{ pageConfig.user.brief }}</p>
+                    </div>
+                    <div class="yy-form-item">
+                        <label>头像</label>
+                        <img src="../../images/global/default_user.png"/>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

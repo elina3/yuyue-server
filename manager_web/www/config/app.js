@@ -53,10 +53,30 @@ yyWeb.config(['$stateProvider', '$urlRouterProvider', function ($stateProvider, 
       templateUrl: 'templates/department/list.client.view.html',
       controller: 'DepartmentListController'
     })
+   .state('department_add', {
+      url: '/department/add',
+      templateUrl: 'templates/department/add.client.view.html',
+      controller: 'DepartmentAddController'
+    })
+   .state('department_detail', {
+      url: '/department/detail:id',
+      templateUrl: 'templates/department/detail.client.view.html',
+      controller: 'DepartmentDetailController'
+    })
    .state('job_title_list', {
       url: '/job_title/list',
       templateUrl: 'templates/job_title/list.client.view.html',
       controller: 'JobTitleListController'
+    })
+   .state('job_title_add', {
+      url: '/job_title/add',
+      templateUrl: 'templates/job_title/add.client.view.html',
+      controller: 'JobTitleAddController'
+    })
+   .state('job_title_detail', {
+      url: '/job_title/detail:id',
+      templateUrl: 'templates/job_title/detail.client.view.html',
+      controller: 'JobTitleDetailController'
     })
    .state('pay_list', {
       url: '/pay/list',
@@ -67,6 +87,26 @@ yyWeb.config(['$stateProvider', '$urlRouterProvider', function ($stateProvider, 
       url: '/pay/detail:id',
       templateUrl: 'templates/pay/detail.client.view.html',
       controller: 'PayDetailController'
+    })
+   .state('sicker_list', {
+      url: '/sicker/list',
+      templateUrl: 'templates/sicker/list.client.view.html',
+      controller: 'SickerListController'
+    })
+   .state('sicker_detail', {
+      url: '/sicker/detail:id',
+      templateUrl: 'templates/sicker/detail.client.view.html',
+      controller: 'SickerDetailController'
+    })
+   .state('schedule_list', {
+      url: '/schedule/list',
+      templateUrl: 'templates/schedule/list.client.view.html',
+      controller: 'ScheduleListController'
+    })
+   .state('schedule_setting', {
+      url: '/schedule/setting/:id',
+      templateUrl: 'templates/schedule/setting.client.view.html',
+      controller: 'ScheduleSettingController'
     });
 
   $urlRouterProvider.otherwise('/user/sign_in');

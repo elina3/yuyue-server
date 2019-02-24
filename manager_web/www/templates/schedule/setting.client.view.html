@@ -1,0 +1,101 @@
+<z-header></z-header>
+<div class="schedule-setting-page ee-body-max">
+    <div class="yy-wrapper">
+        <div class="yy-whiter-board">
+            <div class="yy-panel-item">
+                <div class="yy-date-picker-area">
+                        <input type="text" date-range-picker class="e-date-picker info-input date-picker dropdown"
+                                ng-model="pageConfig.datePicker.createTimeRange"
+                                min="pageConfig.datePicker.createTimeMinTime"
+                                options="pageConfig.datePicker.dateOptions"
+                                placeholder="点击选择日期"
+                                />
+                </div>
+                <button class="yy-green-button" ng-click="pageConfig.changeDate()">筛选</button>
+            </div>
+            <div class="yy-panel-item">
+                <div class="yy-custom-canlendar">
+                    <div class="cal-left"><a ng-click="pageConfig.calendar.prevDate()"><i></i></a></div>
+                    <ul class="cal-middle">
+                        <li ng-click="pageConfig.calendar.clickDate(dateItem)" ng-class="dateItem.show ? 'show' : 'hide'" ng-repeat="dateItem in pageConfig.calendar.dateItems">
+                            <a ng-class="dateItem.current ? 'current': ''">{{dateItem.number}}<br />{{dateItem.weekName}}</a>
+                        </li>
+                    </ul>
+                    <div class="cal-right"><a ng-click="pageConfig.calendar.nextDate()"><i></i></a></div>
+
+                </div>
+            </div>
+        </div>
+        <div class="yy-whiter-board">
+                <div class="yy-panel-item">
+                        <h3>预约号管理</h3>
+                        <button ng-click="addDoctorSchedule()" class="yy-green-button right">添加</button>
+                </div>
+
+                
+            <div class="yy-panel-item">
+                    <div class="ee-table-list">
+                        <div class="content">
+                            <div class="row list-header">
+                                <div class="col-xs-2">
+                                    <span>开始时间</span>
+                                </div>
+                                <div class="col-xs-2">
+                                    <span>结束时间</span>
+                                </div>
+                                <div class="col-xs-2">
+                                    <span>预设号数量</span>
+                                </div>
+                                <div class="col-xs-2">
+                                    <span>已预约数量</span>
+                                </div>
+                                <div class="col-xs-2">
+                                    <span>余号数量</span>
+                                </div>
+                                <div class="col-xs-2">
+                                    <span>操作</span>
+                                </div>
+                            </div>
+                            <div class="row list-info" ng-repeat="appointment in pageConfig.appointmentList">
+                                <div class="col-xs-2">
+                                    <span>{{appointment.orderNumber}}</span>
+                                </div>
+                                <div class="col-xs-1">
+                                    <span>{{appointment.name}}</span>
+                                </div>
+                                <div class="col-xs-3">
+                                    <span>{{appointment.IDCard}}</span>
+                                </div>
+                                <div class="col-xs-2">
+                                    <span>{{appointment.cardType}}</span>
+                                </div>
+                                <div class="col-xs-2">
+                                    <span>{{appointment.cardNumber}}</span>
+                                </div>
+                                <div class="col-xs-1 handle">
+                                    <a href="#/appointment/detail{{ appointment.id }}">查看</a>
+                                </div>
+                            </div>
+                        </div>
+                        <z-pagination config="pageConfig.pagination"></z-pagination>
+                    </div>
+            </div> 
+        </div>
+    </div>
+</div>
+
+<div class="dialog-mask input-pop-panel" ng-show="pageConfig.popBox.show">
+    <div class="dialog-content">
+        <div class="dialog-header">增加{{pageConfig.popBox.dateString}}号源</div>
+        <div class="dialog-body">
+            <label>开始时间<input ng-model="pageConfig.popBox.startTime.hour" type="number" placeholder="HH" min=0 max=23 /><span>:</span><input type="number" ng-model="pageConfig.popBox.startTime.minute" placeholder="mm" min=0 max=59 /></label>
+            <label>结束时间<input ng-model="pageConfig.popBox.endTime.hour" type="number" placeholder="HH" min=0 max=23 /><span>:</span><input type="number" ng-model="pageConfig.popBox.endTime.minute" placeholder="mm" min=0 max=59 /></label>
+            <label>号源数量<input ng-model="pageConfig.popBox.inputNumber" type="number" min=0/></label>
+            <div class="dialog-footer">
+                <p class="sure" ng-click="pageConfig.popBox.sure()">保存</p>
+                <p class="cancel" ng-click="pageConfig.popBox.cancel()">取消</p>
+            </div>
+        </div>
+    </div>
+</div>
+    

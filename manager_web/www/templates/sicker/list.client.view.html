@@ -1,0 +1,80 @@
+<z-header></z-header>
+<z-aside current-indexes="pageConfig.navIndexes"></z-aside>
+<div class="ee-admin-index ee-body">
+    <div class="yy-wrapper">
+        <h2>就诊卡管理</h2>
+        <div class="yy-whiter-board">
+            <div class="yy-panel-item row">
+                <div class=" col-xs-3">
+                    <z-dropdown z-dropdown-model="pageConfig.currentDepartment"
+                                z-dropdown-options="pageConfig.departments"
+                                z-dropdown-label="请选择科室"
+                    >
+                    </z-dropdown>
+                </div>
+                <div class=" col-xs-3">
+                    <z-dropdown z-dropdown-model="pageConfig.currentType"
+                                z-dropdown-options="pageConfig.types"
+                                z-dropdown-label="门诊类型"
+                    >
+                    </z-dropdown>
+                </div>
+                <div class="yy-search-bar">
+                    <form>
+                        <input placeholder="姓名/就诊卡号/身份证号/预约号" type="text" class="yy-search-bar-input"/>
+                        <input type="submit" value="筛选" onclick="alert('search')"/>
+                        <span class="yy-search-bar-icon"></span>
+                    </form>
+                </div>
+            </div>
+            <div class="yy-panel-item">
+                <div class="ee-table-list">
+                    <div class="content">
+                        <div class="row list-header">
+                            <div class="col-xs-2">
+                                <span>预约单号</span>
+                            </div>
+                            <div class="col-xs-1">
+                                <span>姓名</span>
+                            </div>
+                            <div class="col-xs-3">
+                                <span>身份证号</span>
+                            </div>
+                            <div class="col-xs-2">
+                                <span>就诊卡类型</span>
+                            </div>
+                            <div class="col-xs-2">
+                                <span>就诊卡号</span>
+                            </div>
+                            <div class="col-xs-1">
+                                <span>操作</span>
+                            </div>
+                        </div>
+                        <div class="row list-info" ng-repeat="appointment in pageConfig.appointmentList">
+                            <div class="col-xs-2">
+                                <span>{{appointment.orderNumber}}</span>
+                            </div>
+                            <div class="col-xs-1">
+                                <span>{{appointment.name}}</span>
+                            </div>
+                            <div class="col-xs-3">
+                                <span>{{appointment.IDCard}}</span>
+                            </div>
+                            <div class="col-xs-2">
+                                <span>{{appointment.cardType}}</span>
+                            </div>
+                            <div class="col-xs-2">
+                                <span>{{appointment.cardNumber}}</span>
+                            </div>
+                            <div class="col-xs-1 handle">
+                                <a href="#/sicker/detail{{ appointment.id }}">查看</a>
+                            </div>
+                        </div>
+                    </div>
+                    <z-pagination config="pageConfig.pagination"></z-pagination>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

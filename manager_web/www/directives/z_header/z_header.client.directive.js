@@ -16,7 +16,6 @@ angular.module('YYWeb').directive('zHeader',
                 },
                 link: function (scope, element, attributes) {
                     scope.user = Auth.getUser();
-                    console.log('scope.user:', scope.user);
 
                   if(!scope.user){
                     $state.go('user_sign_in');

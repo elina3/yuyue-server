@@ -1,0 +1,143 @@
+.schedule-setting-page {
+    .yy-whiter-board {
+        overflow: hidden;
+
+        .yy-panel-item {
+            padding: 20px 40px;
+            overflow: hidden;
+
+            h3{
+                display: inline-block;
+                float: left;
+                width: 300px;
+                font-weight: 400;
+                line-height: 33px;
+                margin: 0px auto;
+            }
+
+            .yy-date-picker-area {
+                >input {
+                    height: 33px;
+                    padding: 0 5px;
+                    line-height: 33px;
+                    width: 200px;
+                }
+            }
+
+            .yy-date-picker-area,
+            .yy-green-button {
+                display: inline-block;
+                float: left;
+                &.right{
+                    float: right;
+                }
+            }
+            .yy-green-button{
+                margin-left: 20px;
+            }
+
+
+            .yy-custom-canlendar{
+                position: relative;
+                overflow: hidden;
+
+                background: #F6F8F9;
+
+                width: 100%;
+                height: 60px;
+
+                .cal-left, .cal-right{
+                    position: absolute;
+                    top: 0;
+                    width: 40px;
+                    a{
+                        display: block;
+                        height: 60px;
+                        text-align: center;
+                        i{
+                            cursor: pointer;
+                            display: block;
+                            background-size: contain;
+                            background-repeat: no-repeat;
+                            height: 27px;
+                            width: 17px;
+                        }
+                    }
+                }
+                .cal-left{
+                    left: 0;
+                    a{
+                        padding-top: 15px;
+                        i{
+                            margin: 5px 0 0 15px;
+                            background-image: url('../../images/global/arrow_left.png');
+                        }
+                        &:hover{
+                            i{
+                                background-image: url('../../images/global/arrow_left_hover.png');
+                            }
+                        }
+                    }
+                }
+                .cal-right{
+                    right: 0;
+                    a{
+                        padding-top: 15px;
+                        i{
+                            margin: 5px 0 0 12px;
+                            background-image: url('../../images/global/arrow_right.png');
+                        }
+                        &:hover{
+                            i{
+                                background-image: url('../../images/global/arrow_right_hover.png');
+                            }
+                        }
+                    }
+                }
+                >ul.cal-middle{
+                    width: 90%;
+                    height: 59px;
+                    margin-left: 40px;
+                    
+                    li{
+                        &.show{
+                            display: inline-block;
+
+                            // &:nth-child(1){
+                            //     width: 14.2%;
+                            // }
+                        }
+                        display: none;
+                        list-style: none;
+                        float: left;
+                        width: 14.2%;
+                        a{
+                            padding-top: 10px;
+                            height: 60px;
+                            display: block;
+                            font-weight: bold;
+                            color: @font-dark-color;
+                            text-align: center;
+
+                            &:hover{
+                                
+                                background: @icon-green-color;
+                                color: #fff;
+                                text-decoration: none;
+                                cursor: pointer;
+                            }
+                            &.current{
+                                border-top: 2px solid @icon-green-color;
+                                padding-top: 8px;
+                                background: #fff;
+                                color: @icon-green-color;
+                                border-bottom: none;;
+                            }
+                        }
+                    }
+                }
+
+            }
+        }
+    }
+}

@@ -1,0 +1,95 @@
+<z-header></z-header>
+<z-aside current-indexes="pageConfig.navIndexes"></z-aside>
+<div class="ee-admin-index ee-body">
+    <div class="yy-wrapper">
+        <h2>排班管理</h2>
+        <div class="yy-whiter-board">
+            <div class="yy-panel-item row">
+                <div class=" col-xs-3">
+                    <z-dropdown z-dropdown-model="pageConfig.currentDepartment"
+                                z-dropdown-options="pageConfig.departments"
+                                z-dropdown-label="请选择科室"
+                    >
+                    </z-dropdown>
+                </div>
+                <div class=" col-xs-3">
+                    <z-dropdown z-dropdown-model="pageConfig.currentType"
+                                z-dropdown-options="pageConfig.types"
+                                z-dropdown-label="门诊类型"
+                    >
+                    </z-dropdown>
+                </div>
+                <div class="yy-search-bar">
+                    <form>
+                        <input placeholder="请输入专家姓名" type="text" class="yy-search-bar-input"/>
+                        <input type="submit" value="筛选" onclick="alert('search')"/>
+                        <span class="yy-search-bar-icon"></span>
+                    </form>
+                </div>
+            </div>
+            <div class="yy-panel-item">
+                <div class="ee-table-list">
+                    <div class="content">
+                        <div class="row list-header">
+                            <div class="col-xs-2">
+                                <span>科室</span>
+                            </div>
+                            <div class="col-xs-2">
+                                <span>门诊类型</span>
+                            </div>
+                            <div class="col-xs-2">
+                                <span>医生</span>
+                            </div>
+                            <div class="col-xs-2">
+                                <span>挂号费(元)</span>
+                            </div>
+                            <div class="col-xs-1">
+                                <span>状态</span>
+                            </div>
+                            <div class="col-xs-3">
+                                <span>操作</span>
+                            </div>
+                        </div>
+                        <div class="row list-info" ng-repeat="doctor in pageConfig.doctorList">
+                            <div class="col-xs-2">
+                                <span>{{doctor.department}}</span>
+                            </div>
+                            <div class="col-xs-2">
+                                <span>{{doctor.outpatientType}}</span>
+                            </div>
+                            <div class="col-xs-2">
+                                <span>{{doctor.name}}</span>
+                            </div>
+                            <div class="col-xs-2">
+                                <span>{{doctor.price}}</span>
+                            </div>
+                            <div class="col-xs-1">
+                                <span>{{doctor.statusString}}</span>
+                            </div>
+                            <div class="col-xs-3 handle">
+                                <a ng-click="settingPrice(doctor)">设置挂号费</a>
+                                <a ng-show="doctor.status === 'offShelf'" ng-click="upperShelf(doctor)">上架</a>
+                                <a ng-show="doctor.status === 'onShelf'" ng-click="lowerShelf(doctor)">下架</a>
+                                <a ng-click="settingSchedule(doctor)">设置号源</a>
+                            </div>
+                        </div>
+                    </div>
+                    <z-pagination config="pageConfig.pagination"></z-pagination>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="dialog-mask input-pop-panel" ng-show="pageConfig.popBox.show">
+    <div class="dialog-content">
+        <div class="dialog-header">设置{{pageConfig.popBox.currentDoctor.name}}的挂号费</div>
+        <div class="dialog-body">
+            <label>价格<input ng-model="pageConfig.popBox.inputNumber" type="number"/></label>
+            <div class="dialog-footer">
+                <p class="sure" ng-click="pageConfig.popBox.sure()">保存</p>
+                <p class="cancel" ng-click="pageConfig.popBox.cancel()">取消</p>
+            </div>
+        </div>
+    </div>
+</div>
+
