@@ -3,17 +3,23 @@
  */
 'use strict';
 var cryptoLib = require('../libraries/crypto'),
-  publicLib = require('../libraries/public');
+  enumLib = require('../enums/business');
 var userLogic  = require('../logics/user');
-var systemError = require('../errors/system');
+var systemError = require('../errors/system'),
+userError = require('../errors/user');
 
 exports.signIn = function(req, res, next){
   var username = req.body.username || req.query.username || '';
   var password = req.body.password || req.query.password || '';
+  var terminalType = req.body.terminal_type || req.query.terminal_type || '';
+  if(!enumLib.terminal_types.valid(terminalType)){
+    return next({err: userError.terminal_type_not_exist});
+  }
+
   if(!username || !password){
     return next({err: systemError.param_null_error});
   }
-  userLogic.signIn(username, password, function(err, user){
+  userLogic.signIn(username, password, terminalType, function(err, user){
     if(err){
       return next(err);
     }

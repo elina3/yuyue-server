@@ -7,7 +7,7 @@ angular.module('YYWeb').controller('UserSignInController',
     function ($rootScope, $scope, GlobalEvent, $state, UserService, Config, $window) {
 
       $scope.signInObject = {
-        client: '1',
+        terminal_type: 'manager',
         username: '',
         password: ''
       };

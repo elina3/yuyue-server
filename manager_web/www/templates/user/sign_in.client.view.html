@@ -11,10 +11,10 @@
         </div>
         <div class="sign-in-area">
             <form ng-submit="signIn()">
-                <select ng-model="signInObject.client">
-                    <option value="1">后台管理</option>
-                    <option value="2">医生端</option>
-                    <option value="3">取号端</option>
+                <select ng-model="signInObject.terminal_type">
+                    <option value="manager">后台管理端</option>
+                    <option value="doctor">医生端</option>
+                    <option value="pick_up">取号端</option>
                 </select>
                 <input placeholder="请输入账户名" ng-model="signInObject.username" type="text"/>
                 <input placeholder="请输入密码" ng-model="signInObject.password" type="password" />

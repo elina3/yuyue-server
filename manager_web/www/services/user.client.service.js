@@ -1,115 +1,108 @@
 /**
-* Created by elinaguo on 16/2/26.
-*/
+ * Created by elinaguo on 16/2/26.
+ */
 
 'use strict';
 angular.module('YYWeb').factory('UserService',
   ['Auth', 'RequestSupport', 'SystemError',
     function (Auth, RequestSupport, SystemError) {
       return {
-        getDepartments: function(param, callback){
+        getDepartments: function (param, callback) {
           RequestSupport.executeGet('/department/list', {
-            current_page: param.currentPage,
-            limit: param.limit,
-            skip_count: param.skipCount
-          })
+              current_page: param.currentPage,
+              limit: param.limit,
+              skip_count: param.skipCount
+            })
             .then(function (data) {
-              if (!callback) {
-                return data;
-              }
+                if (!callback) {
+                  return data;
+                }
 
-              if (data.err) {
-                return callback(data.zh_message || data.err);
-              }
+                if (data.err) {
+                  return callback(data.zh_message || data.err);
+                }
 
-              callback(null, data);
-            },
-            function (err) {
-              return callback(SystemError.network_error);
-            });
+                callback(null, data);
+              },
+              function (err) {
+                return callback(SystemError.network_error);
+              });
         },
         createUser: function (param, callback) {
           RequestSupport.executePost('/user/create', param)
             .then(function (data) {
-              if (!callback) {
-                return data;
-              }
-              else {
-                if (data.err) {
-                  return callback(data.zh_message || data.err);
-                }
+                if (!callback) {
+                  return data;
+                } else {
+                  if (data.err) {
+                    return callback(data.zh_message || data.err);
+                  }
 
-                callback(null, data);
-              }
-            },
-            function (err) {
-              return callback(SystemError.network_error);
-            });
+                  callback(null, data);
+                }
+              },
+              function (err) {
+                return callback(SystemError.network_error);
+              });
         },
-        modifyUser: function(param, callback){
+        modifyUser: function (param, callback) {
           RequestSupport.executePost('/user/modify', {
-            user_info: param
-          })
+              user_info: param
+            })
             .then(function (data) {
-              if (!callback) {
-                return data;
-              }
-              else {
-                if (data.err) {
-                  return callback(data.zh_message || data.err);
-                }
+                if (!callback) {
+                  return data;
+                } else {
+                  if (data.err) {
+                    return callback(data.zh_message || data.err);
+                  }
 
-                callback(null, data);
-              }
-            },
-            function (err) {
-              return callback(SystemError.network_error);
-            });
+                  callback(null, data);
+                }
+              },
+              function (err) {
+                return callback(SystemError.network_error);
+              });
         },
-        deleteUser: function(userId, callback){
+        deleteUser: function (userId, callback) {
           RequestSupport.executePost('/user/delete', {
-            user_id: userId
-          })
+              user_id: userId
+            })
             .then(function (data) {
-              if (!callback) {
-                return data;
-              }
-              else {
-                if (data.err) {
-                  return callback(data.zh_message || data.err);
-                }
+                if (!callback) {
+                  return data;
+                } else {
+                  if (data.err) {
+                    return callback(data.zh_message || data.err);
+                  }
 
-                callback(null, data);
-              }
-            },
-            function (err) {
-              return callback(SystemError.network_error);
-            });
-        },
-        signIn: function(param, callback){
-          RequestSupport.executePost('/user/sign_in', {
-            username: param.username,
-            password: param.password
-          })
-            .then(function (data) {
-              if (!callback) {
-                return data;
-              }
-              else {
-                if (data.err) {
-                  return callback(data.zh_message || data.err);
+                  callback(null, data);
                 }
-                Auth.setUser(data.user);
-                Auth.setToken(data.access_token);
-                return callback(null, data.user);
-              }
-            },
-            function (err) {
-              return callback(SystemError.network_error);
-            });
+              },
+              function (err) {
+                return callback(SystemError.network_error);
+              });
         },
-        translateUserRole: function(role){
-          switch(role){
+        signIn: function (param, callback) {
+          RequestSupport.executePost('/user/sign_in', param)
+            .then(function (data) {
+                if (!callback) {
+                  return data;
+                } else {
+                  if (data.err) {
+                    return callback(data.zh_message || data.err);
+                  }
+                  Auth.setUser(data.user);
+                  Auth.setToken(data.access_token);
+                  return callback(null, data.user);
+                }
+              },
+              function (err) {
+                return callback(SystemError.network_error);
+              });
+        },
+        translateUserRole: function (role) {
+          switch (role) {
             case 'admin':
               return '管理员';
             case 'pick_up':
@@ -123,8 +116,8 @@ angular.module('YYWeb').factory('UserService',
 
           }
         },
-        translateTerminalType: function(type){
-          switch(type){
+        translateTerminalType: function (type) {
+          switch (type) {
             case 'manager':
               return '管理端';
             case 'pick_up':
@@ -136,8 +129,8 @@ angular.module('YYWeb').factory('UserService',
 
           }
         },
-        translateOutpatientType: function(type){
-          switch(type){
+        translateOutpatientType: function (type) {
+          switch (type) {
             case 'expert':
               return '专家门诊';
             case 'normal':
@@ -147,40 +140,90 @@ angular.module('YYWeb').factory('UserService',
 
           }
         },
-        getUsers: function(param, callback){
+        getAllPermission: function () {
+          return {
+            'manager': [{
+                id: '1a',
+                text: '首页',
+                selected: true
+              },
+              {
+                id: '1b',
+                text: '用户管理',
+                selected: true
+              },
+              {
+                id: '1c',
+                text: '科室管理',
+                selected: true
+              },
+              {
+                id: '1d',
+                text: '职称管理',
+                selected: true
+              },
+              {
+                id: '1e',
+                text: '账单管理',
+                selected: true
+              },
+              {
+                id: '1f',
+                text: '就诊卡管理',
+                selected: true
+              },
+              {
+                id: '1g',
+                text: '页面管理',
+                selected: true
+              },
+            ],
+            'doctor': [{
+              id: '2a',
+              text: '排班管理',
+              selected: true
+            }],
+            'pick_up': [{
+              id: '3a',
+              text: '取号打印',
+              selected: true
+            }]
+          };
+        },
+        getUsers: function (param, callback) {
           RequestSupport.executeGet('/user/list', param)
             .then(function (data) {
-              if (!callback) {
-                return data;
-              }
+                if (!callback) {
+                  return data;
+                }
 
-              if (data.err) {
-                return callback(data.zh_message || data.err);
-              }
+                if (data.err) {
+                  return callback(data.zh_message || data.err);
+                }
 
-              callback(null, data);
-            },
-            function (err) {
-              return callback(SystemError.network_error);
-            });
+                callback(null, data);
+              },
+              function (err) {
+                return callback(SystemError.network_error);
+              });
         },
-        getUserDetail: function(param, callback){
+        getUserDetail: function (param, callback) {
           RequestSupport.executeGet('/user/detail', param)
             .then(function (data) {
-              if (!callback) {
-                return data;
-              }
+                if (!callback) {
+                  return data;
+                }
 
-              if (data.err) {
-                return callback(data.zh_message || data.err);
-              }
+                if (data.err) {
+                  return callback(data.zh_message || data.err);
+                }
 
-              callback(null, data);
-            },
-            function (err) {
-              return callback(SystemError.network_error);
-            });
+                callback(null, data);
+              },
+              function (err) {
+                return callback(SystemError.network_error);
+              });
         }
       };
-    }]);
-
+    }
+  ]);

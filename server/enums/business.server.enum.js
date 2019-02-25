@@ -3,14 +3,10 @@
  */
 'use strict';
 
-exports.card_status = {
-  enums: ['disabled', 'enabled', 'frozen', 'revoked'],
-  parseStatus: function(status){
-    if(this.enums.indexOf(status) > -1){
-      return status;
-    }
-
-    return '';
+exports.terminal_types = {
+  enums: ['manager', 'doctor', 'pick_up'],
+  valid: function(type){
+    return this.enums.indexOf(type) >= 0;
   }
 };
 exports.user_roles = {

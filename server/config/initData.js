@@ -50,13 +50,27 @@ exports.createDefaultHospital = function() {
                       nickname: '系统管理员',
                       password: '654321',
                       role: 'admin',
-                      terminalType: 'management',
+                      terminal_types: ['manager', 'doctor', 'pick_up'],
                       sex: 'male',
-                      mobile_phone: '',
+                      mobile_phone: '18399990000',
                       head_photo: '',
                       hospitalId: hospital._id,
                       departmentId: department._id,
-                      jobTitleId: jobTitle._id
+                      jobTitleId: jobTitle._id,
+                      
+                      permission: {
+                        'manager': [
+                          {id: '1a', text: '首页', selected: true},
+                          {id: '1b', text: '用户管理', selected: true},
+                          {id: '1c', text: '科室管理', selected: true},
+                          {id: '1d', text: '职称管理', selected: true},
+                          {id: '1e', text: '账单管理', selected: true},
+                          {id: '1f', text: '就诊卡管理', selected: true},
+                          {id: '1g', text: '页面管理', selected: true},
+                        ],
+                        'doctor': [{id: '2a', text: '排班管理', selected: true}],
+                        'pick_up': [{id: '3a', text: '取号打印', selected: true}] 
+                      }
                     }, function(err, admin){
                       if(err){
                         console.log(err.err.zh_message, '用户：系统管理员');

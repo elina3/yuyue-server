@@ -194,7 +194,7 @@ exports.getUserDetailById = function(userId, callback) {
   });
 };
 
-exports.signIn = function(username, password, callback) {
+exports.signIn = function(username, password, terminalType, callback) {
   User.findOne({ username: username }).
       exec(function(err, user) {
         if (err) {
@@ -207,6 +207,10 @@ exports.signIn = function(username, password, callback) {
 
         if (!user.authenticate(password)) {
           return callback({ err: systemError.account_not_match });
+        }
+
+        if(user.terminal_types.indexOf(terminalType)){
+          return callback({err: userError.no_terminal_permission});
         }
 
         return callback(null, user);
