@@ -54,6 +54,9 @@ angular.module('YYWeb').controller('UserAddController',
         $scope.toggleClient = toggleClientItem;
 
         $scope.toggleModule = function(moduleKey, moduleItem){
+          if(moduleItem.require){
+            return;
+          }
           moduleItem.selected = !moduleItem.selected;
         };
 

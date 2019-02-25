@@ -145,7 +145,8 @@ angular.module('YYWeb').factory('UserService',
             'manager': [{
                 id: '1a',
                 text: '首页',
-                selected: true
+                selected: true,
+                require: true
               },
               {
                 id: '1b',
@@ -181,12 +182,14 @@ angular.module('YYWeb').factory('UserService',
             'doctor': [{
               id: '2a',
               text: '排班管理',
-              selected: true
+              selected: true,
+              require: true
             }],
             'pick_up': [{
               id: '3a',
               text: '取号打印',
-              selected: true
+              selected: true,
+              require: true
             }]
           };
         },
