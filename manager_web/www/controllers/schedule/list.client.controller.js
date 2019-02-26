@@ -1,45 +1,32 @@
 'use strict';
 angular.module('YYWeb').controller('ScheduleListController',
-  ['$window', '$rootScope', '$scope', 'GlobalEvent', '$state', 'UserService', 'Auth',
-    function ($window, $rootScope, $scope, GlobalEvent, $state, UserService, Auth) {
+  ['$window', '$rootScope', '$scope', 'GlobalEvent', '$state', 'UserService', 'Auth', 'HospitalService',
+    function ($window, $rootScope, $scope, GlobalEvent, $state, UserService, Auth, HospitalService) {
       var user = Auth.getUser();
       if (!user) {
         $state.go('user_sign_in');
         return;
       }
 
-
-      function loadDoctors(callback){
-        $scope.pageConfig.doctorList = [
-          {id: '1', department: '儿科', name: '牛二', outpatientType: '专科门诊', price: 20, statusString: '未上架', status: 'offShelf'},
-          {id: '2', department: '心脏内科', name: '王二小', outpatientType: '专科门诊', price: 30, statusString: '已上架', status: 'onShelf'},
-          {id: '3', department: '呼吸内科', name: '辛加', outpatientType: '普通门诊', price: 100, statusString: '已上架', status: 'onShelf'}
-        ];
-
-        $scope.pageConfig.pagination.totalCount = 3;
-        $scope.pageConfig.pagination.limit = 2;
-        $scope.pageConfig.pagination.pageCount = Math.ceil($scope.pageConfig.pagination.totalCount / $scope.pageConfig.pagination.limit);
-        return callback();
-      }
-
       $scope.pageConfig = {
         navIndexes: [1, 3],
+        searchKey: '',
         currentDepartment: {id: '', text: '全部科室'},
-        departments: [{id: '', text: '全部科室'}, {text: '心脏内科', id: '1'}, {text: '呼吸内科', id: '2'}],
-        currentType: {id: '', text: '全部门诊类型'},
-        types: [{id: '', text: '全部门诊类型'}, {id: '1', text: '专家门诊'}, {id: '2', text: '普通门诊'}],
+        departments: [{id: '', text: '全部科室'}],
+        currentType: {id: '', text: '全部门诊类型',},
+        types: [{id: '', text: '全部门诊类型'}, {id: 'expert', text: '专家门诊'}, {id: 'normal', text: '普通门诊'}],
         doctorList: [],
-        pagination: {
-          currentPage: 1,
-          limit: 2,
-          totalCount: 0,
-          isShowTotalInfo: true,
-          onCurrentPageChanged: function (callback) {
-            loadDoctors(()=>{
-              alert('page changed!');
-            });
-          }
-        },
+        // pagination: {
+        //   currentPage: 1,
+        //   limit: 2,
+        //   totalCount: 0,
+        //   isShowTotalInfo: true,
+        //   onCurrentPageChanged: function (callback) {
+        //     loadDoctors(()=>{
+        //       alert('page changed!');
+        //     });
+        //   }
+        // },
         popBox: {
           show: false,
           inputNumber: 0,
@@ -61,6 +48,57 @@ angular.module('YYWeb').controller('ScheduleListController',
           }
         }
       };
+
+      function loadDoctors(callback){
+        UserService.getAllDoctors({
+          department_id: $scope.pageConfig.currentDepartment.id,
+          outpatient_type: $scope.pageConfig.currentType.id,
+          nickname: $scope.pageConfig.searchKey
+        }, function(err, data){
+          if(err){
+            console.log(err);
+            return $scope.$emit(GlobalEvent.onShowAlert, '获取医生信息失败！');
+          }
+
+          $scope.pageConfig.doctorList = data.doctors.map((item)=>{
+            return {
+              id: item._id,
+              department: item.department.name,
+              name: item.nickname,
+              outpatientType: UserService.translateOutpatientType(item.outpatient_type),
+              price: item.price ? item.price : '--',
+              statusString: item.on_shelf ? '已上架' : '未上架',
+              status: item.on_shelf ? 'onShelf' : 'offShelf'
+            };
+          });
+
+          // $scope.pageConfig.pagination.totalCount = 3;
+          // $scope.pageConfig.pagination.limit = 2;
+          // $scope.pageConfig.pagination.pageCount = Math.ceil($scope.pageConfig.pagination.totalCount / $scope.pageConfig.pagination.limit);
+          return callback();
+        });
+      }
+
+
+      function loadDepartmentList(){
+        HospitalService.getDepartments({}, function(err, data){
+          if(err){
+            return $scope.$emit(GlobalEvent.onShowAlert, err);
+          }
+
+          data.departments = data.departments || [];
+          console.log(data.departments);
+          if(data.departments.length > 0){
+            $scope.pageConfig.departments =  $scope.pageConfig.departments.concat(data.departments.map(item => {
+              return {
+                id: item._id,
+                text: item.name
+              };
+            }));
+          }
+        });
+      }
+
 
       $scope.settingPrice = function(doctor){
         $scope.pageConfig.popBox.open(doctor);
@@ -84,39 +122,9 @@ angular.module('YYWeb').controller('ScheduleListController',
         window.open(url,'_blank');
       };
 
-      $scope.goBack = function () {
-        $window.history.back();
-      };
-
-
-      $scope.goState = function (state) {
-        if (!state) {
-          return;
-        }
-        $state.go(state);
-      };
-      $scope.goToView = function (state) {
-        if (!state) {
-          return;
-        }
-
-        switch (state) {
-          case 'user_manager':
-            return $state.go('user_manager');
-          case 'restaurant':
-            $state.go('goods_manager', {goods_type: 'dish'});
-            return;
-          case 'supermarket':
-            if (user.role === 'admin' || user.role === 'supermarket_manager') {
-              $state.go('supermarket_order');
-            }
-            return;
-          default:
-            return;
-        }
-      };
 
       function init() {
+        loadDepartmentList();
 
         $scope.$emit(GlobalEvent.onShowLoading, true);
         loadDoctors(()=>{

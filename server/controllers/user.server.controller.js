@@ -3,6 +3,7 @@
  */
 'use strict';
 var cryptoLib = require('../libraries/crypto'),
+    publicLib = require('../libraries/public'),
   enumLib = require('../enums/business');
 var userLogic  = require('../logics/user');
 var systemError = require('../errors/system'),
@@ -116,5 +117,25 @@ exports.deleteUser = function(req, res, next){
     };
     return next();
   });
+};
+
+//获取医生列表
+exports.getDoctors = function(req, res, next){
+  userLogic.getDoctors({
+    outpatient_type: req.query.outpatient_type || '',
+    department_id: req.query.department || '',
+    nickname: req.query.nickname || '',
+    on_shelf: publicLib.isTrue(req.query.on_shelf) || ''//只有在传 true 的时候才仅获取上架医生，否则是所有医生
+  }, function(err, doctors) {
+    if(err){
+      return next(err);
+    }
+
+    req.data = {
+      doctors: doctors
+    };
+    return next();
+  });
+
 };
 

@@ -49,7 +49,7 @@ var UserSchema = new Schema({
     enum: roleEnums,
     default: 'admin'
   },
-  outpatient_type: {
+  outpatient_type: {//role角色为doctor时，有门诊类型
     type: String,
     enum: outpatientTypeEnums,//专家门诊，普通门诊
   },
@@ -125,6 +125,13 @@ var UserSchema = new Schema({
         {id: '3a', text: '取号打印', selected: true}
       ]
     }
+  },
+  on_shelf: {//role为doctor时，有上架
+    type: Boolean,
+    default: false,
+  },
+  price: {//role为doctor时，有挂号费价格
+    type: Number
   }
 });
 

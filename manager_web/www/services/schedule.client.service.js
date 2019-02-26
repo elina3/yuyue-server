@@ -3,16 +3,12 @@
  */
 
 'use strict';
-angular.module('YYWeb').factory('UserService',
+angular.module('YYWeb').factory('ScheduleService',
   ['Auth', 'RequestSupport', 'SystemError',
     function (Auth, RequestSupport, SystemError) {
       return {
-        getDepartments: function (param, callback) {
-          RequestSupport.executeGet('/department/list', {
-              current_page: param.currentPage,
-              limit: param.limit,
-              skip_count: param.skipCount
-            })
+        getSchedulesByDoctorId: function (param, callback) {
+          RequestSupport.executeGet('/doctor/schedule/setting', param)
             .then(function (data) {
                 if (!callback) {
                   return data;
@@ -218,23 +214,6 @@ angular.module('YYWeb').factory('UserService',
         getUserDetail: function (param, callback) {
           RequestSupport.executeGet('/user/detail', param)
             .then(function (data) {
-                if (!callback) {
-                  return data;
-                }
-
-                if (data.err) {
-                  return callback(data.zh_message || data.err);
-                }
-
-                callback(null, data);
-              },
-              function (err) {
-                return callback(SystemError.network_error);
-              });
-        },
-        getAllDoctors: function(param, callback){
-          RequestSupport.executeGet('/user/doctor/list', param)
-          .then(function (data) {
                 if (!callback) {
                   return data;
                 }

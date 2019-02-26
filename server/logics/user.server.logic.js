@@ -35,6 +35,7 @@ exports.createUser = function(userInfo, callback) {
         user.hospital = userInfo.hospitalId;
         user.department = userInfo.departmentId;
         user.job_title = userInfo.jobTitleId;
+        user.outpatient_type = userInfo.outpatient_type;
 
         user.sex = !userInfo.sex ? 'unknown' : userInfo.sex;
         user.mobile_phone = userInfo.mobile_phone;
@@ -52,6 +53,7 @@ exports.createUser = function(userInfo, callback) {
         }
         user.save(function(err, newUser) {
           if (err || !newUser) {
+            console.error(err);
             return callback({ err: systemError.database_save_error });
           }
 
@@ -135,7 +137,7 @@ exports.queryUsers = function(filter, pagination, callback) {
     ];
   }
   User.count(query, function(err, totalCount) {
-      if (err) {
+    if (err) {
       return callback({ err: systemError.database_query_error });
     }
 
@@ -180,18 +182,19 @@ exports.getUserById = function(userId, callback) {
   });
 };
 exports.getUserDetailById = function(userId, callback) {
-  User.findOne({ _id: userId })
-  .populate('department job_title').exec(function(err, user) {
-    if (err) {
-      return callback({ err: systemError.internal_system_error });
-    }
+  User.findOne({ _id: userId }).
+      populate('department job_title').
+      exec(function(err, user) {
+        if (err) {
+          return callback({ err: systemError.internal_system_error });
+        }
 
-    if (!user || user.deleted_status) {
-      return callback(userError.user_not_exist);
-    }
+        if (!user || user.deleted_status) {
+          return callback(userError.user_not_exist);
+        }
 
-    return callback(null, user);
-  });
+        return callback(null, user);
+      });
 };
 
 exports.signIn = function(username, password, terminalType, callback) {
@@ -209,11 +212,37 @@ exports.signIn = function(username, password, terminalType, callback) {
           return callback({ err: systemError.account_not_match });
         }
 
-        if(user.terminal_types.indexOf(terminalType)){
-          return callback({err: userError.no_terminal_permission});
+        if (user.terminal_types.indexOf(terminalType) === -1) {
+          return callback({ err: userError.no_terminal_permission });
         }
 
         return callback(null, user);
       });
+};
+
+exports.getDoctors = function(filter, callback) {
+  var query = {
+    role: 'doctor'
+  };
+  if(filter.outpatient_type){//门诊类型
+    query.outpatient_type = filter.outpatient_type;
+  }
+  if(filter.department_id){
+    query.department = filter.department_id;
+  }
+  if(filter.nickname){
+    query.nickname = {$regex: filter.nickname, $options: 'i'};
+  }
+  if (filter.on_shelf) {//需要仅获取上架的医生,App端获取医生信息
+    query.on_shelf = true;
+  }
+  User.find(query).populate('department job_title').exec(function(err, doctors) {
+    if(err){
+      console.log(err);
+      return callback({err: systemError.database_query_error});
+    }
+
+    return callback(null, doctors);
+  });
 };
 

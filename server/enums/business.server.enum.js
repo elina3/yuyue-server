@@ -10,7 +10,7 @@ exports.terminal_types = {
   }
 };
 exports.user_roles = {
-  enums: ['admin', 'doctor', 'picker', 'financial'],//管理员，医生，取号人员，财务人员
+  enums: ['admin', 'doctor', 'pick_up', 'financial'],//管理员，医生，取号人员，财务人员
   valid: function(role){
     return this.enums.indexOf(role) >= 0;
   }

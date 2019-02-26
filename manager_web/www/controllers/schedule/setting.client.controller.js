@@ -9,7 +9,7 @@ angular.module('YYWeb').controller('ScheduleSettingController',
         }
 
 
-        function loadDoctorSchedules(callback){
+        function loadDoctorSchedules(doctorId, callback){
           $scope.pageConfig.doctorSchedules = [{
             id: '3',
             startTime: '8:00',
@@ -41,6 +41,7 @@ angular.module('YYWeb').controller('ScheduleSettingController',
         }
 
         $scope.pageConfig = {
+          showDoctorName: false,
           doctor: {
             name: '刘医生'
           },
@@ -216,12 +217,20 @@ angular.module('YYWeb').controller('ScheduleSettingController',
 
 
         function init() {
-          console.log('params.id:', $stateParams.id);
-
           $scope.pageConfig.calendar.initBoard(new Date(moment().format('YYYY/MM/DD')));
+          let doctorId = $stateParams.id;
+          if(!doctorId){//为登录用户设置号源
+            if(user.role !== 'doctor'){
+              return $scope.$emit(GlobalEvent.onShowAlert, '很抱歉，您不是医生，不能为您设置号源！请联系管理员！');
+            }
+            doctorId = user._id;
+          }else{
+            $scope.pageConfig.showDoctorName = true;
+          }
+
 
           $scope.$emit(GlobalEvent.onShowLoading, true);
-          loadDoctorSchedules(()=>{
+          loadDoctorSchedules(doctorId, ()=>{
             $scope.$emit(GlobalEvent.onShowLoading, false);
           });
         }

@@ -55,6 +55,7 @@ angular.module('YYWeb').factory('Auth',
           signOut: function() {
             currentUser = null;
             currentToken = null;
+            localStorageService.set('user', '');
             localStorageService.set('token', currentToken);
           },
         };

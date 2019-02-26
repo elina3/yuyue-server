@@ -27,7 +27,18 @@ angular.module('YYWeb').controller('UserSignInController',
             return;
           }
 
-          $state.go('user_index');
+          switch ($scope.signInObject.terminal_type){
+            case 'manager'://管理端登录
+              $state.go('user_index');
+              break;
+            case 'doctor'://医生端登录
+              $state.go('schedule_setting', {id: null});
+                  break;
+            case 'pick_up'://取号端
+              $state.go('appointment_pickup');
+              break;
+          }
+
         });
       };
       $scope.goToClientIndex = function(){
