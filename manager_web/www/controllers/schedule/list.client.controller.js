@@ -37,9 +37,18 @@ angular.module('YYWeb').controller('ScheduleListController',
             this.show = true;
           },
           sure: function(){
-            this.currentDoctor.price = this.inputNumber;
-            this.inputNumber = 0;
-            this.show = false;
+            $scope.$emit(GlobalEvent.onShowLoading, true);
+            UserService.setDoctorPrice({doctor_id: this.currentDoctor.id, price: this.inputNumber}, (err, data) => {
+              $scope.$emit(GlobalEvent.onShowLoading, false);
+              if(err){
+                return $scope.$emit(GlobalEvent.onShowAlert, err);
+              }
+
+              this.currentDoctor.price = this.inputNumber;
+              this.inputNumber = 0;
+              this.show = false;
+              $scope.$emit(GlobalEvent.onShowAlert, '设置成功！');
+            });
           },
           cancel: function(){
             this.currentDoctor = null;
@@ -106,16 +115,43 @@ angular.module('YYWeb').controller('ScheduleListController',
 
       $scope.upperShelf = function(doctor){
         $scope.$emit(GlobalEvent.onShowAlertConfirm, {content: '您确定要上架吗？', callback: function (status) {
-          alert('success!');
+          $scope.$emit(GlobalEvent.onShowLoading, true);
+          UserService.onShelfDoctor({doctor_id: doctor.id}, function(err){
+            $scope.$emit(GlobalEvent.onShowLoading, false);
+            if(err){
+              return $scope.$emit(GlobalEvent.onShowAlert, err);
+            }
+
+            doctor.status = 'onShelf';
+            doctor.statusString='已上架';
+            $scope.$emit(GlobalEvent.onShowAlert, '成功上架！');
+          });
         }});
       };
 
       $scope.lowerShelf = function(doctor){
         $scope.$emit(GlobalEvent.onShowAlertConfirm, {content: '您确定要下架吗？', callback: function (status) {
-          alert('success!');
+            $scope.$emit(GlobalEvent.onShowLoading, true);
+            UserService.offShelfDoctor({doctor_id: doctor.id}, function(err){
+              $scope.$emit(GlobalEvent.onShowLoading, false);
+              if(err){
+                return $scope.$emit(GlobalEvent.onShowAlert, err);
+              }
+
+              doctor.status = 'offShelf';
+              doctor.statusString='已下架';
+              $scope.$emit(GlobalEvent.onShowAlert, '成功下架！');
+            });
         }});
       };
-      
+
+      $scope.search = function(){
+        $scope.$emit(GlobalEvent.onShowLoading, true);
+        loadDoctors(()=>{
+          $scope.$emit(GlobalEvent.onShowLoading, false);
+        });
+      };
+
 
       $scope.settingSchedule = function(doctor){
         var url = $state.href('schedule_setting',{id: doctor.id});

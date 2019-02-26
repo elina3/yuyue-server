@@ -2,6 +2,7 @@
  * Created by elinaguo on 16/2/25.
  */
 'use strict';
+var async = require('async');
 var cryptoLib = require('../libraries/crypto'),
     publicLib = require('../libraries/public'),
   enumLib = require('../enums/business');
@@ -123,7 +124,7 @@ exports.deleteUser = function(req, res, next){
 exports.getDoctors = function(req, res, next){
   userLogic.getDoctors({
     outpatient_type: req.query.outpatient_type || '',
-    department_id: req.query.department || '',
+    department_id: req.query.department_id || '',
     nickname: req.query.nickname || '',
     on_shelf: publicLib.isTrue(req.query.on_shelf) || ''//只有在传 true 的时候才仅获取上架医生，否则是所有医生
   }, function(err, doctors) {
@@ -138,4 +139,157 @@ exports.getDoctors = function(req, res, next){
   });
 
 };
+
+//上架医生
+exports.onShelfDoctor = function(req, res, next){
+  var doctorId = req.body.doctor_id || '';
+  if(!doctorId){
+    return next({err: systemError.param_null_error});
+  }
+
+  async.auto({
+    getDoctor: function(autoCallback){
+      userLogic.getUserById(doctorId, function(err, user){
+        if(err){
+          return autoCallback(err);
+        }
+
+        if(user.role !== 'doctor'){
+          return autoCallback({err: userError.not_a_doctor});
+        }
+
+        if(user.on_shelf){
+          return autoCallback({err: userError.doctor_on_shelf});
+        }
+
+        if(!user.price || user.price < 0){
+          return autoCallback({err: userError.doctor_no_price});
+        }
+
+        return autoCallback(null, user);
+
+      });
+    },
+    onShelf: ['getDoctor', function(autoCallback, result){
+      userLogic.updateDoctorShelfStatus(req.user, result.getDoctor._id, true, function(err){
+        if(err){
+          return autoCallback(err);
+        }
+        return autoCallback();
+      });
+    }]
+  }, function(err){
+    if(err){
+      return next(err);
+    }
+
+    req.data = {
+      success: true
+    };
+    return next();
+  });
+};
+
+//下架
+exports.offShelfDoctor = function(req, res, next){
+  var doctorId = req.body.doctor_id || '';
+  if(!doctorId){
+    return next({err: systemError.param_null_error});
+  }
+
+  async.auto({
+    getDoctor: function(autoCallback){
+      userLogic.getUserById(doctorId, function(err, user){
+        if(err){
+          return autoCallback(err);
+        }
+
+        if(user.role !== 'doctor'){
+          return autoCallback({err: userError.not_a_doctor});
+        }
+
+        if(!user.on_shelf){
+          return autoCallback({err: userError.doctor_off_shelf});
+        }
+
+        return autoCallback(null, user);
+
+      });
+    },
+    onShelf: ['getDoctor', function(autoCallback, result){
+      userLogic.updateDoctorShelfStatus(req.user, result.getDoctor._id, false, function(err){
+        if(err){
+          return autoCallback(err);
+        }
+        return autoCallback();
+      });
+    }]
+  }, function(err){
+    if(err){
+      return next(err);
+    }
+
+    req.data = {
+      success: true
+    };
+    return next();
+  });
+};
+
+//设置挂号费
+exports.setDoctorPrice  =function(req, res, next){
+  var doctorId = req.body.doctor_id || '';
+  if(!doctorId){
+    return next({err: systemError.param_null_error});
+  }
+
+  var newPrice = parseInt(req.body.price) || 0;
+  if(!newPrice || newPrice < 0){
+    return next({err: userError.price_error});
+  }
+
+
+  async.auto({
+    getDoctor: function(autoCallback){
+      userLogic.getUserById(doctorId, function(err, user){
+        if(err){
+          return autoCallback(err);
+        }
+
+        if(user.role !== 'doctor'){
+          return autoCallback({err: userError.not_a_doctor});
+        }
+
+        if(user.on_shelf){
+          return autoCallback({err: userError.doctor_on_shelf});
+        }
+
+        return autoCallback(null, user);
+
+      });
+    },
+    onShelf: ['getDoctor', function(autoCallback, result){
+      userLogic.setDoctorPrice(req.user, result.getDoctor, newPrice, function(err){
+        if(err){
+          return autoCallback(err);
+        }
+        return autoCallback();
+      });
+    }]
+  }, function(err){
+    if(err){
+      return next(err);
+    }
+
+    req.data = {
+      success: true
+    };
+    return next();
+  });
+};
+
+//添加号源
+exports.addSchedule = function(req, res, next){};
+exports.deleteSchedule = function(){};
+exports.modifySchedule = function(){};
 

@@ -1,12 +1,11 @@
-/**
- * Created by elinaguo on 16/2/26.
- */
 'use strict';
 var systemError = require('../errors/system');
 var userError = require('../errors/user');
 var mongoLib = require('../libraries/mongoose');
 var appDb = mongoLib.appDb;
 var User = appDb.model('User');
+
+var doctorActionHistoryLogic = require('./doctor_action_history');
 
 exports.createUser = function(userInfo, callback) {
   User.findOne({ hospital: userInfo.hospitalId, username: userInfo.username }).
@@ -246,3 +245,28 @@ exports.getDoctors = function(filter, callback) {
   });
 };
 
+exports.updateDoctorShelfStatus = function(user, doctorId, onShelf, callback){
+  User.update({_id: doctorId}, {$set: {on_shelf: onShelf, recent_modify_user: user._id}}, function(err){
+    if(err){
+      console.log(err);
+      return callback({err: systemError.database_update_error});
+    }
+
+    var action = onShelf ? 'on_shelf' : 'off_shelf';
+    doctorActionHistoryLogic.addDoctorActionHistory(user, doctorId, action, null, function(){});
+
+    return callback();
+  });
+};
+exports.setDoctorPrice = function(user, doctor, newPrice, callback){
+  var oldPrice = doctor.price;
+  User.update({_id: doctor._id}, {$set: {price: newPrice, recent_modify_user: user._id}}, function(err){
+    if(err){
+      console.log(err);
+      return callback({err: systemError.database_update_error});
+    }
+
+    doctorActionHistoryLogic.addDoctorActionHistory(user, doctor._id, 'set_price', {oldPrice: oldPrice, newPrice: newPrice}, function(){});
+    return callback();
+  });
+};

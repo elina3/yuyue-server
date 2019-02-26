@@ -132,6 +132,9 @@ var UserSchema = new Schema({
   },
   price: {//role为doctor时，有挂号费价格
     type: Number
+  },
+  recent_modify_user: {
+    type: Schema.Types.ObjectId
   }
 });
 

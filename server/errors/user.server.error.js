@@ -15,5 +15,10 @@ module.exports = _.extend(exports, {
   user_deleted: {type: 'user_deleted', message: 'The user has been deleted', zh_message: '用户已删除'},
   admin_exist: {type: 'admin_exist', message: 'The admin is exist', zh_message: '管理员账户已存在'},
   terminal_type_not_exist: {type: 'terminal_type_not_exist', message: 'The terminal type is not exist', zh_message: '该登录端不存在！'},
-  no_terminal_permission: {type: 'no_terminal_permission', message: 'No permission for this terminal', zh_message: '您没有登录该系统的权限，请联系管理员！'}
+  no_terminal_permission: {type: 'no_terminal_permission', message: 'No permission for this terminal', zh_message: '您没有登录该系统的权限，请联系管理员！'},
+  not_a_doctor: {type: 'not_a_doctor', message: 'The user is not a doctor', zh_message: '该用户不是医生！'},
+  doctor_on_shelf: {type: 'doctor_on_shelf', message: 'The doctor has been on shelf', zh_message: '该医生已上架'},
+  doctor_off_shelf: {type: 'doctor_off_shelf', message: 'The doctor has been off shelf', zh_message: '该医生已下架'},
+  doctor_no_price: {type: 'doctor_no_price', message: 'The doctor has not set the price', zh_message: '该医生还未设置挂号费'},
+  price_error: {type: 'price_error', message: 'The price is error', zh_message: '挂号费不合法'},
 });

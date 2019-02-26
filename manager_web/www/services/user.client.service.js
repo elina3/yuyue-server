@@ -248,6 +248,57 @@ angular.module('YYWeb').factory('UserService',
               function (err) {
                 return callback(SystemError.network_error);
               });
+        },
+        onShelfDoctor: function(param, callback){
+          RequestSupport.executePost('/user/doctor/on_shelf', param)
+          .then(function (data) {
+                if (!callback) {
+                  return data;
+                } else {
+                  if (data.err) {
+                    return callback(data.zh_message || data.err);
+                  }
+
+                  callback(null, data);
+                }
+              },
+              function (err) {
+                return callback(SystemError.network_error);
+              });
+        },
+        offShelfDoctor: function(param, callback){
+          RequestSupport.executePost('/user/doctor/off_shelf', param)
+          .then(function (data) {
+                if (!callback) {
+                  return data;
+                } else {
+                  if (data.err) {
+                    return callback(data.zh_message || data.err);
+                  }
+
+                  callback(null, data);
+                }
+              },
+              function (err) {
+                return callback(SystemError.network_error);
+              });
+        },
+        setDoctorPrice: function(param, callback){
+          RequestSupport.executePost('/user/doctor/set_price', param)
+          .then(function (data) {
+                if (!callback) {
+                  return data;
+                } else {
+                  if (data.err) {
+                    return callback(data.zh_message || data.err);
+                  }
+
+                  callback(null, data);
+                }
+              },
+              function (err) {
+                return callback(SystemError.network_error);
+              });
         }
       };
     }
