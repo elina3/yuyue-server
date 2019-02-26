@@ -219,6 +219,7 @@ angular.module('YYWeb').controller('ScheduleSettingController',
         function init() {
           $scope.pageConfig.calendar.initBoard(new Date(moment().format('YYYY/MM/DD')));
           let doctorId = $stateParams.id;
+          console.log('doctorId:', doctorId);
           if(!doctorId){//为登录用户设置号源
             if(user.role !== 'doctor'){
               return $scope.$emit(GlobalEvent.onShowAlert, '很抱歉，您不是医生，不能为您设置号源！请联系管理员！');

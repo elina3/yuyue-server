@@ -154,6 +154,7 @@ angular.module('YYWeb').controller('ScheduleListController',
 
 
       $scope.settingSchedule = function(doctor){
+        console.log(doctor);
         var url = $state.href('schedule_setting',{id: doctor.id});
         window.open(url,'_blank');
       };
