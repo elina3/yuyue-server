@@ -8,40 +8,56 @@ angular.module('YYWeb').controller('ScheduleSettingController',
           return;
         }
 
-
-        function loadDoctorSchedules(doctorId, callback){
-          $scope.pageConfig.doctorSchedules = [{
-            id: '3',
-            startTime: '8:00',
-            endTime: '9:00',
-            numberCount: 10,
-            booked: 3
-          }];
-          return callback();
-        }
-
         function getWeekName(date){
           var day = date.getDay();
           switch(day){
             case 0:
-            return '星期日';
+              return '星期日';
             case 1:
-            return '星期一';
+              return '星期一';
             case 2:
-            return '星期二';
+              return '星期二';
             case 3:
-            return '星期三';
+              return '星期三';
             case 4:
-            return '星期四';
+              return '星期四';
             case 5:
-            return '星期五';
+              return '星期五';
             case 6:
-            return '星期六';
+              return '星期六';
           }
         }
 
+        function getCurrentDate(){
+          return $scope.pageConfig.calendar.currentDateItem ? $scope.pageConfig.calendar.currentDateItem.date :new Date(new Date().Format('YYYY/MM/DD'));
+        }
+
+        function loadDoctorSchedules(doctorId, callback){
+          var currentDate = getCurrentDate();
+          UserService.getDoctorSchedules({doctor_id: doctorId, timestamp: currentDate.getTime()}, function(err, data){
+            if(err){
+              $scope.$emit(GlobalEvent.onShowAlert, err);
+            }else{
+              $scope.pageConfig.doctor.name = data.doctor ? data.doctor.nickname : '';
+              $scope.pageConfig.doctorSchedules = data.schedules.map((item)=>{
+                return {
+                  id: item._id,
+                  startTime: item.start_time_string,
+                  endTime: item.end_time_string,
+                  numberCount: item.number_count,
+                  booked: 0
+                };
+              });
+              return callback();
+            }
+
+            return callback();
+          });
+        }
+
         $scope.pageConfig = {
-          showDoctorName: false,
+          isSelfUser: true,//默认是医生为自己设置号源
+          doctorId: '',
           doctor: {
             name: '刘医生'
           },
@@ -73,7 +89,7 @@ angular.module('YYWeb').controller('ScheduleSettingController',
                 var time = moment(this.createTimeRange.startDate);
                 return new Date(time);
               }
-              return null; 
+              return new Date(moment().format('YYYY/MM/DD'));//默认时间
             }
           },
           changeDate: function(){
@@ -93,7 +109,7 @@ angular.module('YYWeb').controller('ScheduleSettingController',
               this.dateItems.push({date: date, number: date.Format('MM月dd日'), weekName: getWeekName(date), show: true});
               for(var i=1; i <= 58; i++){
                 var currentDate = new Date(date.getTime() + i * 24 * 60 *60 * 1000);
-                
+
                 this.dateItems.push({
                   date: currentDate,
                   number: currentDate.Format('MM月dd日'),
@@ -127,6 +143,10 @@ angular.module('YYWeb').controller('ScheduleSettingController',
               }
               dateItem.current = true;
               $scope.pageConfig.calendar.currentDateItem = dateItem;
+              $scope.$emit(GlobalEvent.onShowLoading, true);
+              loadDoctorSchedules($scope.pageConfig.doctorId, function(){
+                $scope.$emit(GlobalEvent.onShowLoading, false);
+              });
             }
           },
           popBox: {
@@ -186,16 +206,60 @@ angular.module('YYWeb').controller('ScheduleSettingController',
               }
 
               if(this.currentSchedule){
-                this.currentSchedule.numberCount = this.inputNumber;
-                this.currentSchedule.startTime = this.startTime.hour + ':' + this.endTime.minute;
-                this.currentSchedule.endTime = this.endTime.hour + ':' + this.endTime.minute;
-                //todo 更新
+
+                let currentDate = getCurrentDate();
+                let dateString = currentDate.Format('yyyy/MM/dd');
+
+
+                UserService.modifyDoctorSchedule({
+                  doctor_schedule_id: this.currentSchedule.id,
+                  doctor_id: $scope.pageConfig.doctorId,
+                  start_timestamp:  new Date(dateString+ ' '+ this.startTime.hour + ':' + this.startTime.minute).getTime(),
+                  end_timestamp: new Date(dateString+ ' '+(this.endTime.hour + ':' + this.endTime.minute)).getTime(),
+                  number_count: this.inputNumber
+                }, (err) => {
+                  $scope.$emit(GlobalEvent.onShowLoading, false);
+                  if(err){
+                    return $scope.$emit(GlobalEvent.onShowAlert, err);
+                  }
+
+                  $scope.$emit(GlobalEvent.onShowLoading, true);
+                  loadDoctorSchedules($scope.pageConfig.doctorId, function(){
+                    $scope.$emit(GlobalEvent.onShowLoading, false);
+                  });
+
+                  return $scope.$emit(GlobalEvent.onShowAlert, '编辑成功');
+                });
+
               }else{
                 console.log('请求保存');
-              //todo 请求保存
-                // $scope.pageConfig.doctorSchedules.push({
+                //todo 请求保存
+                let currentDate = getCurrentDate();
+                let dateString = currentDate.Format('yyyy/MM/dd');
+                let newScheduleObj = {
+                  doctor_id: $scope.pageConfig.doctorId,
+                  start_timestamp:  new Date(dateString+ ' '+ this.startTime.hour + ':' + this.startTime.minute).getTime(),
+                  end_timestamp: new Date(dateString+ ' '+(this.endTime.hour + ':' + this.endTime.minute)).getTime(),
+                  number_count: this.inputNumber
+                };
+                $scope.$emit(GlobalEvent.onShowLoading, true);
+                UserService.addDoctorSchedule(newScheduleObj, function(err, data){
+                  $scope.$emit(GlobalEvent.onShowLoading, false);
+                  if(err){
+                    return $scope.$emit(GlobalEvent.onShowAlert, err);
+                  }
 
-                // });
+                  if(data.schedule){
+                    $scope.pageConfig.doctorSchedules.push({
+                      id: data.schedule._id,
+                      numberCount: data.schedule.number_count,
+                      startTime: data.schedule.start_time_string,
+                      endTime: data.schedule.end_time_string,
+                      booked: 0
+                    });
+                  }
+                  return $scope.$emit(GlobalEvent.onShowAlert, '保存成功');
+                });
               }
               this.show = false;
               this.reset();
@@ -207,6 +271,7 @@ angular.module('YYWeb').controller('ScheduleSettingController',
           }
         };
 
+
         $scope.addDoctorSchedule = function(){
           $scope.pageConfig.popBox.open();
         };
@@ -217,21 +282,22 @@ angular.module('YYWeb').controller('ScheduleSettingController',
 
 
         function init() {
+          let assignDoctorId = $stateParams.id;//如果传入doctorId，为指定医生设置账号
+          console.log('assignDoctorId:', assignDoctorId);
+
+          $scope.pageConfig.isSelfUser = assignDoctorId === user._id;//用户是否为自己，不是自己则显示姓名
+
+          $scope.pageConfig.doctorId = assignDoctorId || user.id;
           $scope.pageConfig.calendar.initBoard(new Date(moment().format('YYYY/MM/DD')));
-          let doctorId = $stateParams.id;
-          console.log('doctorId:', doctorId);
-          if(!doctorId){//为登录用户设置号源
+
+          if($scope.pageConfig.isSelfUser){//如果是自己为自己设置号源，自己必须为医生
             if(user.role !== 'doctor'){
               return $scope.$emit(GlobalEvent.onShowAlert, '很抱歉，您不是医生，不能为您设置号源！请联系管理员！');
             }
-            doctorId = user._id;
-          }else{
-            $scope.pageConfig.showDoctorName = true;
           }
 
-
           $scope.$emit(GlobalEvent.onShowLoading, true);
-          loadDoctorSchedules(doctorId, ()=>{
+          loadDoctorSchedules(assignDoctorId, ()=>{
             $scope.$emit(GlobalEvent.onShowLoading, false);
           });
         }

@@ -71,21 +71,6 @@ exports.isString = function (value) {
   return Object.prototype.toString.call(value) === "[object String]";
 };
 
-exports.parseLocation = function (centerLocationParams) {
-  if (!Array.isArray(centerLocationParams) || centerLocationParams.length !== 2) {
-    return [];
-  }
-
-  var longitude = parseFloatNumber(centerLocationParams[0]);
-  var latitude = parseFloatNumber(centerLocationParams[1]);
-
-  if (longitude < 0 && latitude < 0) {
-    return [];
-  }
-
-  return [longitude, latitude];
-};
-
 //是否为布尔值
 exports.isBoolean = function (value) {
   if (self.isNullOrEmpty(value))

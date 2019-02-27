@@ -18,5 +18,6 @@ module.exports = _.extend(exports, {
   param_null_error: {type: 'param_null_error', message: 'the param is null', zh_message: '参数为空'},
   param_analysis_error: {type: 'param_analysis_error', message: 'the param analysis failed', zh_message: '参数解析错误'},
   database_save_error: {type: 'database_save_error', message: 'database save error', zh_message: '数据库保存出错'},
-  no_permission: {type: 'no_permission', message: 'you do not have the permission to operate it', zh_message: '没有权限'}
+  no_permission: {type: 'no_permission', message: 'you do not have the permission to operate it', zh_message: '没有权限'},
+  invalid_timestamp_param: {type: 'invalid_timestamp_param', message: 'invalid timestamp', zh_message: '时间戳参数不正确'},
 });

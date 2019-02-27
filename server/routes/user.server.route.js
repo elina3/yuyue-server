@@ -19,7 +19,10 @@ module.exports = function (app) {
   app.route('/user/doctor/on_shelf').post(authFilter.requireUser, userController.onShelfDoctor);
   app.route('/user/doctor/off_shelf').post(authFilter.requireUser, userController.offShelfDoctor);
   app.route('/user/doctor/set_price').post(authFilter.requireUser, userController.setDoctorPrice);
-  app.route('/user/doctor/add_schedule').post(authFilter.requireUser, userController.addSchedule);
+
+  app.route('/user/doctor/schedule_list').get(userController.getDoctorSchedules);
+  app.route('/user/doctor/add_schedule').post(authFilter.requireUser, userController.addDoctorSchedule);
+  app.route('/user/doctor/modify_schedule').post(authFilter.requireUser, userController.modifyDoctorSchedule);
 
 
   // app.route('/user/sign_up').post(authFilter.requireUser, userController.signUp);

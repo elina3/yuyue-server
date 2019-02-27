@@ -12,14 +12,10 @@ var DoctorScheduleSchema = new Schema({
     type: String,
     default: 'DoctorSchedule',
   },
-  user: {//医生user的_id
+  doctor: {//医生user的_id
     type: Schema.Types.ObjectId,
     required: true,
     ref: 'User'
-  },
-  date: {//日期 2019/1/31 00:00:00
-    type: Date,
-    required: true
   },
   date_string: {//2019/1/31
     type: String,
@@ -43,6 +39,9 @@ var DoctorScheduleSchema = new Schema({
   },
   number_count: {
     type: Number
+  },
+  operator_user: {
+    type: Schema.Types.ObjectId
   }
 });
 DoctorScheduleSchema.plugin(timestamps, {

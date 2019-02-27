@@ -299,6 +299,57 @@ angular.module('YYWeb').factory('UserService',
               function (err) {
                 return callback(SystemError.network_error);
               });
+        },
+        addDoctorSchedule: function(param, callback){
+          RequestSupport.executePost('/user/doctor/add_schedule', param)
+          .then(function (data) {
+                if (!callback) {
+                  return data;
+                } else {
+                  if (data.err) {
+                    return callback(data.zh_message || data.err);
+                  }
+
+                  callback(null, data);
+                }
+              },
+              function (err) {
+                return callback(SystemError.network_error);
+              });
+        },
+        modifyDoctorSchedule: function(param, callback){
+          RequestSupport.executePost('/user/doctor/modify_schedule', param)
+          .then(function (data) {
+                if (!callback) {
+                  return data;
+                } else {
+                  if (data.err) {
+                    return callback(data.zh_message || data.err);
+                  }
+
+                  callback(null, data);
+                }
+              },
+              function (err) {
+                return callback(SystemError.network_error);
+              });
+        },
+        getDoctorSchedules: function(param, callback){
+          RequestSupport.executeGet('/user/doctor/schedule_list', param)
+          .then(function (data) {
+                if (!callback) {
+                  return data;
+                } else {
+                  if (data.err) {
+                    return callback(data.zh_message || data.err);
+                  }
+
+                  callback(null, data);
+                }
+              },
+              function (err) {
+                return callback(SystemError.network_error);
+              });
         }
       };
     }

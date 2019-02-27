@@ -21,4 +21,8 @@ module.exports = _.extend(exports, {
   doctor_off_shelf: {type: 'doctor_off_shelf', message: 'The doctor has been off shelf', zh_message: '该医生已下架'},
   doctor_no_price: {type: 'doctor_no_price', message: 'The doctor has not set the price', zh_message: '该医生还未设置挂号费'},
   price_error: {type: 'price_error', message: 'The price is error', zh_message: '挂号费不合法'},
+  start_end_time_invalid: {type: 'start_end_time_invalid', message: 'The time range is invalid', zh_message: '开始时间必须早于结束时间'},
+  schedule_number_count_error: {type: 'schedule_number_count_error', message: 'The schedule number count set error', zh_message: '医生的号源数量设置不合法'},
+  time_range_repeat: {type: 'time_range_repeat', message: 'The schedule time range is repeat', zh_message: '时间范围有重叠'},
+  doctor_schedule_not_exist: {type: 'doctor_schedule_not_exist', message: 'The doctor schedule is not exist', zh_message: '该医生的时间安排记录不存在'},
 });

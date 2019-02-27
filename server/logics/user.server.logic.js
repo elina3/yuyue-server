@@ -1,9 +1,11 @@
 'use strict';
+var async = require('async');
 var systemError = require('../errors/system');
 var userError = require('../errors/user');
 var mongoLib = require('../libraries/mongoose');
 var appDb = mongoLib.appDb;
-var User = appDb.model('User');
+var User = appDb.model('User'),
+    DoctorSchedule = appDb.model('DoctorSchedule');
 
 var doctorActionHistoryLogic = require('./doctor_action_history');
 
@@ -221,52 +223,232 @@ exports.signIn = function(username, password, terminalType, callback) {
 
 exports.getDoctors = function(filter, callback) {
   var query = {
-    role: 'doctor'
+    role: 'doctor',
   };
-  if(filter.outpatient_type){//门诊类型
+  if (filter.outpatient_type) {//门诊类型
     query.outpatient_type = filter.outpatient_type;
   }
-  if(filter.department_id){
+  if (filter.department_id) {
     query.department = filter.department_id;
   }
-  if(filter.nickname){
-    query.nickname = {$regex: filter.nickname, $options: 'i'};
+  if (filter.nickname) {
+    query.nickname = { $regex: filter.nickname, $options: 'i' };
   }
   if (filter.on_shelf) {//需要仅获取上架的医生,App端获取医生信息
     query.on_shelf = true;
   }
-  User.find(query).populate('department job_title').exec(function(err, doctors) {
-    if(err){
-      console.log(err);
-      return callback({err: systemError.database_query_error});
-    }
+  User.find(query).
+      populate('department job_title').
+      exec(function(err, doctors) {
+        if (err) {
+          console.log(err);
+          return callback({ err: systemError.database_query_error });
+        }
 
-    return callback(null, doctors);
-  });
+        return callback(null, doctors);
+      });
 };
 
-exports.updateDoctorShelfStatus = function(user, doctorId, onShelf, callback){
-  User.update({_id: doctorId}, {$set: {on_shelf: onShelf, recent_modify_user: user._id}}, function(err){
-    if(err){
-      console.log(err);
-      return callback({err: systemError.database_update_error});
-    }
+exports.updateDoctorShelfStatus = function(user, doctorId, onShelf, callback) {
+  User.update({ _id: doctorId },
+      { $set: { on_shelf: onShelf, recent_modify_user: user._id } },
+      function(err) {
+        if (err) {
+          console.log(err);
+          return callback({ err: systemError.database_update_error });
+        }
 
-    var action = onShelf ? 'on_shelf' : 'off_shelf';
-    doctorActionHistoryLogic.addDoctorActionHistory(user, doctorId, action, null, function(){});
+        var action = onShelf ? 'on_shelf' : 'off_shelf';
+        doctorActionHistoryLogic.addDoctorActionHistory(user, doctorId, action,
+            null, function() {});
 
-    return callback();
-  });
+        return callback();
+      });
 };
-exports.setDoctorPrice = function(user, doctor, newPrice, callback){
+exports.setDoctorPrice = function(user, doctor, newPrice, callback) {
   var oldPrice = doctor.price;
-  User.update({_id: doctor._id}, {$set: {price: newPrice, recent_modify_user: user._id}}, function(err){
-    if(err){
-      console.log(err);
-      return callback({err: systemError.database_update_error});
+  User.update({ _id: doctor._id },
+      { $set: { price: newPrice, recent_modify_user: user._id } },
+      function(err) {
+        if (err) {
+          console.log(err);
+          return callback({ err: systemError.database_update_error });
+        }
+
+        doctorActionHistoryLogic.addDoctorActionHistory(user, doctor._id,
+            'set_price', { oldPrice: oldPrice, newPrice: newPrice },
+            function() {});
+        return callback();
+      });
+};
+
+exports.getDoctorSchedules = function(doctorId, date, callback) {
+  console.log('date:', date.getTime());
+  var query = {
+    doctor: doctorId,
+    date_string: date.Format('yyyy-MM-dd'),
+  };
+  DoctorSchedule.find(query).
+      select(
+          'date date_string start_time end_time start_time_string end_time_string number_count').
+      exec(function(err, schedules) {
+        if (err) {
+          console.log(err);
+          return callback({ err: systemError.database_query_error });
+        }
+
+        return callback(null, schedules);
+      });
+};
+
+function isInvalidScheduleRange(existsSchedules, newStartTime, newEndTime) {
+  var hasRange = false;
+  for (var i = 0; i < existsSchedules.length; i++) {
+    var item = existsSchedules[i];
+    if (newStartTime.getTime() >= item.start_time.getTime() &&
+        newStartTime.getTime() <= item.end_time.getTime()) {
+      hasRange = true;
+      break;
+    }
+    if (newEndTime.getTime() >= item.start_time.getTime() &&
+        newEndTime.getTime() <= item.end_time.getTime()) {
+      hasRange = true;
+      break;
+    }
+    if(newStartTime.getTime() <= item.start_time.getTime() && newEndTime.getTime() >= item.end_time.getTime()){
+      hasRange = true;
+      break;
     }
 
-    doctorActionHistoryLogic.addDoctorActionHistory(user, doctor._id, 'set_price', {oldPrice: oldPrice, newPrice: newPrice}, function(){});
-    return callback();
+  }
+
+  return !hasRange;
+}
+
+exports.addDoctorSchedule = function(user, doctor, scheduleInfo, callback) {
+  var dateString = scheduleInfo.start_time.Format('yyyy-MM-dd');
+  async.auto({
+    otherSchedules: function(autoCallback) {
+      DoctorSchedule.find({ doctor: doctor._id, date_string: dateString }).
+          exec(function(err, doctorSchedules) {
+            if (err) {
+              return autoCallback({ err: systemError.database_query_error });
+            }
+            console.log(doctorSchedules);
+
+            var isValid = isInvalidScheduleRange(doctorSchedules,
+                scheduleInfo.start_time, scheduleInfo.end_time);
+            if (!isValid) {
+              return autoCallback({ err: userError.time_range_repeat });
+            }
+
+            return autoCallback();
+          });
+    },
+    addNew: [
+      'otherSchedules', function(autoCallback) {
+        var doctorSchedule = new DoctorSchedule({
+          operator_user: user._id,
+          doctor: doctor._id,
+          date_string: dateString,
+          start_time: scheduleInfo.start_time,
+          start_time_string: scheduleInfo.start_time.Format('hh:mm'),
+          end_time: scheduleInfo.end_time,
+          end_time_string: scheduleInfo.end_time.Format('hh:mm'),
+          number_count: scheduleInfo.number_count,
+        });
+        doctorSchedule.save(function(err, saved) {
+          if (err) {
+            return autoCallback({ err: systemError.database_save_error });
+          }
+
+          doctorActionHistoryLogic.addDoctorActionHistory(user, doctor._id,
+              'add_schedule',
+              {
+                schedule_id: saved._id,
+                start_time: scheduleInfo.start_time,
+                end_time: scheduleInfo.end_time,
+                number_count: scheduleInfo.number_count,
+              }, function() {});
+          return autoCallback(null, saved);
+        });
+      }],
+  }, function(err, results) {
+    if (err) {
+      return callback(err);
+    }
+
+    return callback(null, results.addNew);
   });
+};
+
+exports.updateDoctorSchedule = function(user, doctor, scheduleInfo, callback) {
+  DoctorSchedule.findOne({ _id: scheduleInfo._id }).
+      exec(function(err, doctorSchedule) {
+        if (err) {
+          return callback({ err: systemError.database_query_error });
+        }
+
+        if (!doctorSchedule) {
+          return callback({ err: userError.doctor_schedule_not_exist });
+        }
+
+        async.auto({
+          otherSchedules: function(autoCallback, result) {
+            var query = {
+              doctor: doctor._id,
+              date_string: doctorSchedule.date_string,
+              _id: {$ne: scheduleInfo._id}
+            };
+            DoctorSchedule.find(query).exec(function(err, otherSchedules) {
+              if (err) {
+                console.log(err);
+                return autoCallback({ err: systemError.database_query_error });
+              }
+
+              var isInvalid = isInvalidScheduleRange(otherSchedules,
+                  scheduleInfo.start_time, scheduleInfo.end_time);
+              if (!isInvalid) {
+                return autoCallback({ err: userError.time_range_repeat });
+              }
+
+              return autoCallback();
+            });
+          },
+          updateSchedule: [
+            'otherSchedules', function(autoCallback) {
+
+              doctorSchedule = {
+                operator_user: user._id,
+                start_time: scheduleInfo.start_time,
+                start_time_string: scheduleInfo.start_time.Format('hh:mm'),
+                end_time: scheduleInfo.end_time,
+                end_time_string: scheduleInfo.end_time.Format('hh:mm'),
+                number_count: scheduleInfo.number_count,
+              };
+              DoctorSchedule.update({ _id: scheduleInfo._id },
+                  { $set: doctorSchedule }, function(err) {
+                    if (err) {
+                      return autoCallback(
+                          { err: systemError.database_update_error });
+                    }
+                    doctorActionHistoryLogic.addDoctorActionHistory(user,
+                        doctor._id,
+                        'update_schedule',
+                        {
+                          schedule_id: scheduleInfo._id,
+                          start_time: scheduleInfo.start_time,
+                          end_time: scheduleInfo.end_time,
+                          number_count: scheduleInfo.number_count,
+                        }, function() {});
+                    return autoCallback();
+                  });
+            }],
+        }, function(err) {
+          if (err) {
+            return callback(err);
+          }
+          return callback();
+        });
+      });
 };
