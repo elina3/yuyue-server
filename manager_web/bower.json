@@ -28,7 +28,8 @@
     "angular-ui-router": "~0.2.13",
     "angularytics": "~0.3.0",
     "bootstrap": "~3.3.4",
-    "js-xlsx": "~0.8.0"
+    "js-xlsx": "~0.8.0",
+    "jquery": "~2.1.4"
   },
   "devDependencies": {
     "angular-daterangepicker": "~0.1.12"
