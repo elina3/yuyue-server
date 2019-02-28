@@ -60,10 +60,10 @@ angular.module('YYWeb').controller('AppointmentPickUpController',
           return;
         }
         plugin().SetReadType(0);
-        plugin().SetPortNo(1001);	//ÉèÖÃ¶Ë¿Ú£¬´®¿Ú1~16£¬USB 1001~1016
+        plugin().SetPortNo(1001);
         plugin().ReadCard();
         console.log(plugin());
-        //´æ²Î
+
         var namea1 = plugin().Name + '/' + plugin().NameL;
         console.log(namea1);
 
@@ -81,6 +81,7 @@ angular.module('YYWeb').controller('AppointmentPickUpController',
 
         var cardno1 = plugin().CardNo;
         console.log(cardno1);
+        $scope.IDNumber = cardno1;
 
         var police1 = plugin().Police;
         console.log(police1);
