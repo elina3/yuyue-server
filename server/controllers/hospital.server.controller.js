@@ -170,3 +170,16 @@ exports.getJobTitleDetail = function(req, res, next){
   };
   return next();
 };
+
+exports.getOpenDepartmentList = function(req, res, next){
+  departmentLogic.getAllOpenDepartments(function(err, departments){
+    if(err){
+      return next(err);
+    }
+
+    req.data = {
+      departments: departments
+    };
+    return next();
+  });
+};

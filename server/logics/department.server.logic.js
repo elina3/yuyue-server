@@ -69,3 +69,13 @@ exports.getDepartmentDetail = function(departmentId, callback) {
     return callback(null, hospital);
   });
 };
+
+exports.getAllOpenDepartments = function(callback){
+  DepartmentModel.find({deleted_status: false}, function(err, list){
+    if(err){
+      return callback({err: systemError.database_query_error});
+    }
+
+    return callback(null, list);
+  });
+};
