@@ -7,7 +7,7 @@
                 <div class="yy-panel-item">
                     <label>身份证号码：<input ng-model="IDNumber" type="text" placeholder="" /></label>
                     <input type="button" ng-click="readIDCard()" class="yy-default-button" value="读取"/>
-                    <img ng-src="{{ IDImage }}"/>
+                    <img ng-show="IDImage" ng-src="{{ IDImage }}"/>
                     <object id="plugin0" type="application/x-syncard" width="0" height="0">
                         <param name="onload" value="pluginLoaded" />
                     </object>
