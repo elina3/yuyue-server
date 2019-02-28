@@ -17,7 +17,7 @@ exports.user_roles = {
 };
 
 exports.outpatient_types = {
-  enums: ['expert', 'normal'],//专家门诊，普通门诊
+  enums: ['expert', 'normal', ''],//专家门诊，普通门诊
   valid: function(type){
     return this.enums.indexOf(type) >= 0;
   }

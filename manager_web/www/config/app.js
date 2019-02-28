@@ -8,7 +8,8 @@ var yyWeb = angular.module('YYWeb', [
   'ngMessages',
   'LocalStorageModule',
   'base64',
-  'daterangepicker'
+  'daterangepicker',
+  'angularFileUpload'
 ]);
 
 yyWeb.config(['$stateProvider', '$urlRouterProvider', function ($stateProvider, $urlRouterProvider) {

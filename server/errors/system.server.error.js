@@ -20,4 +20,5 @@ module.exports = _.extend(exports, {
   database_save_error: {type: 'database_save_error', message: 'database save error', zh_message: '数据库保存出错'},
   no_permission: {type: 'no_permission', message: 'you do not have the permission to operate it', zh_message: '没有权限'},
   invalid_timestamp_param: {type: 'invalid_timestamp_param', message: 'invalid timestamp', zh_message: '时间戳参数不正确'},
+  upload_error: {type: 'upload_error', message: 'File upload failed', zh_message: '文件上传失败！'},
 });

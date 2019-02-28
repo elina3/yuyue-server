@@ -67,6 +67,7 @@ manager_web/bower_components
 manager_web/www/dist
 
 client_web/www/dist
+temp_file
 
 .idea/
 .idea/vcs.xml

@@ -112,7 +112,22 @@
                     </div>
                     <div class="yy-form-item">
                         <label>头像</label>
-                        <img src="../../images/global/default_user.png"/>
+                        <img ng-show="pageConfig.user.headUrl" ng-src="{{ pageConfig.user.headUrl }}"/>
+
+                        <input type="file" accept="image/*"  nv-file-select uploader="uploader"/><br/>
+                        <ul>
+                            <li ng-repeat="item in uploader.queue">
+                                Name: <span ng-bind="item.file.name"></span><br/>
+                            </li>
+                        </ul>
+                        <!--<img ng-src="{{ user.headUrl }}"/>-->
+
+
+                        <!--<form action="/file_upload" method="post" enctype="multipart/form-data">-->
+                            <!--<input type="file" name="image" accept="image/*" size="50" />-->
+                            <!--<br />-->
+                            <!--<input type="submit" value="上传文件" />-->
+                        <!--</form>-->
                         <!--<input type="text" ng-model="pageConfig.user.headUrl" disabled type="text"/>-->
                     </div>
 

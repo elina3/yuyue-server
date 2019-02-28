@@ -1,7 +1,8 @@
 'use strict';
+
 angular.module('YYWeb').controller('UserAddController',
-    ['$window', '$rootScope', '$scope', '$stateParams', 'GlobalEvent', '$state', 'UserService', 'Auth', 'HospitalService',
-      function ($window, $rootScope, $scope, $stateParams, GlobalEvent, $state, UserService, Auth, HospitalService) {
+    ['$window', '$rootScope', '$scope', '$stateParams', 'GlobalEvent', '$state', 'UserService', 'Auth', 'HospitalService', 'FileUploader',
+      function ($window, $rootScope, $scope, $stateParams, GlobalEvent, $state, UserService, Auth, HospitalService, FileUploader) {
         var user = Auth.getUser();
         if (!user) {
           $state.go('user_sign_in');
@@ -33,9 +34,45 @@ angular.module('YYWeb').controller('UserAddController',
             department: null,
             goodAt: '',
             brief: '',
-            headUrl: '../../images/global/default_user.png'
+            // headUrl: '../../images/global/default_user.png'
+            headUrl: '',
+            head_photo_key: ''
           }
         };
+
+        var uploader=$scope.uploader=new FileUploader({
+          queueLimit: 1,
+          url: '/file_upload',
+          removeAfterUpload: true
+        });/*实例化一个FileUploader对象*/
+        uploader.autoUpload = true;
+        uploader.filters.push({
+          name: 'imageFilter',
+          fn: function(item /*{File|FileLikeObject}*/, options) {
+            var type = '|' + item.type.slice(item.type.lastIndexOf('/') + 1) + '|';
+            return '|jpg|png|jpeg|bmp|gif|'.indexOf(type) !== -1;
+          }
+        });
+        // uploader.queue=[];
+
+        uploader.onSuccessItem = function(fileItem, response, status, headers) {
+          console.log(response);
+          console.log(status);
+          console.log(headers);
+          console.info('onSuccessItem');
+          if(response.success){
+            $scope.pageConfig.user.headUrl = '/file/image?key='+response.file_id;
+            $scope.pageConfig.user.head_photo_key = response.file_id;
+          }
+        };
+        uploader.onErrorItem = function(fileItem, response, status, headers){
+          $scope.$emit(GlobalEvent.onShowAlert, '文件上传失败');
+        };
+
+
+        // $scope.clearItems = function(){    //重新选择文件时，清空队列，达到覆盖文件的效果
+        //   uploader.clearQueue();
+        // }
 
 
         function toggleClientItem(client){
@@ -112,6 +149,7 @@ angular.module('YYWeb').controller('UserAddController',
           params.outpatient_type = params.outpatientType && params.outpatientType.id;
           params.terminal_types = params.selectedClientIds;
           params.permission = permission;
+          params.head_photo = $scope.pageConfig.user.head_photo_key;
 
           if($scope.pageConfig.user._id){
             //todo updateUser

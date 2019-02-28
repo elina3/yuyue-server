@@ -1,30 +1,26 @@
 'use strict';
-
 var mongoLib = require('../libraries/mongoose');
 var appDb = mongoLib.appDb;
-var enumLib = require('../enums/business');
-var roleEnums = enumLib.user_roles.enums;
-var outpatientTypeEnums = enumLib.outpatient_types.enums;
-
 var mongoose = require('mongoose'),
     Schema = mongoose.Schema,
-    timestamps = require('mongoose-timestamp'),
-    cryptoLib = require('../libraries/crypto'),
-    crypto = require('crypto');
+    timestamps = require('mongoose-timestamp');
 
-var ClientSchema = new Schema({
+var MemberSchema = new Schema({
   object: {
     type: String,
-    default: 'Client',
-  },
-  IDCard: {
-    type: String,
-    required: true,
-    unique: true
+    default: 'Member',
   },
   open_id: {//绑定wechat的唯一值
     type: String,
     trim: true,
+    required: true,
+    unique: true
+  },
+  wechat_info: {
+    type: Schema.Types.Mixed
+  },
+  IDCard: {
+    type: String,
     required: true,
     unique: true
   },
@@ -38,6 +34,7 @@ var ClientSchema = new Schema({
   },
   mobile_phone: {
     type: String,
+    required: true
   },
   head_photo: {
     type: String,
@@ -48,12 +45,16 @@ var ClientSchema = new Schema({
   },
   card_number: {
     type: String
+  },
+  deleted_status:{
+    type: Boolean,
+    default: false
   }
 });
 
-ClientSchema.plugin(timestamps, {
+MemberSchema.plugin(timestamps, {
   createdAt: 'create_time',
   updatedAt: 'update_time',
 });
 
-appDb.model('Client', ClientSchema);
+appDb.model('Member', MemberSchema);

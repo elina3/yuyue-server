@@ -1,6 +1,3 @@
-/**
- * Created by elinaguo on 16/2/25.
- */
 'use strict';
 var async = require('async');
 var cryptoLib = require('../libraries/crypto'),

@@ -14,6 +14,8 @@ var express = require('express'),
   ejs = require('ejs'),
   async = require('async'),
   mongoose = require('mongoose');
+var multer  = require('multer'),
+    fs = require('fs');
 
 
 
@@ -77,6 +79,11 @@ module.exports = function () {
     res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
     next();
   });
+
+
+  app.use(express.static('public'));
+  app.use(multer({ dest: '/tmp/'}).any('image'));
+
 
   // Setting the app router and static folder
   app.use('/', express.static(path.resolve('../manager_web/www')));
