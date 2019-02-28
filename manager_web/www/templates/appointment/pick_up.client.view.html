@@ -6,7 +6,10 @@
 
                 <div class="yy-panel-item">
                     <label>身份证号码：<input type="text" placeholder="" /></label>
-                    <input type="button" class="yy-default-button" value="读取"/>
+                    <input type="button" ng-click="readIDCard()" class="yy-default-button" value="读取"/>
+                    <object id="plugin0" type="application/x-syncard" width="0" height="0">
+                        <param name="onload" value="pluginLoaded" />
+                    </object>
                 </div>
                 <div class="yy-panel-item no-top">
                     <label>预约患者号：<input type="text" placeholder="" /></label>

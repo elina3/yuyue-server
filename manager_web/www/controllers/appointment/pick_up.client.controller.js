@@ -48,8 +48,55 @@ angular.module('YYWeb').controller('AppointmentPickUpController',
         window.open(url,'_blank');
       };
 
-      $scope.goBack = function () {
-        $window.history.back();
+      function plugin0()
+      {
+        return document.getElementById('plugin0');
+      }
+      var plugin = plugin0;
+
+      $scope.readIDCard = function(){
+        if(!plugin || !plugin().SetReadType){
+          console.log('no plugin');
+          return;
+        }
+        plugin().SetReadType(0);
+        plugin().SetPortNo(1001);	//ÉèÖÃ¶Ë¿Ú£¬´®¿Ú1~16£¬USB 1001~1016
+        plugin().ReadCard();
+        console.log(plugin());
+        //´æ²Î
+        var namea1 = plugin().Name + '/' + plugin().NameL;
+        console.log(namea1);
+
+        var sex1 = plugin().Sex + '/' + plugin().SexL;
+        console.log(sex1);
+
+        var nation1 = plugin().Nation + '/' + plugin().NationL;
+        console.log(nation1);
+
+        var born1 = plugin().Born + '/' + plugin().BornL;
+        console.log(born1);
+
+        var address1 = plugin().Address;
+        console.log(address1);
+
+        var cardno1 = plugin().CardNo;
+        console.log(cardno1);
+
+        var police1 = plugin().Police;
+        console.log(police1);
+
+        var ustart1 = plugin().UserLifeB;
+        console.log(ustart1);
+
+        var uend1 = plugin().UserLifeE;
+        console.log(uend1);
+
+        var photoname1 = plugin().PhotoName;
+        console.log(photoname1);
+
+        var photobase = plugin().Base64Photo;
+        console.log(photobase);
+        // myElement10.src="data:image/jpeg;base64,"+photobase;
       };
 
       function init() {
