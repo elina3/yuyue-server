@@ -35,7 +35,7 @@ angular.module('YYWeb').controller('JobTitleAddController',
         }
 
         $scope.saveJobTitle = function(){
-          addJobTitle(()=>{
+          addJobTitle(function(){
             $state.go('job_title_list');
           });
         };

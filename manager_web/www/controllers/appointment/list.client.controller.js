@@ -35,7 +35,7 @@ angular.module('YYWeb').controller('AppointmentListController',
           totalCount: 0,
           isShowTotalInfo: true,
           onCurrentPageChanged: function (callback) {
-            loadAppointments(()=>{
+            loadAppointments(function(){
               alert('page changed!');
             });
           }

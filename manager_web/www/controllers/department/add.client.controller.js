@@ -39,7 +39,7 @@ angular.module('YYWeb').controller('DepartmentAddController',
 
         $scope.saveDepartment = function(){
           $scope.$emit(GlobalEvent.onShowLoading, true);
-          createDepartment(()=>{
+          createDepartment(function(){
             $scope.$emit(GlobalEvent.onShowLoading, false);
             $state.go('department_list');
           });

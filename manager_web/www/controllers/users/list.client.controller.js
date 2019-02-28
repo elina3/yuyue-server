@@ -19,7 +19,7 @@ angular.module('YYWeb').controller('UserListController',
             }
 
             data.users = data.users || [];
-            $scope.pageConfig.userList = data.users.map(item => {
+            $scope.pageConfig.userList = data.users.map(function(item) {
               return {
                 _id: item._id,
                 username: item.username,
@@ -48,7 +48,7 @@ angular.module('YYWeb').controller('UserListController',
             isShowTotalInfo: true,
             onCurrentPageChanged: function () {
               $scope.$emit(GlobalEvent.onShowLoading, true);
-              loadUserList(()=>{
+              loadUserList(function(){
                 $scope.$emit(GlobalEvent.onShowLoading, false);
               });
             }
@@ -57,7 +57,7 @@ angular.module('YYWeb').controller('UserListController',
 
         $scope.search = function () {
           $scope.$emit(GlobalEvent.onShowLoading, true);
-          loadUserList(()=>{
+          loadUserList(function(){
             $scope.$emit(GlobalEvent.onShowLoading, false);
           });
         };
@@ -65,7 +65,7 @@ angular.module('YYWeb').controller('UserListController',
 
         function init() {
           $scope.$emit(GlobalEvent.onShowLoading, true);
-          loadUserList(()=>{
+          loadUserList(function(){
             $scope.$emit(GlobalEvent.onShowLoading, false);
           });
         }

@@ -23,7 +23,7 @@ angular.module('YYWeb').controller('DepartmentListController',
           data.departments = data.departments || [];
           console.log(data.departments);
 
-          $scope.pageConfig.departmentList = data.departments.map(item => {
+          $scope.pageConfig.departmentList = data.departments.map(function(item) {
             return {
               _id: item._id,
               name: item.name,
@@ -49,7 +49,7 @@ angular.module('YYWeb').controller('DepartmentListController',
           onCurrentPageChanged: function (callback) {
 
             $scope.$emit(GlobalEvent.onShowLoading, true);
-            loadDepartmentList(()=>{
+            loadDepartmentList(function(){
               $scope.$emit(GlobalEvent.onShowLoading, false);
             });
           }
@@ -60,7 +60,7 @@ angular.module('YYWeb').controller('DepartmentListController',
 
       function init() {
         $scope.$emit(GlobalEvent.onShowLoading, true);
-        loadDepartmentList(()=>{
+        loadDepartmentList(function(){
           $scope.$emit(GlobalEvent.onShowLoading, false);
         });
       }

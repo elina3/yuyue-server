@@ -35,7 +35,7 @@ angular.module('YYWeb').controller('SickerListController',
           totalCount: 0,
           isShowTotalInfo: true,
           onCurrentPageChanged: function (callback) {
-            loadAppointments(()=>{
+            loadAppointments(function(){
               alert('page changed!');
             });
           }
@@ -79,7 +79,7 @@ angular.module('YYWeb').controller('SickerListController',
       function init() {
 
         $scope.$emit(GlobalEvent.onShowLoading, true);
-        loadAppointments(()=>{
+        loadAppointments(function(){
           $scope.pageConfig.pagination.totalCount = 3;
           $scope.$emit(GlobalEvent.onShowLoading, false);
           alert('init');

@@ -73,7 +73,7 @@ angular.module('YYWeb').controller('AppointmentDetailController',
 
 
           $scope.$emit(GlobalEvent.onShowLoading, true);
-          loadAppointment(()=>{
+          loadAppointment(function(){
             $scope.$emit(GlobalEvent.onShowLoading, false);
           });
         }

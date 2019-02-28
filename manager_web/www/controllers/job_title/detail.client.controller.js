@@ -35,7 +35,7 @@ angular.module('YYWeb').controller('JobTitleDetailController',
         function init() {
           $scope.pageConfig.job_title_id = $stateParams.id;
           $scope.$emit(GlobalEvent.onShowLoading, true);
-          loadJobTitleDetail(()=>{
+          loadJobTitleDetail(function(){
             $scope.$emit(GlobalEvent.onShowLoading, false);
           });
         }

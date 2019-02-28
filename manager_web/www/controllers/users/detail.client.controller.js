@@ -23,7 +23,7 @@ angular.module('YYWeb').controller('UserDetailController',
               for(var prop in data.user.permission){
                 var module = data.user.permission[prop];
                 if(module && module.length > 0){
-                  modules.push(module.filter(item => {return item.selected;}).map(item=>{return item.text;}));
+                  modules.push(module.filter(function(item) {return item.selected;}).map(function(item){return item.text;}));
                 }
               }
 
@@ -36,7 +36,7 @@ angular.module('YYWeb').controller('UserDetailController',
                 role: UserService.translateUserRole(data.user.role),
                 outpatientType:  UserService.translateOutpatientType(data.user.outpatient_type),
                 jobTitle: data.user.job_title.name,
-                clients: data.user.terminal_types.map(item => {
+                clients: data.user.terminal_types.map(function(item) {
                   return UserService.translateTerminalType(item);
                 }),
                 modules: modules,//[['用户管理', '科室管理'], ['取号']],
@@ -91,7 +91,7 @@ angular.module('YYWeb').controller('UserDetailController',
         function init() {
           $scope.pageConfig.user_id = $stateParams.id;
           $scope.$emit(GlobalEvent.onShowLoading, true);
-          loadUser(()=>{
+          loadUser(function(){
             $scope.$emit(GlobalEvent.onShowLoading, false);
           });
         }

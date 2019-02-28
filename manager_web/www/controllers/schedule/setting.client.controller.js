@@ -39,7 +39,7 @@ angular.module('YYWeb').controller('ScheduleSettingController',
               $scope.$emit(GlobalEvent.onShowAlert, err);
             }else{
               $scope.pageConfig.doctor.name = data.doctor ? data.doctor.nickname : '';
-              $scope.pageConfig.doctorSchedules = data.schedules.map((item)=>{
+              $scope.pageConfig.doctorSchedules = data.schedules.map(function(item){
                 return {
                   id: item._id,
                   startTime: item.start_time_string,
@@ -217,7 +217,7 @@ angular.module('YYWeb').controller('ScheduleSettingController',
                   start_timestamp:  new Date(dateString+ ' '+ this.startTime.hour + ':' + this.startTime.minute).getTime(),
                   end_timestamp: new Date(dateString+ ' '+(this.endTime.hour + ':' + this.endTime.minute)).getTime(),
                   number_count: this.inputNumber
-                }, (err) => {
+                }, function(err) {
                   $scope.$emit(GlobalEvent.onShowLoading, false);
                   if(err){
                     return $scope.$emit(GlobalEvent.onShowAlert, err);
@@ -297,7 +297,7 @@ angular.module('YYWeb').controller('ScheduleSettingController',
           }
 
           $scope.$emit(GlobalEvent.onShowLoading, true);
-          loadDoctorSchedules(assignDoctorId, ()=>{
+          loadDoctorSchedules(assignDoctorId, function(){
             $scope.$emit(GlobalEvent.onShowLoading, false);
           });
         }

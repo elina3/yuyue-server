@@ -129,9 +129,9 @@ angular.module('YYWeb').controller('UserAddController',
 
           var hasModule = false;
           var permission = {};
-          $scope.pageConfig.user.selectedClientIds.forEach(item => {
+          $scope.pageConfig.user.selectedClientIds.forEach(function(item) {
             if($scope.pageConfig.modulesDic[item]){
-              var modules = $scope.pageConfig.modulesDic[item].filter(a=>{return a.selected;});
+              var modules = $scope.pageConfig.modulesDic[item].filter(function(a){return a.selected;});
               if(modules.length > 0){
                 hasModule = true;
                 permission[item] = modules;
@@ -177,7 +177,7 @@ angular.module('YYWeb').controller('UserAddController',
         }
 
         $scope.saveUser = function(){
-          saveOneUser(()=>{
+          saveOneUser(function(){
             $state.go('user_list');
           });
         };
@@ -190,7 +190,7 @@ angular.module('YYWeb').controller('UserAddController',
             }
 
             if(data.departments){
-              $scope.pageConfig.departments = data.departments.map(item=>{
+              $scope.pageConfig.departments = data.departments.map(function(item){
                 return {id: item._id, text: item.name};
               });
             }
@@ -204,7 +204,7 @@ angular.module('YYWeb').controller('UserAddController',
             }
 
             if(data.job_titles){
-              $scope.pageConfig.jobTitles = data.job_titles.map(item=>{
+              $scope.pageConfig.jobTitles = data.job_titles.map(function(item){
                 return {id: item._id, text: item.name};
               });
             }
@@ -220,7 +220,7 @@ angular.module('YYWeb').controller('UserAddController',
 
           toggleClientItem($scope.pageConfig.clients[0]);
           // $scope.$emit(GlobalEvent.onShowLoading, true);
-          // loadUser(()=>{
+          // loadUser(function(){
           //   $scope.$emit(GlobalEvent.onShowLoading, false);
           // });
         }

@@ -35,7 +35,7 @@ angular.module('YYWeb').controller('DepartmentDetailController',
         function init() {
           $scope.pageConfig.department_id = $stateParams.id;
           $scope.$emit(GlobalEvent.onShowLoading, true);
-          loadDepartment(()=>{
+          loadDepartment(function(){
             $scope.$emit(GlobalEvent.onShowLoading, false);
           });
         }

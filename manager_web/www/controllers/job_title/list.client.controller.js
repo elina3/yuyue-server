@@ -17,7 +17,7 @@ angular.module('YYWeb').controller('JobTitleListController',
             return $scope.$emit(GlobalEvent.onShowAlert, err);
           }
 
-          $scope.pageConfig.jobTitleList = data.job_titles.map(item=>{return {_id: item._id, name: item.name, description: item.description||'--'};});
+          $scope.pageConfig.jobTitleList = data.job_titles.map(function(item){return {_id: item._id, name: item.name, description: item.description||'--'};});
           // [
           //   {id: '1', name: '信息科主任', description: '心内科'},
           //   {id: '2', name: '护士', description: '呼吸内科'},
@@ -43,7 +43,7 @@ angular.module('YYWeb').controller('JobTitleListController',
           totalCount: 0,
           isShowTotalInfo: true,
           onCurrentPageChanged: function (callback) {
-            // loadJobTitleList(()=>{
+            // loadJobTitleList(function(){
             //   alert('page changed!');
             // });
           }
@@ -53,7 +53,7 @@ angular.module('YYWeb').controller('JobTitleListController',
 
       function init() {
         $scope.$emit(GlobalEvent.onShowLoading, true);
-        loadJobTitleList(()=>{
+        loadJobTitleList(function(){
           $scope.$emit(GlobalEvent.onShowLoading, false);
         });
       }

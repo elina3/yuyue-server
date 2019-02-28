@@ -22,7 +22,7 @@ angular.module('YYWeb').controller('ScheduleListController',
         //   totalCount: 0,
         //   isShowTotalInfo: true,
         //   onCurrentPageChanged: function (callback) {
-        //     loadDoctors(()=>{
+        //     loadDoctors(function(){
         //       alert('page changed!');
         //     });
         //   }
@@ -38,7 +38,7 @@ angular.module('YYWeb').controller('ScheduleListController',
           },
           sure: function(){
             $scope.$emit(GlobalEvent.onShowLoading, true);
-            UserService.setDoctorPrice({doctor_id: this.currentDoctor.id, price: this.inputNumber}, (err, data) => {
+            UserService.setDoctorPrice({doctor_id: this.currentDoctor.id, price: this.inputNumber}, function(err, data) {
               $scope.$emit(GlobalEvent.onShowLoading, false);
               if(err){
                 return $scope.$emit(GlobalEvent.onShowAlert, err);
@@ -69,7 +69,7 @@ angular.module('YYWeb').controller('ScheduleListController',
             return $scope.$emit(GlobalEvent.onShowAlert, '获取医生信息失败！');
           }
 
-          $scope.pageConfig.doctorList = data.doctors.map((item)=>{
+          $scope.pageConfig.doctorList = data.doctors.map(function(item){
             return {
               id: item._id,
               department: item.department.name,
@@ -98,7 +98,7 @@ angular.module('YYWeb').controller('ScheduleListController',
           data.departments = data.departments || [];
           console.log(data.departments);
           if(data.departments.length > 0){
-            $scope.pageConfig.departments =  $scope.pageConfig.departments.concat(data.departments.map(item => {
+            $scope.pageConfig.departments =  $scope.pageConfig.departments.concat(data.departments.map(function(item) {
               return {
                 id: item._id,
                 text: item.name
@@ -147,7 +147,7 @@ angular.module('YYWeb').controller('ScheduleListController',
 
       $scope.search = function(){
         $scope.$emit(GlobalEvent.onShowLoading, true);
-        loadDoctors(()=>{
+        loadDoctors(function(){
           $scope.$emit(GlobalEvent.onShowLoading, false);
         });
       };
@@ -164,7 +164,7 @@ angular.module('YYWeb').controller('ScheduleListController',
         loadDepartmentList();
 
         $scope.$emit(GlobalEvent.onShowLoading, true);
-        loadDoctors(()=>{
+        loadDoctors(function(){
           $scope.$emit(GlobalEvent.onShowLoading, false);
         });
       }
