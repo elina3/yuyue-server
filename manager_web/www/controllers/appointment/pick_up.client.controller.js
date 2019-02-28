@@ -96,7 +96,7 @@ angular.module('YYWeb').controller('AppointmentPickUpController',
         console.log(photoname1);
 
         var photobase = plugin().Base64Photo;
-        $scope.IDImage = plugin().Base64Photo;
+        $scope.IDImage = 'data:image/jpeg;base64,' + photobase;
         console.log(photobase);
         // myElement10.src="data:image/jpeg;base64,"+photobase;
       };
