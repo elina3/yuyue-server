@@ -79,10 +79,8 @@ angular.module('YYWeb').controller('AppointmentListController',
       function init() {
 
         $scope.$emit(GlobalEvent.onShowLoading, true);
-        loadAppointments(()=>{
-          $scope.pageConfig.pagination.totalCount = 3;
+        loadAppointments(function(){
           $scope.$emit(GlobalEvent.onShowLoading, false);
-          alert('init');
         });
       }
 
