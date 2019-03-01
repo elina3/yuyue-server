@@ -86,6 +86,27 @@ module.exports = function () {
   app.use(multer({ dest: '/tmp/'}).any('image'));
 
 
+  var xml2json = require('xml2js');
+  app.post('/wechat/vertificate', function (req, res, next) {
+    req.rawBody = '';
+    req.setEncoding('utf8');
+
+    req.on('data', function (chunk) {
+      req.rawBody += chunk;
+    });
+    req.on('end', function () {
+      xml2json.parseString(req.rawBody, function (err, result) {
+        if (err) {
+          return next(err);
+        }
+        console.log(result);
+        req.rawBody = result;
+        return next();
+      });
+    });
+  });
+
+
   // Setting the app router and static folder
   app.use('/', express.static(path.resolve('../manager_web/www')));
   app.use('/client', express.static(path.resolve('../../yuyue-vue-app/yuyue-client/dist')));
