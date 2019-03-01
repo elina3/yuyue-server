@@ -5,6 +5,7 @@
 var crypto = require('crypto'),
   httpManager = require('../libraries/wechat_http_manager'),
   utf8 = require('utf8'),
+    wechatService = require('../services/wechat'),
   xmlParser = require('xml2js');
 
 var wechatConfig = {
@@ -218,6 +219,14 @@ function pay(paymentInfo, callback) {
 exports.getCode = function(req, res, next){
   req.data = {code:req.query.code};
   console.log('code:', req.data.code);
-  return next();
+  if(req.data.code){
+    wechatService.getOpenIdByCode(req.data.code, function(err, openId){
+      if(err){
+        return console.log('err:', err);
+      }
 
+      console.log();
+
+    });
+  }
 };

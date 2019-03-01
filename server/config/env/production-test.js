@@ -8,7 +8,7 @@ module.exports = {
   app: {
     title: 'YUYUE-SYSTEM - Production Test Environment'
   },
-  serverAddress:'http://localhost/',
+  serverAddress:'http://datonghao.com/',
   port: process.env.PORT || 80,
   wechat: {
     app_id: "wxa6210d998dd41246",
@@ -16,6 +16,7 @@ module.exports = {
     getTokenUrl: "https://api.weixin.qq.com/cgi-bin/token",
     getUserInfoUrl: "https://api.weixin.qq.com/cgi-bin/user/info",
     autoReplyUrl: "https://api.weixin.qq.com/cgi-bin/message/custom/send",
-    getCodeUrl: "https://open.weixin.qq.com/connect/oauth2/authorize"
+    getCodeUrl: "https://open.weixin.qq.com/connect/oauth2/authorize",
+    getTokenByCodeUrl: 'https://api.weixin.qq.com/sns/oauth2/access_token'
   },
 };

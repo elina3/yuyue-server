@@ -61,12 +61,12 @@ exports.getDepartmentList = function(hospitalId, callback){
 };
 
 exports.getDepartmentDetail = function(departmentId, callback) {
-  DepartmentModel.findOne({ _id: departmentId }).exec(function(err, hospital) {
+  DepartmentModel.findOne({ _id: departmentId }).exec(function(err, department) {
     if (err) {
       return callback({ err: systemError.database_query_error });
     }
 
-    return callback(null, hospital);
+    return callback(null, department);
   });
 };
 
