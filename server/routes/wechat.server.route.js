@@ -6,5 +6,6 @@ module.exports = function(app) {
   app.route('/wechat/vertificate').get(wechatController.vertificate);
   //微信订阅用户行为的消息接口
   app.route('/wechat/vertificate').post(wechatController.onWechatUserAction);
-  app.route('/wechat/test').get(wechatController.getWechatUserBaseInfoBy);
+
+  app.route('/wechat/code').get(wechatController.getWechatCode);
 };

@@ -15,6 +15,7 @@ module.exports = {
     app_secret: "f55b2c01ab809977f21b69e615861621",
     getTokenUrl: "https://api.weixin.qq.com/cgi-bin/token",
     getUserInfoUrl: "https://api.weixin.qq.com/cgi-bin/user/info",
-    autoReplyUrl: "https://api.weixin.qq.com/cgi-bin/message/custom/send"
+    autoReplyUrl: "https://api.weixin.qq.com/cgi-bin/message/custom/send",
+    getCodeUrl: "https://open.weixin.qq.com/connect/oauth2/authorize"
   },
 };

@@ -3,7 +3,20 @@
  */
 'use strict';
 var agent = require('superagent').agent();
+
 var config = require('../config/config');
+exports.getWechatCode = function(callback){
+  agent.get(config.wechat.getCodeUrl + '?appid=' + config.wechat.app_id + '&redirect_uri=http%3a%2f%2fdatonghao.com%2ftest%2fcode&response_type=code&scope=snsapi_userinfo&state=wechatcode&connect_redirect=1#wechat_redirect')
+  .end(function (err, res) {
+    if(err){
+      console.error('get wechat code error:', err);
+      return callback(err);
+    }
+
+    console.log('code result:', res.body);
+    return callback(null, res.body);
+  });
+};
 exports.getUserInfo = function(openId, callback){
   agent.get(config.wechat.getTokenUrl + '?grant_type=client_credential&appid=' + config.wechat.app_id + '&secret=' + config.wechat.app_secret)
     .end(function (err, res) {
@@ -27,7 +40,6 @@ exports.autoReplyText = function(openId, callback){
     {
       content: '终于等到您！谢谢关注民航医院瑞金古北分院！'
     }
-
   };
 
   console.log('auto post:', postData);

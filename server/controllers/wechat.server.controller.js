@@ -124,41 +124,16 @@ exports.onWechatUserAction = function (req, res, next) {
   }
 };
 
-
-exports.getWechatUserBaseInfoBy = function (req, res, next) {
-  req.data = {
-    message: 'It is a test data'
-  };
-  return next();
-  // var openId = 'oaXTWwe2SgE7pWGRCnhMuOA7s1RA';
-  // updateUserBaseInfo(openId, function (err, newUser) {
-  //   if (err) {
-  //     req.err = err;
-  //     return next();
-  //   }
-  //
-  //   req.data = {
-  //     success: true,
-  //     user: newUser
-  //   };
-  //   return next();
-  // });
+exports.getWechatCode = function(req, res, next){
+  wechatService.getWechatCode(function(err, result){
+    if(err){
+      return next(err);
+    }
+    req.data = {
+      code: result.code
+    };
+    return next();
+  });
 };
 
 
-exports.testWechatPay = function (req, res, next) {
-  //测试支付
-  // var openId = 'okiSOwq7cRwOEKlUcxj_D-2qUgsY';
-  // updateUserBaseInfo(openId, function (err, newUser) {
-  //   if (err) {
-  //     req.err = err;
-  //     return next();
-  //   }
-  //
-  //   req.data = {
-  //     success: true,
-  //     user: newUser
-  //   };
-  //   return next();
-  // });
-};
