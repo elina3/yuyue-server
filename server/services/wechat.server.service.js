@@ -15,8 +15,6 @@ exports.getUserInfo = function(openId, callback){
 
       agent.get(config.wechat.getUserInfoUrl + '?access_token=' + accessToken + '&openid=' + openId)
         .end(function (err, res) {
-          console.log('wechat user info:');
-          console.log(res.body);
           return callback(err, res.body);
         });
     });
@@ -31,9 +29,8 @@ exports.autoReplyText = function(openId, callback){
     }
 
   };
-  console.log('auto reply post data======');
-  console.log(postData);
-  console.log('====================end===');
+
+  console.log('auto post:', postData);
   var api = config.wechat.getTokenUrl + '?grant_type=client_credential&appid=' + config.wechat.app_id + '&secret=' + config.wechat.app_secret;
   console.log(api);
   agent.get(api)
@@ -49,7 +46,7 @@ exports.autoReplyText = function(openId, callback){
         .end(function (err, res) {
           console.log('wechat auto reply:');
           console.log(res.body);
-
+          console.log('=======auto reply end========');
           return callback(err, res.body);
         });
     });

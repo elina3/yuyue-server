@@ -5,6 +5,7 @@
 var JSSHA = require('jssha');
 var wechatService = require('../services/wechat');
 
+//用户平台验证微信接口
 exports.vertificate = function (req, res, next) {
   req.query = req.query || {};
   if (!req.query || req.query === {}) {
@@ -46,42 +47,20 @@ exports.vertificate = function (req, res, next) {
   }
 };
 
-//todo 不应该引用controller 临时做法，将来直接调用用户缓存服务去更新token缓存
-// var userController = require('../controllers/user');
 function updateUserBaseInfo(openId, callback) {
   wechatService.getUserInfo(openId, function (err, wechatInfo) {
     if (err) {
       return callback(err);
     }
 
-    console.error('get wechat info by wechat service:');
+    console.log('获取用户详细信息：');
     console.log(wechatInfo);
     return callback(wechatInfo);
-
-    // userLogic.upsertUserByUnionId(wechatInfo.unionid, wechatInfo, function (err, userList) {
-    //   if (err) {
-    //     return callback(err);
-    //   }
-    //   if (userList && userList.length > 0) {
-    //     async.each(userList, function (userItem, eachCallback) {
-    //       if (!userItem.latest_access_token) {
-    //         return eachCallback();
-    //       }
-    //       userController.updateUserCache(userItem.latest_access_token, userItem, function (err) {
-    //       });
-    //       return eachCallback();
-    //     }, function (err) {
-    //       return callback(err);
-    //     });
-    //   }
-    //   else {
-    //     return callback();
-    //   }
-    // });
   });
 }
 
-exports.UpsertUserPaymentId = function (req, res, next) {
+//接受微信用户行为的推送接口
+exports.onWechatUserAction = function (req, res, next) {
   console.log(req.query);
   if (!req.query || req.query === {}) {
     req.err = {err: '参数为空！'};
@@ -101,14 +80,16 @@ exports.UpsertUserPaymentId = function (req, res, next) {
     wechatPostParam.FromUserName = wechatPostParam.FromUserName[0];
   }
   if (wechatPostParam.Event && Array.isArray(wechatPostParam.Event) && wechatPostParam.Event.length > 0) {
-    console.log('原始时间信息');
+    console.log('原始事件信息:');
+    console.log(wechatPostParam.Event[0]);
     wechatPostParam.Event = wechatPostParam.Event[0];
   }
-
-  console.log('FromUserName:', wechatPostParam.FromUserName, ' ', wechatPostParam.event, '!');
-
+  console.log('重新赋值后的事件信息:');
+  console.log('FromUserName:', wechatPostParam.FromUserName, ' ', wechatPostParam.Event, '!');
 
   if (wechatPostParam.Event === 'subscribe') {  //订阅
+    console.log('用户' + wechatPostParam.FromUserName + '已关注！');
+
     wechatService.autoReplyText(wechatPostParam.FromUserName, function (err, result) {
       if (err) {
         console.error('自动回复失败');
@@ -117,7 +98,6 @@ exports.UpsertUserPaymentId = function (req, res, next) {
       }
     });
 
-    console.error('begin to update user base info:');
     updateUserBaseInfo(wechatPostParam.FromUserName, function (err) {
       if (err) {
         console.error('update user base info failed', err);
@@ -129,29 +109,14 @@ exports.UpsertUserPaymentId = function (req, res, next) {
     });
   }
   else if (wechatPostParam.Event === 'unsubscribe') {
+    console.log('用户' + wechatPostParam.FromUserName + '已取消关注！');
     req.data = {
       success: true
     };
     return next();
-    // updateUserBaseInfo(wechatPostParam.FromUserName, function (err) {
-    //   if (err) {
-    //     console.error('update user base info failed', err);
-    //   }
-    //   req.data = {
-    //     success: true
-    //   };
-    //   return next();
-    // });
   }
   else {
-    // wechatService.autoReplyText(wechatPostParam.FromUserName, function (err, result) {
-    //   if (err) {
-    //     console.error('自动回复失败');
-    //   } else {
-    //     console.error('自动回复成功');
-    //   }
-    // });
-
+    console.log('用户' + wechatPostParam.FromUserName + '进入菜单页面！');
     req.data = {
       success: true
     };
