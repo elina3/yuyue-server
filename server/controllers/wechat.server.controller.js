@@ -56,6 +56,7 @@ function updateUserBaseInfo(openId, callback) {
 
     console.error('get wechat info by wechat service:');
     console.log(wechatInfo);
+    return callback(wechatInfo);
 
     // userLogic.upsertUserByUnionId(wechatInfo.unionid, wechatInfo, function (err, userList) {
     //   if (err) {
@@ -100,14 +101,14 @@ exports.UpsertUserPaymentId = function (req, res, next) {
     wechatPostParam.FromUserName = wechatPostParam.FromUserName[0];
   }
   if (wechatPostParam.Event && Array.isArray(wechatPostParam.Event) && wechatPostParam.Event.length > 0) {
+    console.log('原始时间信息');
     wechatPostParam.Event = wechatPostParam.Event[0];
   }
 
-  console.log('FromUserName:', wechatPostParam.FromUserName, ' ', wechatPostParam.Event, '!');
+  console.log('FromUserName:', wechatPostParam.FromUserName, ' ', wechatPostParam.event, '!');
 
 
   if (wechatPostParam.Event === 'subscribe') {  //订阅
-
     wechatService.autoReplyText(wechatPostParam.FromUserName, function (err, result) {
       if (err) {
         console.error('自动回复失败');
@@ -126,7 +127,8 @@ exports.UpsertUserPaymentId = function (req, res, next) {
       };
       return next();
     });
-  } else if (wechatPostParam.Event === 'unsubscribe') {
+  }
+  else if (wechatPostParam.Event === 'unsubscribe') {
     req.data = {
       success: true
     };
@@ -140,14 +142,15 @@ exports.UpsertUserPaymentId = function (req, res, next) {
     //   };
     //   return next();
     // });
-  } else {
-    wechatService.autoReplyText(wechatPostParam.FromUserName, function (err, result) {
-      if (err) {
-        console.error('自动回复失败');
-      } else {
-        console.error('自动回复成功');
-      }
-    });
+  }
+  else {
+    // wechatService.autoReplyText(wechatPostParam.FromUserName, function (err, result) {
+    //   if (err) {
+    //     console.error('自动回复失败');
+    //   } else {
+    //     console.error('自动回复成功');
+    //   }
+    // });
 
     req.data = {
       success: true

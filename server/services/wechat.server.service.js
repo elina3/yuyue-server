@@ -27,7 +27,7 @@ exports.autoReplyText = function(openId, callback){
     msgtype: 'text',
     text:
     {
-      content: '您好！请任选一名微客服搜索并添加好友以获取帮助：“小顺子（微信号sszq007）”，“小小赚（微信号agilepops008）”，“钱多多（微信号sszq007）”。（非工作时间请耐心等待）'
+      content: '终于等到您！谢谢关注民航医院瑞金古北分院！'
     }
 
   };
