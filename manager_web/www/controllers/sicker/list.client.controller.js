@@ -1,7 +1,7 @@
 'use strict';
 angular.module('YYWeb').controller('SickerListController',
-  ['$window', '$rootScope', '$scope', 'GlobalEvent', '$state', 'UserService', 'Auth',
-    function ($window, $rootScope, $scope, GlobalEvent, $state, UserService, Auth) {
+  ['$window', '$rootScope', '$scope', 'GlobalEvent', '$state', 'UserService', 'Auth', 'MemberService',
+    function ($window, $rootScope, $scope, GlobalEvent, $state, UserService, Auth, MemberService) {
       var user = Auth.getUser();
       if (!user) {
         $state.go('user_sign_in');
@@ -9,80 +9,70 @@ angular.module('YYWeb').controller('SickerListController',
       }
 
 
-      function loadAppointments(callback){
-        $scope.pageConfig.appointmentList = [
-          {id: '1', orderNumber: '201893421343', name: '牛二', IDCard: '410825198805177889', cardType: '医保卡', cardNumber: 'yibaoewr3809582035'},
-          {id: '2', orderNumber: '201893421344', name: '王二小', IDCard: '28082519880517788X', cardType: '--', cardNumber: '--'},
-          {id: '3', orderNumber: '201893421345', name: '辛加', IDCard: '320825198805177833', cardType: '就诊卡', cardNumber: 'etfewr3809582035'}
-        ];
+      function loadMembers(callback){
+        MemberService.getList({
+          search_key: $scope.pageConfig.searchKey,
+          current_page: $scope.pageConfig.currentPage,
+          limit: $scope.pageConfig.limit
+        }, function(err, data){
+          if(err){
+            return $scope.$emit(GlobalEvent.onShowAlert, err.zh_message);
+          }
 
-        $scope.pageConfig.pagination.totalCount = 3;
-        $scope.pageConfig.pagination.limit = 2;
-        $scope.pageConfig.pagination.pageCount = Math.ceil($scope.pageConfig.pagination.totalCount / $scope.pageConfig.pagination.limit);
+          console.log(data.members);
+          if(data.members && data.members.length > 0){
+            $scope.pageConfig.memberList = data.members.map(function(item){
+              return {
+                id: item._id,
+                open_id: item.open_id,
+                nickname: item.nickname || '--',
+                IDCard: item.IDCard || '--',
+                cardType: MemberService.translateCardType(item.card_type) || '--',
+                cardNumber: item.card_number,
+              };
+            });
+          }
+
+          $scope.pageConfig.pagination.totalCount = data.total_count;
+          $scope.pageConfig.pagination.pageCount = Math.ceil($scope.pageConfig.pagination.totalCount / $scope.pageConfig.pagination.limit);
+
+        });
         return callback();
       }
 
       $scope.pageConfig = {
         navIndexes: [1, 5],
-        currentDepartment: {id: '', text: '全部科室'},
-        departments: [{id: '', text: '全部科室'}, {text: '心脏内科', id: '1'}, {text: '呼吸内科', id: '2'}],
-        currentType: {id: '', text: '全部门诊类型'},
-        types: [{id: '', text: '全部门诊类型'}, {id: '1', text: '专家门诊'}, {id: '2', text: '普通门诊'}],
-        appointmentList: [],
+        memberList: [],
+        searchKey: '',
         pagination: {
           currentPage: 1,
           limit: 2,
           totalCount: 0,
           isShowTotalInfo: true,
           onCurrentPageChanged: function (callback) {
-            loadAppointments(function(){
-              alert('page changed!');
+            $scope.$emit(GlobalEvent.onShowLoading, true);
+            loadMembers(function(){
+              $scope.$emit(GlobalEvent.onShowLoading, false);
             });
           }
-        },
-        groupList: []
-      };
-
-
-      $scope.goBack = function () {
-        $window.history.back();
-      };
-
-
-      $scope.goState = function (state) {
-        if (!state) {
-          return;
-        }
-        $state.go(state);
-      };
-      $scope.goToView = function (state) {
-        if (!state) {
-          return;
-        }
-
-        switch (state) {
-          case 'user_manager':
-            return $state.go('user_manager');
-          case 'restaurant':
-            $state.go('goods_manager', {goods_type: 'dish'});
-            return;
-          case 'supermarket':
-            if (user.role === 'admin' || user.role === 'supermarket_manager') {
-              $state.go('supermarket_order');
-            }
-            return;
-          default:
-            return;
         }
       };
+
+      $scope.search = function(){
+        $scope.pageConfig.currentPage = 1;
+        $scope.pageConfig.totalCount = 0;
+        $scope.pageConfig.memberList = [];
+        $scope.$emit(GlobalEvent.onShowLoading, true);
+        loadMembers(function(){
+          $scope.$emit(GlobalEvent.onShowLoading, false);
+        });
+      };
+
 
       function init() {
-
         $scope.$emit(GlobalEvent.onShowLoading, true);
-        loadAppointments(function(){
-          $scope.pageConfig.pagination.totalCount = 3;
+        loadMembers(function(){
           $scope.$emit(GlobalEvent.onShowLoading, false);
-          alert('init');
         });
       }
 

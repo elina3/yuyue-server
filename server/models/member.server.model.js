@@ -33,7 +33,7 @@ var MemberSchema = new Schema({
   mobile_phone: {
     type: String
   },
-  head_photo: {
+  head_photo: {//url
     type: String,
   },
   card_type: {

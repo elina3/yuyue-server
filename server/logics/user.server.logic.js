@@ -108,6 +108,9 @@ function userParamValid(userId, userInfo, callback){
       });
     },
     validIDCard: function(autoCallback){
+      if(!userInfo.IDCard){
+        return autoCallback();
+      }
       User.findOne({IDCard: userInfo.IDCard, deleted_status: false, _id: {$ne: userId}})
       .select('username')
       .exec(function(err, user){

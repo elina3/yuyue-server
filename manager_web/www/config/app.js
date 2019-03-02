@@ -120,7 +120,7 @@ yyWeb.config(['$stateProvider', '$urlRouterProvider', function ($stateProvider, 
       controller: 'SickerListController'
     })
    .state('sicker_detail', {
-      url: '/sicker/detail:id',
+      url: '/sicker/detail/:id',
       templateUrl: 'templates/sicker/detail.client.view.html',
       controller: 'SickerDetailController'
     })

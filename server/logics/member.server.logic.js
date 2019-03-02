@@ -6,6 +6,59 @@ var mongoLib = require('../libraries/mongoose');
 var appDb = mongoLib.appDb;
 var Member = appDb.model('Member');
 
+exports.getAllMembers = function(filter, pagination, callback){
+  var query = { deleted_status: false };
+  if (filter.searchKey) {
+    query.$or = [
+      { mobile_phone: { $regex: filter.searchKey, $options: '$i' } },
+      { IDCard: { $regex: filter.searchKey, $options: '$i' } },
+      { nickname: { $regex: filter.searchKey, $options: '$i' } }
+    ];
+  }
+  Member.count(query, function(err, totalCount) {
+    if (err) {
+      return callback({ err: systemError.database_query_error });
+    }
+
+    if (totalCount === 0) {
+      return callback(null, { totalCount: 0, users: [] });
+    }
+
+    if (pagination.limit === -1) {
+      pagination.limit = 10;
+    }
+    if (pagination.skip_count === -1) {
+      pagination.skip_count = pagination.limit * (pagination.current_page - 1);
+    }
+
+    Member.find(query).
+        sort({ update_time: -1 }).
+        skip(pagination.skip_count).
+        limit(pagination.limit).
+        exec(function(err, members) {
+          if (err) {
+            return callback({ err: systemError.database_query_error });
+          }
+
+          return callback(null, { totalCount: totalCount, members: members });
+        });
+  });
+};
+
+exports.getMemberDetail = function(memberId, callback){
+  Member.findOne({_id: memberId})
+      .exec(function(err, member){
+        if(err){
+          return callback({err: systemError.database_query_error});
+        }
+
+        if(!member){
+          return callback({err: memberError.member_not_exist});
+        }
+
+        return callback(null, member);
+  });
+};
 exports.isMember = function(openId, callback){
   Member.findOne({open_id: openId})
       .exec(function(err, member){

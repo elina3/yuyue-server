@@ -32,7 +32,7 @@ angular.module('YYWeb').controller('ScheduleListController',
           inputNumber: 0,
           currentDoctor: null,
           open: function(doctor){
-            this.inputNumber = doctor.price;
+            this.inputNumber = parseFloat(doctor.priceNumber) || 0;
             this.currentDoctor = doctor;
             this.show = true;
           },
@@ -44,9 +44,10 @@ angular.module('YYWeb').controller('ScheduleListController',
                 return $scope.$emit(GlobalEvent.onShowAlert, err);
               }
 
-              this.currentDoctor.price = this.inputNumber;
-              this.inputNumber = 0;
-              this.show = false;
+              $scope.pageConfig.popBox.currentDoctor.priceNumber = $scope.pageConfig.popBox.inputNumber;
+              $scope.pageConfig.popBox.currentDoctor.price = $scope.pageConfig.popBox.inputNumber.toString();
+              $scope.pageConfig.popBox.inputNumber = 0;
+              $scope.pageConfig.popBox.show = false;
               $scope.$emit(GlobalEvent.onShowAlert, '设置成功！');
             });
           },
@@ -70,12 +71,14 @@ angular.module('YYWeb').controller('ScheduleListController',
           }
 
           $scope.pageConfig.doctorList = data.doctors.map(function(item){
+            var price = item.price ? parseFloat(item.price / 100) : 0;
             return {
               id: item._id,
               department: item.department.name,
               name: item.nickname,
               outpatientType: UserService.translateOutpatientType(item.outpatient_type),
-              price: item.price ? item.price : '--',
+              price: price === 0 ? '--' : price,
+              priceNumber: price,
               statusString: item.on_shelf ? '已上架' : '未上架',
               status: item.on_shelf ? 'onShelf' : 'offShelf'
             };

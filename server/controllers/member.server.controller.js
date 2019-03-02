@@ -6,6 +6,35 @@ var memberLogic  = require('../logics/member');
 var systemError = require('../errors/system'),
     memberError = require('../errors/member');
 
+exports.getAllMembers = function(req, res, next){
+  memberLogic.getAllMembers({searchKey: req.query.search_key}, req.pagination, function(err, result){
+    if(err){
+      return next(err);
+    }
+    req.data = {
+      total_count: result.totalCount,
+      members: result.members
+    };
+    return next();
+  });
+};
+exports.getMemberDetail = function(req, res, next){
+  var memberId = req.query.member_id || '';
+  if(!memberId){
+    return next({err: systemError.param_null_error});
+  }
+  memberLogic.getMemberDetail(memberId, function(err, member){
+    if(err){
+      return next(err);
+    }
+    req.data = {
+      member: member
+    };
+    return next();
+  });
+};
+
+
 //微信回调url接口
 exports.registerMember = function(req, res, next){
   var openId = req.query.open_id || req.body.open_id || '';

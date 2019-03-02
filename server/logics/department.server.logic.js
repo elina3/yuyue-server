@@ -88,7 +88,7 @@ exports.getDepartmentDetail = function(departmentId, callback) {
 };
 
 exports.getAllOpenDepartments = function(callback) {
-  DepartmentModel.find({ deleted_status: false }, function(err, list) {
+  DepartmentModel.find({ opened: true }, function(err, list) {
     if (err) {
       return callback({ err: systemError.database_query_error });
     }
