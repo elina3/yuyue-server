@@ -51,28 +51,24 @@ exports.checkMemberByOpenId = function(req, res, next){
   });
 };
 
-//微信回调url接口
-exports.registerMember = function(req, res, next){
-  var openId = req.query.open_id || req.body.open_id || '';
+
+exports.registerAndBindCard = function(req, res, next){
+  var openId = req.body.open_id || req.query.open_id || '';
+  var memberInfo = req.body.member_info || {};
   var wechatInfo = req.body.wechat_info || {};
   if(!openId){
     return next({err: memberError.no_open_id});
   }
-  memberLogic.createMemberBaseInfo(openId, wechatInfo, function(err, member){
-    if(err){
-      return next(err);
-    }
-    req.data = {
-      base_info: member
-    };
-    return next();
-  });
-};
-
-exports.completeMemberInfo = function(req, res, next){
-  var memberId = req.body.member_id || req.query.member_id || '';
-  var memberInfo = req.body.member_info || {};
-  memberLogic.bindCard(memberId, memberInfo, function(err, member){
+  if(!memberInfo.nickname){
+    return next({err: memberError.no_nickname});
+  }
+  if(!memberInfo.IDCard){
+    return next({err: memberError.member_no_IDCard});
+  }
+  if(memberInfo.card_type && !memberInfo.card_number){
+    return next({err: memberError.member_no_card});
+  }
+  memberLogic.registerAndBindCard(openId, memberInfo, wechatInfo, function(err, member){
     if(err){
       return next(err);
     }

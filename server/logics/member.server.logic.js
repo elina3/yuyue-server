@@ -107,36 +107,37 @@ exports.getMemberInfoByOpenId = function(openId, callback){
     return callback(null, member);
   });
 };
-exports.createMemberBaseInfo = function(openId, wechatInfo, callback){
+
+exports.registerAndBindCard = function(openId, memberInfo, wechatInfo, callback){
   Member.findOne({open_id: openId})
-      .exec(function(err, member){
-        if(err){
-          console.log(err);
-          return callback({err: systemError.database_query_error});
-        }
+  .exec(function(err, member){
+    if(err){
+      return callback({err: systemError.database_query_error});
+    }
 
-        if(member && !wechatInfo){//有member基本信息，没有微信详情信息直接返回
-          return callback(null, member);
-        }
+    if(!member){
+      member = new Member({
+        open_id: openId
+      });
+    }
+    member.wechat_info = wechatInfo;
+    member.nickname = memberInfo.nickname;
+    member.IDCard = memberInfo.IDCard;
+    member.sex = memberInfo.sex || 'unknown';
+    member.mobile_phone = memberInfo.mobile_phone || '';
+    member.card_type = memberInfo.card_type || 'none';
+    member.card_number = memberInfo.card_number || '';
+    member.head_photo = wechatInfo.headimgurl || '';
+    member.save(function(err, saved){
+      if(err){
+        return callback({err: systemError.database_save_error});
+      }
 
-        if(!member){
-          member = new Member({
-            open_id: openId
-          });
-        }
-
-        if(wechatInfo){//有微信信息更新微信信息
-          member.wechat_info = wechatInfo;
-        }
-        member.save(function(err, newMember){
-          if(err){
-            console.error(err)
-            return callback({err: systemError.database_save_error});
-          }
-          return callback(null, newMember);
-        });
+      return callback(null, saved);
+    });
   });
 };
+
 exports.bindCard = function(memberId, memberInfo, callback){
   if(!memberInfo){
     return callback({err: memberError.no_member_info});
