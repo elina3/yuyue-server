@@ -26,6 +26,7 @@ exports.getOpenIdByCode = function(code, callback){
     // }
     console.error('access_token result:', res.text);
     let resultObj = JSON.parse(res.text);
+    console.error(JSON.stringify(resultObj));
     if(!resultObj.access_token){
       return callback({err: wechatError.access_token_failed});
     }
