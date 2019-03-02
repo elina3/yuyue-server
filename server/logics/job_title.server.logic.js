@@ -46,12 +46,22 @@ exports.getJobTitleList = function(hospitalId, callback){
 };
 
 exports.modifyJobTitle = function(jobTitleId, jobTitleInfo, callback){
-  JobTitleModel.update({_id: jobTitleId}, {$set: {name: jobTitleInfo.name, description: jobTitleInfo.description || '', update_time: new Date()}}, function(err){
+  JobTitleModel.findOne({_id: {$ne: jobTitleId}, name: jobTitleInfo.name}, function(err, jobTitle){
     if(err){
-      return callback({err: systemError.database_update_error});
+      return callback({err: systemError.database_query_error});
     }
 
-    return callback();
+    if(jobTitle){
+      return callback({err: hospitalError.job_title_exists});
+    }
+
+    JobTitleModel.update({_id: jobTitleId}, {$set: {name: jobTitleInfo.name, description: jobTitleInfo.description || '', update_time: new Date()}}, function(err){
+      if(err){
+        return callback({err: systemError.database_update_error});
+      }
+
+      return callback();
+    });
   });
 };
 

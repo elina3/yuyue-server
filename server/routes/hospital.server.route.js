@@ -20,7 +20,7 @@ module.exports = function (app) {
   app.route('/hospital/department/').get(hospitalController.getOpenDepartmentList);
 
   app.route('/hospital/job_title/create').post(authFilter.requireAdmin, hospitalController.createJobTitle);
-  app.route('/hospital/job_title/modify').post(authFilter.requireAdmin, hospitalFilter.requireJobTitle,  hospitalController.modifyJobTitle);
+  app.route('/hospital/job_title/edit').post(authFilter.requireAdmin, hospitalFilter.requireJobTitle, hospitalController.editJobTitle);
   app.route('/hospital/job_title/list').get(authFilter.requireUser, hospitalController.getJobTitleList);
   app.route('/hospital/job_title/detail').get(authFilter.requireUser, hospitalFilter.requireJobTitle, hospitalController.getJobTitleDetail);
 };

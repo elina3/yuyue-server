@@ -140,7 +140,7 @@ exports.createJobTitle = function(req, res, next) {
         return next();
       });
 };
-exports.modifyJobTitle = function(req, res, next) {
+exports.editJobTitle = function(req, res, next) {
   var modifyName = req.body.name || '';
   if (!modifyName) {
     return next({ err: hospitalError.param_name_null });

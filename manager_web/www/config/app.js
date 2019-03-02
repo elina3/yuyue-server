@@ -94,6 +94,11 @@ yyWeb.config(['$stateProvider', '$urlRouterProvider', function ($stateProvider, 
       templateUrl: 'templates/job_title/add.client.view.html',
       controller: 'JobTitleAddController'
     })
+   .state('job_title_edit', {
+      url: '/job_title/edit/:id',
+      templateUrl: 'templates/job_title/edit.client.view.html',
+      controller: 'JobTitleEditController'
+    })
    .state('job_title_detail', {
       url: '/job_title/detail/:id',
       templateUrl: 'templates/job_title/detail.client.view.html',
