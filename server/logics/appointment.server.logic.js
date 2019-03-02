@@ -20,12 +20,13 @@ exports.getAllUnBookSchedules = function(doctorId, callback) {
   };
   DoctorSchedule.aggregate([
     { $match: query },
-    { $sort: { start_time: -1 } },
+    { $sort: { start_time: 1 } },
     {
       $group:
           {
             _id: '$date_string',
             date_string: { $first: '$date_string' },
+            date: { $first: '$start_time'},
             schedules: {
               $push: {
                 _id: '$_id',
@@ -38,6 +39,9 @@ exports.getAllUnBookSchedules = function(doctorId, callback) {
             },
           },
     },
+    {
+      $sort: { date: 1}
+    }
   ], function(err, results) {
     if (err) {
       return callback({ err: systemError.database_query_error });

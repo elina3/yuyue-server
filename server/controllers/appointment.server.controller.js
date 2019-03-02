@@ -198,7 +198,7 @@ exports.createNewAppointmentInfo = function(req, res, next){
     }
 
     req.data = {
-      appointment_info: results.createAppointment
+      appointment: results.createAppointment.appointment
     };
     return next();
   });
