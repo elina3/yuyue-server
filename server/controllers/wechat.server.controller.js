@@ -131,7 +131,7 @@ exports.getWechatInfo = function(req, res, next){
     return next({err: wechatError.invalid_wechat_code});
   }
   console.log('code', code);
-  wechatService.getOpenIdByCode(req.body.code, function(err, result){
+  wechatService.getOpenIdByCode(code, function(err, result){
     if(err){
       return next(err);
     }
