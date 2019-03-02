@@ -7,5 +7,7 @@ module.exports = function(app) {
   //微信订阅用户行为的消息接口
   app.route('/wechat/vertificate').post(wechatController.onWechatUserAction);
 
-  app.route('/wechat/code').get(wechatController.getWechatCode);
+
+  //微信端通过open_id获取微信具体信息
+  app.route('/wechat/wechat_info').post(wechatController.getWechatInfo);
 };

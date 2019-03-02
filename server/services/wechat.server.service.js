@@ -5,32 +5,53 @@
 var agent = require('superagent').agent();
 
 var config = require('../config/config');
-exports.getWechatCode = function(callback){
-  // var redirectURI = config.serverAddress + '/test/code';
-  agent.get(config.wechat.getCodeUrl + '?appid=' + config.wechat.app_id + '&redirect_uri=http%3a%2f%2fdatonghao.com%2ftest%2fcode&response_type=code&scope=snsapi_userinfo&state=wechatcode&connect_redirect=1#wechat_redirect')
-  .end(function (err, res) {
-    if(err){
-      console.error('get wechat code error:', err);
-      return callback(err);
-    }
 
-    console.log('code result:', res.body);
-    return callback(null, res.body);
-  });
-};
 exports.getOpenIdByCode = function(code, callback){
-  var url = config.wechat.getTokenByCodeUrl +  `?appid=${config.wechat.app_id}&secret=${config.wechat.app_secret}&code=${code}&grant_type=authorization_code`;
-  agent.get(url)
+  var tokenUrl = `${config.wechat.getTokenByCodeUrl}?appid=${config.wechat.app_id}&secret=${config.wechat.app_secret}&code=${code}&grant_type=authorization_code`;
+  agent.get(tokenUrl)
       .end(function(err, res){
     if(err){
       console.error('get wechat access_token error:', err);
       return callback(err);
     }
 
+    // {
+    //   "access_token":"ACCESS_TOKEN",
+    //   "expires_in":7200,
+    //   "refresh_token":"REFRESH_TOKEN",
+    //   "openid":"OPENID",
+    //   "scope":"SCOPE"
+    // }
     console.log('access_token result:', res.body);
-    return callback(null, res.body);
+    if(!res.access_token){
+      return callback({err: {zh_message: 'error', obj: res.body}});
+    }
+
+    var wechatInfoUrl = `${config.wechat.getUserInfoByToken}?access_token=${res.access_token}&open_id=${res.openid}&lang=zh_CN`;
+    agent.get(wechatInfoUrl)
+        .end(function(err, res){
+          if(err){
+            console.error('get wechat info error:', err);
+            return callback(err);
+          }
+
+      // {    "openid":" OPENID",
+      //     " nickname": NICKNAME,
+      //     "sex":"1",
+      //     "province":"PROVINCE"
+      //   "city":"CITY",
+      //     "country":"COUNTRY",
+      //     "headimgurl":    "http://thirdwx.qlogo.cn/mmopen/g3MonUZtNHkdmzicIlibx6iaFqAc56vxLSUfpb6n5WKSYVY0ChQKkiaJSgQ1dZuTOgvLLrhJbERQQ4eMsv84eavHiaiceqxibJxCfHe/46",
+      //     "privilege":[ "PRIVILEGE1" "PRIVILEGE2"     ],
+      //     "unionid": "o6_bmasdasdsad6_2sgVt7hMZOPfL"
+      // }
+      console.log(res.body);
+
+      return callback(null, res.body);
+    });
   });
 };
+
 //https://api.weixin.qq.com/sns/userinfo?access_token=ACCESS_TOKEN&openid=OPENID&lang=zh_CN
 
 

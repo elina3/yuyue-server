@@ -213,20 +213,4 @@ function pay(paymentInfo, callback) {
       return callback(null, result);
     });
   });
-
-};
-
-exports.getCode = function(req, res, next){
-  req.data = {code:req.query.code};
-  console.log('code:', req.data.code);
-  if(req.data.code){
-    wechatService.getOpenIdByCode(req.data.code, function(err, openId){
-      if(err){
-        return console.log('err:', err);
-      }
-
-      console.log();
-
-    });
-  }
-};
+}

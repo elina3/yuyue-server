@@ -124,13 +124,13 @@ exports.onWechatUserAction = function (req, res, next) {
   }
 };
 
-exports.getWechatCode = function(req, res, next){
-  wechatService.getWechatCode(function(err, result){
+exports.getWechatInfo = function(req, res, next){
+  wechatService.getOpenIdByCode(req.body.code, function(err, result){
     if(err){
       return next(err);
     }
     req.data = {
-      code: result.code
+      wechat_info: result
     };
     return next();
   });
