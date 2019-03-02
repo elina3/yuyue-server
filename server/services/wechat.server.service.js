@@ -8,6 +8,7 @@ var config = require('../config/config');
 
 exports.getOpenIdByCode = function(code, callback){
   var tokenUrl = `${config.wechat.getTokenByCodeUrl}?appid=${config.wechat.app_id}&secret=${config.wechat.app_secret}&code=${code}&grant_type=authorization_code`;
+  console.error(tokenUrl);
   agent.get(tokenUrl)
       .end(function(err, res){
     if(err){
@@ -22,7 +23,7 @@ exports.getOpenIdByCode = function(code, callback){
     //   "openid":"OPENID",
     //   "scope":"SCOPE"
     // }
-    console.log('access_token result:', res);
+    console.error('access_token result:', res.text);
     if(!res.access_token){
       return callback({err: {zh_message: 'error', obj: res.body}});
     }
