@@ -167,8 +167,8 @@ exports.bindCard = function(memberId, memberInfo, callback){
     });
   });
 };
-exports.unbindCard = function(memberId, callback){
-  Member.findOne({_id: memberId})
+exports.unbindCard = function(openId, callback){
+  Member.findOne({open_id: openId})
       .exec(function(err, member){
         if(err){
           return callback({err: systemError.database_query_error});
@@ -178,20 +178,18 @@ exports.unbindCard = function(memberId, callback){
           return callback({err: memberError.member_not_exist});
         }
 
-        let updateObj = {
-          IDCard: '',
-          nickname: '',
-          sex: '',
-          mobile_phone: '',
-          card_type: 'none',
-          card_number: ''
-        };
-        Member.update({_id: memberId}, {$set: updateObj}, function(err){
+        member.IDCard = '';
+        member.nickname = '';
+        member.sex = 'unknown';
+        member.mobile_phone = '';
+        member.card_type = 'none';
+        member.card_number = '';
+        member.save(function(err, saved){
           if(err){
-            return callback({err: systemError.database_update_error});
+            return callback({err: systemError.database_save_error});
           }
 
-          return callback();
+          return callback(null, saved);
         });
   });
 };

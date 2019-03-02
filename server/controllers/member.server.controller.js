@@ -92,8 +92,11 @@ exports.registerAndBindCard = function(req, res, next){
 };
 
 exports.unbindCard = function(req, res, next){
-  var memberId = req.body.member_id || req.query.member_id || '';
-  memberLogic.unbindCard(memberId, function(err, member){
+  var openId = req.body.open_id || req.query.open_id || '';
+  if(!openId){
+    return next({er: memberError.no_open_id});
+  }
+  memberLogic.unbindCard(openId, function(err, member){
     if(err){
       return next(err);
     }
