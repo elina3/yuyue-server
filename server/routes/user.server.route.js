@@ -15,6 +15,7 @@ module.exports = function (app) {
   app.route('/user/sign_in').post(userController.signIn);
   app.route('/user/create').post(authFilter.requireAdmin, hospitalFilter.requireDepartment, hospitalFilter.requireJobTitle, userController.createUser);
   app.route('/user/modify').post(authFilter.requireUserById, hospitalFilter.requireDepartment, hospitalFilter.requireJobTitle, userController.modifyUser);
+  app.route('/user/reset_password').post(authFilter.requireUserById, userController.resetPassword);
 
   app.route('/user/doctor/list').get(userController.getDoctors);
   app.route('/user/doctor/on_shelf').post(authFilter.requireUser, userController.onShelfDoctor);

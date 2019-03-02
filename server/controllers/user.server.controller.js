@@ -104,6 +104,33 @@ exports.modifyUser = function(req, res, next){
   });
 };
 
+exports.resetPassword = function(req, res, next){
+  var user = req.user;
+  var oldPassword = req.body.old_password || '';
+  var newPassword = req.body.new_password || '';
+  if(!oldPassword){
+    return next({err: systemError.password_param_error});
+  }
+  if(!newPassword){
+    return next({err: systemError.password_param_error});
+  }
+
+  if(!user.authenticate(oldPassword)) {
+    return next({ err: systemError.account_not_match });
+  }
+
+  userLogic.resetPassword(user, newPassword, function(err, user){
+    if(err){
+      return next(err);
+    }
+
+    req.data = {
+      user: user
+    };
+    return next();
+  });
+};
+
 exports.deleteUser = function(req, res, next){
   var user = req.admin;
   var userId = req.body.user_id || req.query.user_id || '';

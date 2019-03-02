@@ -182,6 +182,18 @@ exports.modifyUser = function(userId, userInfo, callback) {
   });
 };
 
+exports.resetPassword = function(user, newPassword, callback){
+  var updateObj = {};
+  updateObj.password=  user.hashPassword(newPassword);
+  User.update({_id: user._id}, {$set: updateObj}, function(err){
+    if(err){
+      return callback({err: systemError.database_update_error});
+    }
+
+    return callback();
+  });
+};
+
 exports.queryUsers = function(filter, pagination, callback) {
   var query = { deleted_status: false };
   if (filter.searchKey) {

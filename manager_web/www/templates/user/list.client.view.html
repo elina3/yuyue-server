@@ -56,6 +56,7 @@
                             <div class="col-xs-2 handle">
                                 <a href="#/user/detail/{{ user._id }}">查看</a>
                                 <a href="#/user/edit/{{ user._id }}">编辑</a>
+                                <a ng-click="resetPassword(user)">重置密码</a>
                             </div>
                         </div>
                     </div>
@@ -65,4 +66,20 @@
         </div>
     </div>
 </div>
+
+<div class="dialog-mask input-pop-panel" ng-show="pageConfig.popBox.show">
+    <div class="dialog-content">
+        <div class="dialog-header">重置{{pageConfig.popBox.currentUser.nickname}}的密码</div>
+        <div class="dialog-body">
+            <label>旧密码<input type="password" ng-model="pageConfig.popBox.oldPassword"/></label>
+            <label>新密码<input type="password" ng-model="pageConfig.popBox.newPassword"/></label>
+            <label>确认新密码<input type="password" ng-model="pageConfig.popBox.newPasswordAgain"/></label>
+            <div class="dialog-footer">
+                <p class="sure" ng-click="pageConfig.popBox.sure()">保存</p>
+                <p class="cancel" ng-click="pageConfig.popBox.cancel()">取消</p>
+            </div>
+        </div>
+    </div>
+</div>
+
 

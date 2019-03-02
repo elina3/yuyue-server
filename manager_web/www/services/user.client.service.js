@@ -99,6 +99,24 @@ angular.module('YYWeb').factory('UserService',
                 return callback(SystemError.network_error);
               });
         },
+        resetPassword: function (param, callback) {
+          RequestSupport.executePost('/user/reset_password', param)
+          .then(function (data) {
+                if (!callback) {
+                  return data;
+                } else {
+                  if (data.err) {
+                    return callback(data.zh_message || data.err);
+                  }
+                  Auth.setUser(data.user);
+                  Auth.setToken(data.access_token);
+                  return callback(null, data.user);
+                }
+              },
+              function (err) {
+                return callback(SystemError.network_error);
+              });
+        },
         translateUserRole: function (role) {
           switch (role) {
             case 'admin':
@@ -146,6 +164,12 @@ angular.module('YYWeb').factory('UserService',
             return true;
           }
         },
+        isCardNo: function(card)
+        {
+          // 身份证号码为15位或者18位，15位时全为数字，18位前17位为数字，最后一位是校验位，可能为数字或字符X
+          var reg = /(^\d{15}$)|(^\d{18}$)|(^\d{17}(\d|X|x)$)/;
+          return reg.test(card);
+        },
         userParamsByRole: function(role, userInfo){
 
           if(!userInfo.username){
@@ -171,6 +195,9 @@ angular.module('YYWeb').factory('UserService',
           }
           if(!userInfo.selectedClientIds){
             return {err: {zh_message:'至少选择一端登录'}};
+          }
+          if(userInfo.IDCard && !this.isCardNo(userInfo.IDCard)){
+            return {err: {zh_message:'身份证号码格式不正确！'}};
           }
 
 

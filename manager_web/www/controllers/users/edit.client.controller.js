@@ -78,35 +78,6 @@ angular.module('YYWeb').controller('UserEditController',
         };
 
         function saveOneUser(callback){
-          // if(!$scope.pageConfig.user.username){
-          //   $scope.$emit(GlobalEvent.onShowAlert, '员工号必填');
-          //   return;
-          // }
-          // if(!$scope.pageConfig.user.nickname){
-          //   $scope.$emit(GlobalEvent.onShowAlert, '姓名必填');
-          //   return;
-          // }
-          // if(!$scope.pageConfig.user.mobile_phone){
-          //   $scope.$emit(GlobalEvent.onShowAlert, '手机号必填');
-          //   return;
-          // }
-          // if(!$scope.pageConfig.user.department){
-          //   $scope.$emit(GlobalEvent.onShowAlert, '科室必填');
-          //   return;
-          // }
-          // if(!$scope.pageConfig.user.jobTitle){
-          //   $scope.$emit(GlobalEvent.onShowAlert, '职称必填');
-          //   return;
-          // }
-          // if(!$scope.pageConfig.user.role){
-          //   $scope.$emit(GlobalEvent.onShowAlert, '角色必填');
-          //   return;
-          // }
-          // if(!$scope.pageConfig.user.selectedClientIds){
-          //   $scope.$emit(GlobalEvent.onShowAlert, '至少选择一端登录');
-          //   return;
-          // }
-
           let valid = UserService.userParamsByRole($scope.pageConfig.user.role.id, $scope.pageConfig.user);
           if(valid.err){
             return $scope.$emit(GlobalEvent.onShowAlert, valid.err.zh_message);

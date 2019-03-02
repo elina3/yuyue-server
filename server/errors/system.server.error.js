@@ -21,4 +21,5 @@ module.exports = _.extend(exports, {
   no_permission: {type: 'no_permission', message: 'you do not have the permission to operate it', zh_message: '没有权限'},
   invalid_timestamp_param: {type: 'invalid_timestamp_param', message: 'invalid timestamp', zh_message: '时间戳参数不正确'},
   upload_error: {type: 'upload_error', message: 'File upload failed', zh_message: '文件上传失败！'},
+  password_param_error: {type: 'password_param_error', message: 'Password invalid', zh_message: '密码无效！'},
 });

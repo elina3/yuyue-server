@@ -52,6 +52,58 @@ angular.module('YYWeb').controller('UserListController',
                 $scope.$emit(GlobalEvent.onShowLoading, false);
               });
             }
+          },
+          popBox: {
+            show: false,
+            oldPassword: '',
+            newPassword: '',
+            newPasswordAgain: '',
+            currentUser: null,
+            reset: function(){
+              this.oldPassword = '';
+              this.newPassword = '';
+              this.newPasswordAgain = '';
+            },
+            open: function(userItem){
+              console.log(userItem);
+              this.currentUser = userItem;
+              this.show = true;
+            },
+            sure: function(){
+              if(!this.oldPassword ||  this.oldPassword.length < 6){
+                $scope.$emit(GlobalEvent.onShowAlert, '旧密码不符合要求，至少6位字符');
+                return;
+              }
+              if(!this.newPassword ||  this.newPassword.length < 6){
+                $scope.$emit(GlobalEvent.onShowAlert, '新密码不符合要求，至少6位字符');
+                return;
+              }
+              if(this.newPassword === this.oldPassword){
+                $scope.$emit(GlobalEvent.onShowAlert, '新旧密码相同！');
+                return;
+              }
+              if(this.newPassword !== this.newPasswordAgain){
+                $scope.$emit(GlobalEvent.onShowAlert, '新密码两次不一致');
+                return;
+              }
+
+              $scope.$emit(GlobalEvent.onShowLoading, true);
+              UserService.resetPassword({user_id: this.currentUser._id, old_password: this.oldPassword, new_password: this.newPassword}, function(err){
+                $scope.$emit(GlobalEvent.onShowLoading, false);
+                if(err){
+                  return $scope.$emit(GlobalEvent.onShowAlert, err.zh_message);
+                }
+
+                $scope.$emit(GlobalEvent.onShowAlert, '保存成功！');
+
+                $scope.pageConfig.popBox.show = false;
+                $scope.pageConfig.popBox.reset();
+              });
+            },
+            cancel: function(){
+              this.show = false;
+              this.reset();
+            }
           }
         };
 
@@ -62,6 +114,10 @@ angular.module('YYWeb').controller('UserListController',
           loadUserList(function(){
             $scope.$emit(GlobalEvent.onShowLoading, false);
           });
+        };
+
+        $scope.resetPassword = function(user){
+          $scope.pageConfig.popBox.open(user);
         };
 
         function init() {
