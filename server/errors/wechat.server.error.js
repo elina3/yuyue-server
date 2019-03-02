@@ -18,5 +18,8 @@ module.exports = _.extend(exports, {
   param_null_error: {type: 'param_null_error', message: 'the param is null', zh_message: '参数为空'},
   database_save_error: {type: 'database_save_error', message: 'database save error', zh_message: '数据库保存出错'},
   network_busy: {type: 'network_busy', message: 'the network is busy', zh_message: '网络忙'},
-  no_open_id: {type: 'no_open_id', message: 'the open id is null', zh_message: '无open_id'}
+  no_open_id: {type: 'no_open_id', message: 'the open id is null', zh_message: '无open_id'},
+  access_token_failed: {type: 'access_token_failed', message: 'the access_token by code id failed', zh_message: '通过code获取access_token失败'},
+  openid_failed: {type: 'openid_failed', message: 'the openid by code id failed', zh_message: '通过code获取openid失败'},
+
 });

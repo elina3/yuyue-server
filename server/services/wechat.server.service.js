@@ -3,6 +3,7 @@
  */
 'use strict';
 var agent = require('superagent').agent();
+var wechatError = require('../errors/wechat');
 
 var config = require('../config/config');
 
@@ -24,11 +25,15 @@ exports.getOpenIdByCode = function(code, callback){
     //   "scope":"SCOPE"
     // }
     console.error('access_token result:', res.text);
-    if(!res.access_token){
-      return callback({err: {zh_message: 'error', obj: res.body}});
+    let resultObj = res.text;
+    if(!resultObj.access_token){
+      return callback({err: wechatError.access_token_failed});
+    }
+    if(!resultObj.openid){
+      return callback({err: wechatError.openid_failed});
     }
 
-    var wechatInfoUrl = `${config.wechat.getUserInfoByToken}?access_token=${res.access_token}&open_id=${res.openid}&lang=zh_CN`;
+    var wechatInfoUrl = `${config.wechat.getUserInfoByToken}?access_token=${resultObj.access_token}&open_id=${resultObj.openid}&lang=zh_CN`;
     agent.get(wechatInfoUrl)
         .end(function(err, res){
           if(err){
@@ -46,9 +51,8 @@ exports.getOpenIdByCode = function(code, callback){
       //     "privilege":[ "PRIVILEGE1" "PRIVILEGE2"     ],
       //     "unionid": "o6_bmasdasdsad6_2sgVt7hMZOPfL"
       // }
-      console.log(res.body);
-
-      return callback(null, res.body);
+      console.log(res.text);
+      return callback(null, res.text);
     });
   });
 };
