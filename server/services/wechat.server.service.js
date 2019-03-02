@@ -25,7 +25,7 @@ exports.getOpenIdByCode = function(code, callback){
     //   "scope":"SCOPE"
     // }
     console.error('access_token result:', res.text);
-    let resultObj = res.text;
+    let resultObj = JSON.parse(res.text);
     if(!resultObj.access_token){
       return callback({err: wechatError.access_token_failed});
     }
@@ -52,7 +52,7 @@ exports.getOpenIdByCode = function(code, callback){
       //     "unionid": "o6_bmasdasdsad6_2sgVt7hMZOPfL"
       // }
       console.log(res.text);
-      return callback(null, res.text);
+      return callback(null, JSON.parse(res.text));
     });
   });
 };
