@@ -26,7 +26,6 @@ exports.getOpenIdByCode = function(code, callback){
     // }
     console.error('access_token result:', res.text);
     let resultObj = JSON.parse(res.text);
-    console.error(JSON.stringify(resultObj));
     if(!resultObj.access_token){
       return callback({err: wechatError.access_token_failed});
     }
@@ -34,8 +33,7 @@ exports.getOpenIdByCode = function(code, callback){
       return callback({err: wechatError.openid_failed});
     }
 
-    var wechatInfoUrl = `${config.wechat.getUserInfoByToken}?access_token=${resultObj.access_token}&open_id=${resultObj.openid}&lang=zh_CN`;
-    console.error('wechatInfoUrl', wechatInfoUrl)
+    var wechatInfoUrl = `${config.wechat.getUserInfoByToken}?access_token=${resultObj.access_token}&openid=${resultObj.openid}&lang=zh_CN`;
     agent.get(wechatInfoUrl)
         .end(function(err, res){
           if(err){
@@ -43,17 +41,17 @@ exports.getOpenIdByCode = function(code, callback){
             return callback(err);
           }
 
-      // {    "openid":" OPENID",
+      // {   "openid":" OPENID",
       //     " nickname": NICKNAME,
       //     "sex":"1",
       //     "province":"PROVINCE"
-      //   "city":"CITY",
+      //     "city":"CITY",
       //     "country":"COUNTRY",
       //     "headimgurl":    "http://thirdwx.qlogo.cn/mmopen/g3MonUZtNHkdmzicIlibx6iaFqAc56vxLSUfpb6n5WKSYVY0ChQKkiaJSgQ1dZuTOgvLLrhJbERQQ4eMsv84eavHiaiceqxibJxCfHe/46",
       //     "privilege":[ "PRIVILEGE1" "PRIVILEGE2"     ],
       //     "unionid": "o6_bmasdasdsad6_2sgVt7hMZOPfL"
       // }
-      console.log(res.text);
+      console.log('wechatInfo:', res.text);
       return callback(null, JSON.parse(res.text));
     });
   });
