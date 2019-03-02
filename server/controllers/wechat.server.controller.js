@@ -3,6 +3,7 @@
  */
 'use strict';
 var JSSHA = require('jssha');
+var wechatError = require('../errors/wechat');
 var wechatService = require('../services/wechat');
 
 //用户平台验证微信接口
@@ -125,6 +126,11 @@ exports.onWechatUserAction = function (req, res, next) {
 };
 
 exports.getWechatInfo = function(req, res, next){
+  var code = req.body.code || req.query.code || '';
+  if(!code){
+    return next({err: wechatError.invalid_wechat_code});
+  }
+  console.log('code', code);
   wechatService.getOpenIdByCode(req.body.code, function(err, result){
     if(err){
       return next(err);
