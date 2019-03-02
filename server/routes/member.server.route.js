@@ -11,6 +11,9 @@ module.exports = function (app) {
   app.route('/member/detail').get(memberController.getMemberDetail);
 
 
+
+  app.route('/member/check_by_openid').get(memberController.checkMemberByOpenId);
+
   //微信open_id注册会员信息（由wechat授权重定向返回）
   app.route('/member/register').post(memberController.registerMember);
   app.route('/member/bind_card').post(memberController.completeMemberInfo);

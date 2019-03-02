@@ -59,6 +59,22 @@ exports.getMemberDetail = function(memberId, callback){
         return callback(null, member);
   });
 };
+
+exports.checkMemberByOpenId = function(openId, callback){
+  Member.findOne({open_id: openId})
+  .exec(function(err, member){
+    if(err){
+      return callback({err: systemError.database_query_error});
+    }
+
+    if(!member){
+      return callback();
+    }
+
+    return callback(null, member);
+  });
+};
+
 exports.isMember = function(openId, callback){
   Member.findOne({open_id: openId})
       .exec(function(err, member){

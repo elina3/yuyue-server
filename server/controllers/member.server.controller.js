@@ -34,6 +34,22 @@ exports.getMemberDetail = function(req, res, next){
   });
 };
 
+exports.checkMemberByOpenId = function(req, res, next){
+  var openId = req.query.open_id || req.body.open_id || '';
+  if(!openId){
+    return next({err: memberError.no_open_id});
+  }
+  memberLogic.checkMemberByOpenId(openId, function(err, member){
+    if(err){
+      return next(err);
+    }
+
+    req.data = {
+      member: member
+    };
+    return next();
+  });
+};
 
 //微信回调url接口
 exports.registerMember = function(req, res, next){
