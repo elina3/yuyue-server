@@ -25,4 +25,6 @@ module.exports = _.extend(exports, {
   schedule_number_count_error: {type: 'schedule_number_count_error', message: 'The schedule number count set error', zh_message: '医生的号源数量设置不合法'},
   time_range_repeat: {type: 'time_range_repeat', message: 'The schedule time range is repeat', zh_message: '时间范围有重叠'},
   doctor_schedule_not_exist: {type: 'doctor_schedule_not_exist', message: 'The doctor schedule is not exist', zh_message: '该医生的时间安排记录不存在'},
+  username_exist: {type: 'username_exist', message: 'The username has been exist', zh_message: '该用户工号已存在'},
+  IDCard_exist: {type: 'IDCard_exist', message: 'The IDCard has been binded', zh_message: '该用户身份证已绑定其他账号！'},
 });

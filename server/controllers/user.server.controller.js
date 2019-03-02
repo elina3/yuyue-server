@@ -79,14 +79,20 @@ exports.getUserDetail = function(req, res, next){
 };
 
 exports.modifyUser = function(req, res, next){
-  var user = req.admin;
+  var user = req.user;
   var userInfo = req.body.user_info || req.query.user_info || {};
-  if(!userInfo.group_id || !userInfo.username || !userInfo.password){
+  if(!userInfo.username || !userInfo.role){
     return next({err: systemError.param_null_error});
   }
-  userInfo.hospital_id = user.hospital;
+  if(!userInfo.mobile_phone){
+    return next({err: systemError.param_null_error});
+  }
 
-  userLogic.modifyUser(userInfo, function(err, user){
+  userInfo.hospitalId = user.hospital;
+  userInfo.departmentId = req.department._id;
+  userInfo.jobTitleId = req.job_title._id;
+
+  userLogic.modifyUser(user._id, userInfo, function(err, user){
     if(err){
       return next(err);
     }

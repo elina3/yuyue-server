@@ -46,9 +46,7 @@ angular.module('YYWeb').factory('UserService',
               });
         },
         modifyUser: function (param, callback) {
-          RequestSupport.executePost('/user/modify', {
-              user_info: param
-            })
+          RequestSupport.executePost('/user/modify',param)
             .then(function (data) {
                 if (!callback) {
                   return data;
@@ -136,9 +134,62 @@ angular.module('YYWeb').factory('UserService',
             case 'normal':
               return '普通门诊';
             default:
-              return '未知';
+              return '无';
 
           }
+        },
+        isPhoneAvailable: function(phone) {
+          let regex = /^[1][3,4,5,7,8][0-9]{9}$/;
+          if (!regex.test(phone)) {
+            return false;
+          } else {
+            return true;
+          }
+        },
+        userParamsByRole: function(role, userInfo){
+
+          if(!userInfo.username){
+            return {err: {zh_message: '员工号必填'}};
+          }
+          if(!userInfo.nickname){
+            return {err: {zh_message: '姓名必填'}};
+          }
+          if(!userInfo.mobile_phone){
+            return {err: {zh_message: '手机号必填'}};
+          }
+          if(!this.isPhoneAvailable(userInfo.mobile_phone)){
+            return {err: {zh_message: '手机号无效'}};
+          }
+          if(!userInfo.department){
+            return {err: {zh_message: '科室必填'}};
+          }
+          if(!userInfo.jobTitle){
+            return {err: {zh_message: '职称必填'}};
+          }
+          if(!userInfo.role){
+            return {err: {zh_message: '角色必填'}};
+          }
+          if(!userInfo.selectedClientIds){
+            return {err: {zh_message:'至少选择一端登录'}};
+          }
+
+
+          switch (role){
+            case 'doctor':
+              if(!userInfo.brief){
+                return {err: {zh_message:'医生必须要填简介'}};
+              }
+              if(!userInfo.goodAt){
+                return {err: {zh_message:'医生必须要填擅长'}};
+              }
+              if(!userInfo.outpatientType || !userInfo.outpatientType.id){
+                return {err: {zh_message:'医生必须要选择一个门诊类型'}};
+              }
+              return {};
+            default:
+              return {};
+          }
+
         },
         getAllPermission: function () {
           return {

@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('YYWeb').controller('UserAddController',
+angular.module('YYWeb').controller('UserEditController',
     ['$window', '$rootScope', '$scope', '$stateParams', 'GlobalEvent', '$state', 'UserService', 'Auth', 'HospitalService', 'FileUploader',
       function ($window, $rootScope, $scope, $stateParams, GlobalEvent, $state, UserService, Auth, HospitalService, FileUploader) {
         var user = Auth.getUser();
@@ -10,7 +10,7 @@ angular.module('YYWeb').controller('UserAddController',
         }
 
         let outpatientTypeOptions = [{id: '', text: '无'}, {id: 'expert', text: '专家门诊'}, {id: 'normal', text: '普通门诊'}];
-        let roleOptions = [{id: 'admin', text: '后台管理员'}, {id: 'doctor', text: '医生'}, {id: 'pick_up', text: '取号人员'}, {id: 'financial', text: '财务专员'}];
+        let roleOptions = [{id: 'admin', text: '管理员'}, {id: 'doctor', text: '医生'}, {id: 'pick_up', text: '取号人员'}, {id: 'financial', text: '财务专员'}];
         let terminalTypeOptions = [{id: 'manager', text: '管理端'},{id: 'doctor', text: '医生端'},{id: 'pick_up', text: '取号端'}];
 
         $scope.pageConfig = {
@@ -21,23 +21,7 @@ angular.module('YYWeb').controller('UserAddController',
           roles: roleOptions,
           clients: terminalTypeOptions,
           modulesDic: UserService.getAllPermission(),
-          user: {
-            selectedClientIds: [],
-            password: '654321',
-            username: '',
-            nickname: '',
-            mobile_phone: '',
-            IDCard: '',
-            role: roleOptions[0],
-            outpatientType: outpatientTypeOptions[0],
-            jobTitle: null,
-            department: null,
-            goodAt: '',
-            brief: '',
-            // headUrl: '../../images/global/default_user.png'
-            headUrl: '',
-            head_photo_key: ''
-          }
+          user: {}
         };
 
         var uploader=$scope.uploader=new FileUploader({
@@ -53,7 +37,8 @@ angular.module('YYWeb').controller('UserAddController',
             return '|jpg|png|jpeg|bmp|gif|'.indexOf(type) !== -1;
           }
         });
-        // uploader.queue=[];
+
+        const ImageRootUrl = '/file/image?key=';
 
         uploader.onSuccessItem = function(fileItem, response, status, headers) {
           console.log(response);
@@ -61,18 +46,13 @@ angular.module('YYWeb').controller('UserAddController',
           console.log(headers);
           console.info('onSuccessItem');
           if(response.success){
-            $scope.pageConfig.user.headUrl = '/file/image?key='+response.file_id;
+            $scope.pageConfig.user.headUrl = ImageRootUrl+response.file_id;
             $scope.pageConfig.user.head_photo_key = response.file_id;
           }
         };
         uploader.onErrorItem = function(fileItem, response, status, headers){
           $scope.$emit(GlobalEvent.onShowAlert, '文件上传失败');
         };
-
-
-        // $scope.clearItems = function(){    //重新选择文件时，清空队列，达到覆盖文件的效果
-        //   uploader.clearQueue();
-        // }
 
 
         function toggleClientItem(client){
@@ -98,6 +78,35 @@ angular.module('YYWeb').controller('UserAddController',
         };
 
         function saveOneUser(callback){
+          // if(!$scope.pageConfig.user.username){
+          //   $scope.$emit(GlobalEvent.onShowAlert, '员工号必填');
+          //   return;
+          // }
+          // if(!$scope.pageConfig.user.nickname){
+          //   $scope.$emit(GlobalEvent.onShowAlert, '姓名必填');
+          //   return;
+          // }
+          // if(!$scope.pageConfig.user.mobile_phone){
+          //   $scope.$emit(GlobalEvent.onShowAlert, '手机号必填');
+          //   return;
+          // }
+          // if(!$scope.pageConfig.user.department){
+          //   $scope.$emit(GlobalEvent.onShowAlert, '科室必填');
+          //   return;
+          // }
+          // if(!$scope.pageConfig.user.jobTitle){
+          //   $scope.$emit(GlobalEvent.onShowAlert, '职称必填');
+          //   return;
+          // }
+          // if(!$scope.pageConfig.user.role){
+          //   $scope.$emit(GlobalEvent.onShowAlert, '角色必填');
+          //   return;
+          // }
+          // if(!$scope.pageConfig.user.selectedClientIds){
+          //   $scope.$emit(GlobalEvent.onShowAlert, '至少选择一端登录');
+          //   return;
+          // }
+
           let valid = UserService.userParamsByRole($scope.pageConfig.user.role.id, $scope.pageConfig.user);
           if(valid.err){
             return $scope.$emit(GlobalEvent.onShowAlert, valid.err.zh_message);
@@ -129,8 +138,9 @@ angular.module('YYWeb').controller('UserAddController',
           params.good_at = $scope.pageConfig.user.goodAt;
 
           $scope.$emit(GlobalEvent.onShowLoading, true);
-          UserService.createUser({
+          UserService.modifyUser({
             user_info: params,
+            user_id: $scope.pageConfig.user._id,
             department_id: params.department.id,
             job_title_id: params.jobTitle.id
           }, function(err, data){
@@ -139,6 +149,9 @@ angular.module('YYWeb').controller('UserAddController',
               $scope.$emit(GlobalEvent.onShowAlert, err);
               return;
             }
+            $scope.$emit(GlobalEvent.onShowAlert, '保存成功！');
+            console.log(err);
+            console.log(data);
 
             return callback();
           });
@@ -150,11 +163,11 @@ angular.module('YYWeb').controller('UserAddController',
           });
         };
 
-        function loadDepartments(){
+        function loadDepartments(callback){
           HospitalService.getDepartments({}, function(err, data){
             if(err){
               console.log('加载科室失败',err);
-              return;
+              return callback(err);
             }
 
             if(data.departments){
@@ -162,13 +175,14 @@ angular.module('YYWeb').controller('UserAddController',
                 return {id: item._id, text: item.name};
               });
             }
+            return callback();
           });
         }
-        function loadJobTitles(){
+        function loadJobTitles(callback){
           HospitalService.getJobTitles({}, function(err, data){
             if(err){
               console.log('加载职称失败',err);
-              return;
+              return callback(err);
             }
 
             if(data.job_titles){
@@ -176,13 +190,88 @@ angular.module('YYWeb').controller('UserAddController',
                 return {id: item._id, text: item.name};
               });
             }
+            return callback();
+          });
+        }
+
+        function loadUser(userId, callback){
+          UserService.getUserDetail({user_id: userId}, function(err, data){
+            if(err){
+              return callback(err);
+            }
+
+            let user = data.user;
+            console.log(user);
+            $scope.pageConfig.user = {
+              _id: user._id,
+              username: user.username,
+              nickname: user.nickname,
+              mobile_phone: user.mobile_phone ? parseInt(user.mobile_phone) : null,
+              IDCard: user.IDCard,
+              role: {id: user.role, text: UserService.translateUserRole(user.role)},
+              outpatientType: {id: user.outpatient_type, text: UserService.translateOutpatientType(user.outpatient_type)},
+              jobTitle: {id: user.job_title._id, text: user.job_title.name},
+              department: {id: user.department._id, text: user.department.name},
+              goodAt: user.good_at || '',
+              brief: user.brief || '',
+              headUrl: user.head_photo ? (ImageRootUrl + user.head_photo) : '',
+              head_photo_key: user.head_photo,
+              selectedClientIds: []
+            };
+            if(user.terminal_types && user.terminal_types.length > 0){
+              $scope.pageConfig.clients.forEach(function(item){
+                if(user.terminal_types.indexOf(item.id) >= 0){
+                  item.selected = true;
+                  $scope.pageConfig.user.selectedClientIds.push(item.id);
+
+                  let permissionArray = user.permission[item.id].filter(function(permission){
+                    return permission.selected;
+                  }).map(function(selectedItem){
+                    return selectedItem.text;
+                  });
+                  $scope.pageConfig.modulesDic[item.id].forEach(function(moduleItem){
+                    if(permissionArray.indexOf(moduleItem.text) >= 0){
+                      moduleItem.selected = true;
+                    }else{
+                      moduleItem.selected = false;
+                    }
+                  });
+                }
+              });
+            }
+            return callback();
           });
         }
 
         function init() {
-          loadDepartments();
-          loadJobTitles();
-          toggleClientItem($scope.pageConfig.clients[0]);
+          console.log('params.id:', $stateParams.id);
+
+          $scope.$emit(GlobalEvent.onShowLoading, true);
+          loadDepartments(function(err){
+            if(err){
+              $scope.$emit(GlobalEvent.onShowLoading, false);
+              return $scope.$emit(GlobalEvent.onShowAlert, err.zh_message);
+            }
+
+            loadJobTitles(function(err){
+              if(err){
+                $scope.$emit(GlobalEvent.onShowLoading, false);
+                return $scope.$emit(GlobalEvent.onShowAlert, err.zh_message);
+              }
+
+              loadUser($stateParams.id, function(err){
+                $scope.$emit(GlobalEvent.onShowLoading, false);
+                if(err){
+                  return $scope.$emit(GlobalEvent.onShowAlert, err.zh_message);
+                }
+
+                // toggleClientItem($scope.pageConfig.clients[0]);
+              });
+            });
+          });
+
+
+
         }
 
         init();

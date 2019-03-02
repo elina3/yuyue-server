@@ -27,6 +27,9 @@ var AppointmentSchema = new Schema({
     required: true,
     index: true
   },
+  nickname: {
+    type: String
+  },
   card_type: {//就诊卡类型 //member有可能换绑定的卡，但在付款那刻一定不会变
     type: String
   },
@@ -65,11 +68,20 @@ var AppointmentSchema = new Schema({
     type: String,
     enum: ['booking', 'booked', 'picked_up', 'over_number', 'canceled']//预定中，已预定，已取号，已过号，已取消
   },
+  price: {
+    type: Number//金额：分
+  },
   paid: {//是否支付
     type: Boolean
   },
+  paid_time: {
+    type: Date
+  },
   printed: {
     type: Boolean
+  },
+  print_time: {
+    type: Date
   }
 });
 AppointmentSchema.plugin(timestamps, {

@@ -44,6 +44,7 @@ exports.createUser = function(userInfo, callback) {
         user.deleted_status = false;
         user.good_at = userInfo.good_at;
         user.brief = userInfo.brief;
+        user.IDCard = userInfo.IDCard;
         if (userInfo.permission) {
           for (var prop in userInfo.permission) {
             userInfo.permission[prop].forEach(item => {
@@ -89,6 +90,46 @@ exports.deleteUser = function(userId, callback) {
   });
 };
 
+function userParamValid(userId, userInfo, callback){
+  async.auto({
+    validUsername: function(autoCallback){
+      User.findOne({username: userInfo.username, deleted_status: false, _id: {$ne: userId}})
+      .select('username')
+          .exec(function(err, user){
+            if(err){
+              return autoCallback({err: systemError.database_query_error});
+            }
+
+            if(user){
+              return autoCallback({err: userError.username_exist});
+            }
+
+            return autoCallback();
+      });
+    },
+    validIDCard: function(autoCallback){
+      User.findOne({IDCard: userInfo.IDCard, deleted_status: false, _id: {$ne: userId}})
+      .select('username')
+      .exec(function(err, user){
+        if(err){
+          return autoCallback({err: systemError.database_query_error});
+        }
+
+        if(user){
+          return autoCallback({err: userError.IDCard_exist});
+        }
+
+        return autoCallback();
+      });
+    }
+  }, function(err){
+    if(err){
+      return callback(err);
+    }
+    return callback();
+  });
+}
+
 exports.modifyUser = function(userId, userInfo, callback) {
   User.findOne({ _id: userId }).exec(function(err, user) {
     if (err) {
@@ -99,30 +140,44 @@ exports.modifyUser = function(userId, userInfo, callback) {
       return callback({ err: userError.user_not_exist });
     }
 
-    if (userInfo.password) {//修改密码
-      user.password = userInfo.password
-          ? user.hashPassword(userInfo.password)
-          : '';
-    }
-    user.nickname = userInfo.nickname;
-    user.role = userInfo.role;
-    user.terminalType = userInfo.terminalType || 'management';
-
-    user.hospital = userInfo.hospitalId;
-    user.department = userInfo.departmentId;
-    user.job_title = userInfo.jobTitleId;
-
-    user.sex = !userInfo.sex ? 'unknown' : userInfo.sex;
-    user.mobile_phone = userInfo.mobile_phone;
-    user.head_photo = userInfo.head_photo;
-    user.description = userInfo.description;
-    user.deleted_status = false;
-    user.save(function(err, modifiedUser) {
-      if (err || !modifiedUser) {
-        return callback({ err: systemError.database_save_error });
+    userParamValid(userId, userInfo, function(err){
+      if(err){
+        return callback(err);
       }
 
-      return callback(null, modifiedUser);
+      user.username = userInfo.username;
+      user.nickname = userInfo.nickname;
+      user.role = userInfo.role;
+      user.terminal_types = userInfo.terminal_types ||
+          ['manager', 'doctor', 'pick_up'];
+
+      user.hospital = userInfo.hospitalId;
+      user.department = userInfo.departmentId;
+      user.job_title = userInfo.jobTitleId;
+      user.outpatient_type = userInfo.outpatient_type;
+
+      user.sex = !userInfo.sex ? 'unknown' : userInfo.sex;
+      user.mobile_phone = userInfo.mobile_phone;
+      user.head_photo = userInfo.head_photo;
+      user.deleted_status = false;
+      user.good_at = userInfo.good_at;
+      user.brief = userInfo.brief;
+      user.IDCard = userInfo.IDCard;
+      if (userInfo.permission) {
+        for (var prop in userInfo.permission) {
+          userInfo.permission[prop].forEach(item => {
+            delete item.$$hashKey;
+          });
+        }
+        user.permission = userInfo.permission;
+      }
+      user.save(function(err, modifiedUser) {
+        if (err || !modifiedUser) {
+          return callback({ err: systemError.database_save_error });
+        }
+
+        return callback(null, modifiedUser);
+      });
     });
   });
 };

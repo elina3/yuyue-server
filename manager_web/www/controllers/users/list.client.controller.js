@@ -56,12 +56,13 @@ angular.module('YYWeb').controller('UserListController',
         };
 
         $scope.search = function () {
+          $scope.pageConfig.pagination.currentPage = 1;
+          $scope.pageConfig.pagination.totalCount = 0;
           $scope.$emit(GlobalEvent.onShowLoading, true);
           loadUserList(function(){
             $scope.$emit(GlobalEvent.onShowLoading, false);
           });
         };
-
 
         function init() {
           $scope.$emit(GlobalEvent.onShowLoading, true);

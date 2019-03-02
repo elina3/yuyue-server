@@ -44,6 +44,11 @@ yyWeb.config(['$stateProvider', '$urlRouterProvider', function ($stateProvider, 
       templateUrl: 'templates/user/add.client.view.html',
       controller: 'UserAddController'
     })
+    .state('user_edit', {
+      url: '/user/edit/:id',
+      templateUrl: 'templates/user/edit.client.view.html',
+      controller: 'UserEditController'
+    })
     .state('appointment_detail', {
       url: '/appointment/detail:id',
       templateUrl: 'templates/appointment/detail.client.view.html',

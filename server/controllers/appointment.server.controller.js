@@ -9,6 +9,23 @@ var systemError = require('../errors/system'),
 userError = require('../errors/user'),
 appointmentError = require('../errors/appointment');
 
+//后台获取所有预约
+exports.getAllAppointments = function(req, res, next){
+  appointmentLogic.getAllAppointments({
+    search_key: req.query.search_key,
+    department_id: req.query.department_id,
+    outpatient_type: req.query.outpatient_type
+  }, req.pagination, function(err, results){
+    if(err){
+      return next(err);
+    }
+    req.data= {
+      appointments: results.appointments,
+      total_count: results.totalCount
+    };
+    return next();
+  });
+};
 
 //获取医生所有可预约时间段的号源--app
 exports.getAllUnBookSchedules = function(req, res, next){

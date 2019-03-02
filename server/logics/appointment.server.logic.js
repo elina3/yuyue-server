@@ -114,15 +114,17 @@ function createOneAppointment(member, doctor, schedule, payMethod, callback) {
         doctor._id.toString()),
     member: member._id,
     IDCard: member.IDCard,
+    nickname: member.nickname,
     doctor_schedule: schedule._id,
     doctor: doctor._id,
     department: doctor.department._id,
     start_time: schedule.start_time,
     end_time: schedule.end_time,
     appointment_time: new Date(),
-    payment_method: payMethod,
+    pay_method: payMethod,
     status: payMethod === 'offline' ? 'booked' : 'booking',
     paid: false,
+    price: doctor.price
   });
   if(member.card_type){
     appointment.card_type = member.card_type;
@@ -203,6 +205,21 @@ exports.createAppointment = function(
 //后台管理查看所有预约情况
 exports.getAllAppointments = function(filter, pagination, callback) {
   var query = {};
+  if(filter.search_key){
+    var regexObj = {$regex: filter.search_key, $options: '$i'}
+    query.$or = [
+      {IDCard: regexObj},
+      {nickname: regexObj},
+      {card_number: regexObj},
+      {order_number: regexObj}
+    ];
+  }
+  if(filter.department_id){
+    query.department = filter.department_id;
+  }
+  if(filter.outpatient_type){
+    query.outpatient_type = filter.outpatient_type;
+  }
   Appointment.count(query)
       .exec(function(err, totalCount){
         if(err){

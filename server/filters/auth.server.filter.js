@@ -70,6 +70,22 @@ exports.requireUser = function(req, res, next){
   });
 };
 
+
+exports.requireUserById = function(req, res, next){
+  var userId = req.query.user_id || req.body.user_id || '';
+  if(!userId){
+    return next({err: systemError.param_null_error});
+  }
+  userLogic.getUserById(userId, function(err, user){
+    if(err){
+      return next(err);
+    }
+
+    req.user = user;
+    next();
+  });
+};
+
 exports.requireUserDetailById = function(req, res, next){
   var userId = req.body.user_id || req.query.user_id;
   userLogic.getUserDetailById(userId, function(err, user){

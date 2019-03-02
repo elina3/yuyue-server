@@ -5,10 +5,11 @@
 
 var appointmentController = require('../controllers/appointment');
 var authFilter = require('../filters/auth'),
-  hospitalFilter = require('../filters/hospital'),
   paginationFilter = require('../filters/pagination');
 
 module.exports = function (app) {
+  //manager获取所有预约
+  app.route('/appointment/list').get(paginationFilter.requirePagination, appointmentController.getAllAppointments);
 
   //app端获取医生可预约时间段
   app.route('/app/doctor/schedules').get(appointmentController.getAllUnBookSchedules);
@@ -17,5 +18,6 @@ module.exports = function (app) {
   //创建一条预约记录
   app.route('/app/doctor/create_appointment').post(authFilter.requireMemberByOpenId, appointmentController.createNewAppointmentInfo);
   app.route('/app/doctor/appointment_list').get(authFilter.requireMemberByOpenId, appointmentController.getMyAppointments);
+  //app,manger看详情的接口
   app.route('/app/doctor/appointment_detail').get(appointmentController.getAppointmentDetail);
 };
