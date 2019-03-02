@@ -54,11 +54,22 @@ exports.checkMemberByOpenId = function(req, res, next){
 
 exports.registerAndBindCard = function(req, res, next){
   var openId = req.body.open_id || req.query.open_id || '';
-  var memberInfo = req.body.member_info || req.query.member_info || {};
-  var wechatInfo = req.body.wechat_info || req.query.wechat_info || {};
+  var memberInfo = req.body.member_info || req.query.member_info || '';
+  var wechatInfo = req.body.wechat_info || req.query.wechat_info || '';
   if(!openId){
     return next({err: memberError.no_open_id});
   }
+
+  if(!memberInfo){
+    return next({err: memberError.no_member_info});
+  }
+  memberInfo = JSON.parse(memberInfo);
+
+  if(!wechatInfo){
+    return next({err: memberError.no_wechat_info});
+  }
+  wechatInfo =JSON.parse(wechatInfo);
+
   if(!memberInfo.nickname){
     return next({err: memberError.no_nickname});
   }
