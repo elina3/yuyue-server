@@ -22,7 +22,7 @@ exports.getOpenIdByCode = function(code, callback){
     //   "openid":"OPENID",
     //   "scope":"SCOPE"
     // }
-    console.log('access_token result:', res.body);
+    console.log('access_token result:', res);
     if(!res.access_token){
       return callback({err: {zh_message: 'error', obj: res.body}});
     }
