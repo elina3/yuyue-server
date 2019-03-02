@@ -7,8 +7,9 @@ var appDb = mongoLib.appDb;
 var DepartmentModel = appDb.model('Department');
 
 exports.createDepartment = function(departmentInfo, callback) {
-  DepartmentModel.findOne({ hospital: departmentInfo.hospitalId, name: departmentInfo.name })
-  .exec(function(err, department) {
+  DepartmentModel.findOne(
+      { hospital: departmentInfo.hospitalId, name: departmentInfo.name }).
+      exec(function(err, department) {
         if (err) {
           return callback({ err: systemError.database_query_error });
         }
@@ -21,7 +22,9 @@ exports.createDepartment = function(departmentInfo, callback) {
           name: departmentInfo.name,
           hospital: departmentInfo.hospitalId,
           description: departmentInfo.description,
-          opened: departmentInfo.opened
+          opened: departmentInfo.opened,
+          title_pic: departmentInfo.title_pic || '',
+          desc_pic: departmentInfo.desc_pic || '',
         });
         department.save(function(err, saved) {
           if (err) {
@@ -32,48 +35,62 @@ exports.createDepartment = function(departmentInfo, callback) {
       });
 };
 
-exports.modifyDepartment = function(departmentId, departmentInfo, callback){
-  DepartmentModel.update({_id: departmentId}, {$set: {name: departmentInfo.name, description: departmentInfo.description || '', update_time: new Date()}}, function(err){
-    if(err){
-      return callback({err: systemError.database_update_error});
+exports.modifyDepartment = function(departmentId, departmentInfo, callback) {
+  let obj = {
+    name: departmentInfo.name,
+    description: departmentInfo.description || '',
+    update_time: new Date(),
+    opened: departmentInfo.opened,
+    title_pic: departmentInfo.title_pic || '',
+    desc_pic: departmentInfo.desc_pic || '',
+  };
+  DepartmentModel.update({ _id: departmentId }, {
+    $set: obj,
+  }, function(err) {
+    if (err) {
+      return callback({ err: systemError.database_update_error });
     }
 
     return callback();
   });
 };
-exports.deleteDepartment = function(departmentId, callback){
-  DepartmentModel.update({_id: departmentId}, {$set: {deleted_status: true, delete_time: new Date()}}, function(err){
-    if(err){
-      return callback({err: systemError.database_update_error});
-    }
+exports.deleteDepartment = function(departmentId, callback) {
+  DepartmentModel.update({ _id: departmentId },
+      { $set: { deleted_status: true, delete_time: new Date() } },
+      function(err) {
+        if (err) {
+          return callback({ err: systemError.database_update_error });
+        }
 
-    return callback();
-  });
+        return callback();
+      });
 };
-exports.getDepartmentList = function(hospitalId, callback){
-  DepartmentModel.find({hospital: hospitalId, deleted_status: false}, function(err, list){
-    if(err){
-      return callback({err: systemError.database_query_error});
-    }
+exports.getDepartmentList = function(hospitalId, callback) {
+  DepartmentModel.find({ hospital: hospitalId, deleted_status: false },
+      function(err, list) {
+        if (err) {
+          return callback({ err: systemError.database_query_error });
+        }
 
-    return callback(null, list);
-  });
+        return callback(null, list);
+      });
 };
 
 exports.getDepartmentDetail = function(departmentId, callback) {
-  DepartmentModel.findOne({ _id: departmentId }).exec(function(err, department) {
-    if (err) {
-      return callback({ err: systemError.database_query_error });
-    }
+  DepartmentModel.findOne({ _id: departmentId }).
+      exec(function(err, department) {
+        if (err) {
+          return callback({ err: systemError.database_query_error });
+        }
 
-    return callback(null, department);
-  });
+        return callback(null, department);
+      });
 };
 
-exports.getAllOpenDepartments = function(callback){
-  DepartmentModel.find({deleted_status: false}, function(err, list){
-    if(err){
-      return callback({err: systemError.database_query_error});
+exports.getAllOpenDepartments = function(callback) {
+  DepartmentModel.find({ deleted_status: false }, function(err, list) {
+    if (err) {
+      return callback({ err: systemError.database_query_error });
     }
 
     return callback(null, list);

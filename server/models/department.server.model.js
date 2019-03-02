@@ -42,6 +42,12 @@ var departmentSchema = new Schema({
   opened: {//对外展示（微信可见）
     type: Boolean,
     default: false
+  },
+  title_pic: {//key
+    type: String
+  },
+  desc_pic: {//key
+    type: String
   }
 });
 

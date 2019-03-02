@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('YYWeb').controller('UserAddController',
-    ['$window', '$rootScope', '$scope', '$stateParams', 'GlobalEvent', '$state', 'UserService', 'Auth', 'HospitalService', 'FileUploader',
-      function ($window, $rootScope, $scope, $stateParams, GlobalEvent, $state, UserService, Auth, HospitalService, FileUploader) {
+    ['$window', '$rootScope', '$scope', '$stateParams', 'GlobalEvent', '$state', 'UserService', 'Auth', 'HospitalService', 'FileUploader', 'Config',
+      function ($window, $rootScope, $scope, $stateParams, GlobalEvent, $state, UserService, Auth, HospitalService, FileUploader, Config) {
         var user = Auth.getUser();
         if (!user) {
           $state.go('user_sign_in');
@@ -42,7 +42,7 @@ angular.module('YYWeb').controller('UserAddController',
 
         var uploader=$scope.uploader=new FileUploader({
           queueLimit: 1,
-          url: '/file_upload',
+          url: Config.uploadUrl,
           removeAfterUpload: true
         });/*实例化一个FileUploader对象*/
         uploader.autoUpload = true;
@@ -61,7 +61,7 @@ angular.module('YYWeb').controller('UserAddController',
           console.log(headers);
           console.info('onSuccessItem');
           if(response.success){
-            $scope.pageConfig.user.headUrl = '/file/image?key='+response.file_id;
+            $scope.pageConfig.user.headUrl = Config.imageUrl+response.file_id;
             $scope.pageConfig.user.head_photo_key = response.file_id;
           }
         };

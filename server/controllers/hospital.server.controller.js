@@ -46,7 +46,9 @@ exports.createDepartment = function(req, res, next) {
         name: departmentName,
         hospitalId: req.user.hospital,
         description: req.body.description || '',
-        opened: publicLib.isTrue(req.body.opened) || false
+        opened: publicLib.isTrue(req.body.opened) || false,
+        title_pic: req.body.title_pic,
+        desc_pic: req.body.desc_pic,
       },
       function(err, newDepartment) {
         if (err) {
@@ -65,7 +67,13 @@ exports.modifyDepartment = function(req, res, next) {
     return next({ err: hospitalError.param_name_null });
   }
   departmentLogic.modifyDepartment(req.department._id,
-      { name: modifyName, description: req.body.description || '' },
+      {
+        name: modifyName,
+        description: req.body.description || '',
+        opened: publicLib.isTrue(req.body.opened) || false,
+        title_pic: req.body.title_pic,
+        desc_pic: req.body.desc_pic,
+      },
       function(err) {
         if (err) {
           return next(err);
@@ -104,7 +112,7 @@ exports.getDepartmentList = function(req, res, next) {
 };
 exports.getDepartmentDetail = function(req, res, next) {
   req.data = {
-    department: req.department
+    department: req.department,
   };
   return next();
 };
@@ -151,7 +159,6 @@ exports.modifyJobTitle = function(req, res, next) {
       });
 };
 
-
 exports.getJobTitleList = function(req, res, next) {
   jobTitleLogic.getJobTitleList(req.user.hospital, function(err, list) {
     if (err) {
@@ -159,26 +166,26 @@ exports.getJobTitleList = function(req, res, next) {
     }
 
     req.data = {
-      job_titles: list
+      job_titles: list,
     };
     return next();
   });
 };
-exports.getJobTitleDetail = function(req, res, next){
+exports.getJobTitleDetail = function(req, res, next) {
   req.data = {
-    job_title: req.job_title
+    job_title: req.job_title,
   };
   return next();
 };
 
-exports.getOpenDepartmentList = function(req, res, next){
-  departmentLogic.getAllOpenDepartments(function(err, departments){
-    if(err){
+exports.getOpenDepartmentList = function(req, res, next) {
+  departmentLogic.getAllOpenDepartments(function(err, departments) {
+    if (err) {
       return next(err);
     }
 
     req.data = {
-      departments: departments
+      departments: departments,
     };
     return next();
   });

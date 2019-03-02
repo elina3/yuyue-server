@@ -10,7 +10,7 @@ module.exports = function (app) {
   app.route('/hospital/detail').get(authFilter.requireAdmin, hospitalFilter.requireHospital, hospitalController.getHospitalDetail);
 
   app.route('/hospital/department/create').post(authFilter.requireAdmin, hospitalController.createDepartment);
-  app.route('/hospital/department/modify').post(authFilter.requireAdmin, hospitalFilter.requireDepartment, hospitalController.modifyDepartment);
+  app.route('/hospital/department/edit').post(authFilter.requireAdmin, hospitalFilter.requireDepartment, hospitalController.modifyDepartment);
   app.route('/hospital/department/delete').post(authFilter.requireAdmin, hospitalFilter.requireDepartment, hospitalController.deleteDepartment);
   app.route('/hospital/department/list').get(authFilter.requireUser, hospitalController.getDepartmentList);
   app.route('/hospital/department/detail').get(hospitalFilter.requireDepartment, hospitalController.getDepartmentDetail);

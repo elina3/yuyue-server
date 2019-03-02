@@ -21,9 +21,16 @@
                         <p>{{ pageConfig.department.description }}</p>
                     </div>
                     <div class="yy-form-item">
-                        <label>图片</label>
-                        <img src="../../images/global/default_user.png"/>
-                        <!--<input type="text" ng-model="pageConfig.user.headUrl" disabled type="text"/>-->
+                        <label>是否开放</label>
+                        <p>{{ pageConfig.department.opened ? '开放' : '关闭' }}</p>
+                    </div>
+                    <div class="yy-form-item">
+                        <label>缩略图片</label>
+                        <img ng-src="{{ pageConfig.department.titlePic }}"/>
+                    </div>
+                    <div class="yy-form-item">
+                        <label>正文图片</label>
+                        <img ng-src="{{ pageConfig.department.descPic }}"/>
                     </div>
                 </div>
             </div>

@@ -74,6 +74,11 @@ yyWeb.config(['$stateProvider', '$urlRouterProvider', function ($stateProvider, 
       templateUrl: 'templates/department/add.client.view.html',
       controller: 'DepartmentAddController'
     })
+   .state('department_edit', {
+      url: '/department/edit/:id',
+      templateUrl: 'templates/department/edit.client.view.html',
+      controller: 'DepartmentEditController'
+    })
    .state('department_detail', {
       url: '/department/detail/:id',
       templateUrl: 'templates/department/detail.client.view.html',

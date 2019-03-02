@@ -57,7 +57,6 @@ angular.module('YYWeb').controller('DepartmentListController',
         groupList: []
       };
 
-
       function init() {
         $scope.$emit(GlobalEvent.onShowLoading, true);
         loadDepartmentList(function(){

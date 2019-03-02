@@ -1,7 +1,7 @@
 'use strict';
 angular.module('YYWeb').controller('UserDetailController',
-    ['$window', '$rootScope', '$scope', '$stateParams', 'GlobalEvent', '$state', 'UserService', 'Auth',
-      function ($window, $rootScope, $scope, $stateParams, GlobalEvent, $state, UserService, Auth) {
+    ['$window', '$rootScope', '$scope', '$stateParams', 'GlobalEvent', '$state', 'UserService', 'Auth', 'Config',
+      function ($window, $rootScope, $scope, $stateParams, GlobalEvent, $state, UserService, Auth, Config) {
         var user = Auth.getUser();
         if (!user) {
           $state.go('user_sign_in');
@@ -42,7 +42,7 @@ angular.module('YYWeb').controller('UserDetailController',
                 modules: modules,//[['用户管理', '科室管理'], ['取号']],
                 goodAt: data.user.good_at || '--',
                 brief: data.user.brief || '--',
-                headUrl: '../../images/global/default_user.png'
+                headUrl: data.user.head_photo ? Config.imageUrl + data.user.head_photo : '../../images/global/default_user.png'
               };
 
               return callback();

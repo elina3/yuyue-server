@@ -1,7 +1,20 @@
 'use strict';
-angular.module('YYWeb').controller('DepartmentAddController',
-    ['$window', '$rootScope', '$scope', '$stateParams', 'GlobalEvent', '$state', 'UserService', 'Auth', 'HospitalService', 'FileUploader', 'Config',
-      function ($window, $rootScope, $scope, $stateParams, GlobalEvent, $state, UserService, Auth, HospitalService, FileUploader, Config) {
+angular.module('YYWeb').controller('DepartmentEditController',
+    [
+      '$window',
+      '$rootScope',
+      '$scope',
+      '$stateParams',
+      'GlobalEvent',
+      '$state',
+      'UserService',
+      'Auth',
+      'HospitalService',
+      'FileUploader',
+      'Config',
+      function(
+          $window, $rootScope, $scope, $stateParams, GlobalEvent, $state,
+          UserService, Auth, HospitalService, FileUploader, Config) {
         var user = Auth.getUser();
         if (!user) {
           $state.go('user_sign_in');
@@ -10,14 +23,14 @@ angular.module('YYWeb').controller('DepartmentAddController',
 
         $scope.pageConfig = {
           navIndexes: [1, 1],
+          department_id: '',
           opened: [{ id: true, text: '开放' }, { id: false, text: '关闭' }],
           department: {
             name: '',
             description: '',
-            opened: {id: true, text: '开放'}
-          }
+            opened: { id: true, text: '开放' },
+          },
         };
-
 
         const imageUrl = Config.imageUrl;
 
@@ -76,25 +89,26 @@ angular.module('YYWeb').controller('DepartmentAddController',
         };
 
 
-        function createDepartment(callback){
-          if(!$scope.pageConfig.department.name){
+
+        function saveDepartment(callback) {
+          if (!$scope.pageConfig.department.name) {
             return $scope.$emit(GlobalEvent.onShowAlert, '请输入科室名称！');
           }
           var params = {
+            department_id: $scope.pageConfig.department_id,
             name: $scope.pageConfig.department.name,
             description: $scope.pageConfig.department.description,
-            opened: $scope.pageConfig.department.opened.id
+            opened: $scope.pageConfig.department.opened.id,
           };
-          console.log('params:', params);
-
           if($scope.pageConfig.department.desc_pic_key){
             params.desc_pic = $scope.pageConfig.department.desc_pic_key;
           }
           if($scope.pageConfig.department.title_pic_key){
             params.title_pic = $scope.pageConfig.department.title_pic_key;
           }
-          HospitalService.createDepartment(params, function(err, data){
-            if(err){
+          console.log('params:', params);
+          HospitalService.editDepartment(params, function(err, data) {
+            if (err) {
               return $scope.$emit(GlobalEvent.onShowAlert, err);
             }
 
@@ -103,11 +117,48 @@ angular.module('YYWeb').controller('DepartmentAddController',
           });
         }
 
-        $scope.saveDepartment = function(){
+        $scope.saveDepartment = function() {
           $scope.$emit(GlobalEvent.onShowLoading, true);
-          createDepartment(function(){
+          saveDepartment(function() {
             $scope.$emit(GlobalEvent.onShowLoading, false);
             $state.go('department_list');
           });
         };
+
+        function loadDepartment(callback) {
+          HospitalService.getDepartmentDetail(
+              { department_id: $scope.pageConfig.department_id },
+              function(err, data) {
+                if (err) {
+                  return $scope.$emit(GlobalEvent.onShowAlert, err);
+                }
+
+                data.department = data.department || {};
+
+                $scope.pageConfig.department = {
+                  name: data.department.name,
+                  description: data.department.description || '--',
+                  opened: {
+                    id: data.department.opened ? true : false,
+                    text: data.department.opened ? '开放' : '关闭',
+                  },
+                  title_pic: data.department.title_pic ? imageUrl + data.department.title_pic : '',
+                  title_pic_key: data.department.title_pic,
+                  desc_pic: data.department.desc_pic ? imageUrl + data.department.desc_pic : '',
+                  desc_pic_key: data.department.desc_pic,
+                  headUrl: '../../images/global/default_user.png',
+                };
+                return callback();
+              });
+        }
+
+        function init() {
+          $scope.pageConfig.department_id = $stateParams.id;
+          $scope.$emit(GlobalEvent.onShowLoading, true);
+          loadDepartment(function() {
+            $scope.$emit(GlobalEvent.onShowLoading, false);
+          });
+        }
+
+        init();
       }]);

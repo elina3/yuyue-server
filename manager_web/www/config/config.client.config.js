@@ -5,7 +5,9 @@
 'use strict';
 
 angular.module('YYWeb').constant('Config', {
-    serverAddress: 'http://' + window.location.host,
-    //serverAddress: 'https://zhuzhu1688.com',
-    //serverAddress: 'https://agilepops.com'
+  serverAddress: 'http://' + window.location.host,
+  imageUrl: '/file/image?key=',
+  uploadUrl: '/file_upload'
+  //serverAddress: 'https://zhuzhu1688.com',
+  //serverAddress: 'https://agilepops.com'
 });

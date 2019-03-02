@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('YYWeb').controller('UserEditController',
-    ['$window', '$rootScope', '$scope', '$stateParams', 'GlobalEvent', '$state', 'UserService', 'Auth', 'HospitalService', 'FileUploader',
-      function ($window, $rootScope, $scope, $stateParams, GlobalEvent, $state, UserService, Auth, HospitalService, FileUploader) {
+    ['$window', '$rootScope', '$scope', '$stateParams', 'GlobalEvent', '$state', 'UserService', 'Auth', 'HospitalService', 'FileUploader', 'Config',
+      function ($window, $rootScope, $scope, $stateParams, GlobalEvent, $state, UserService, Auth, HospitalService, FileUploader, Config) {
         var user = Auth.getUser();
         if (!user) {
           $state.go('user_sign_in');
@@ -26,7 +26,7 @@ angular.module('YYWeb').controller('UserEditController',
 
         var uploader=$scope.uploader=new FileUploader({
           queueLimit: 1,
-          url: '/file_upload',
+          url: Config.uploadUrl,
           removeAfterUpload: true
         });/*实例化一个FileUploader对象*/
         uploader.autoUpload = true;
@@ -38,7 +38,7 @@ angular.module('YYWeb').controller('UserEditController',
           }
         });
 
-        const ImageRootUrl = '/file/image?key=';
+        const ImageRootUrl = Config.imageUrl;
 
         uploader.onSuccessItem = function(fileItem, response, status, headers) {
           console.log(response);
