@@ -35,6 +35,7 @@ exports.getOpenIdByCode = function(code, callback){
     }
 
     var wechatInfoUrl = `${config.wechat.getUserInfoByToken}?access_token=${resultObj.access_token}&open_id=${resultObj.openid}&lang=zh_CN`;
+    console.error('wechatInfoUrl', wechatInfoUrl)
     agent.get(wechatInfoUrl)
         .end(function(err, res){
           if(err){
