@@ -240,10 +240,12 @@ exports.setDoctorPrice  =function(req, res, next){
     return next({err: systemError.param_null_error});
   }
 
-  var newPrice = parseInt(req.body.price) || 0;
-  if(!newPrice || newPrice < 0){
+  var newPrice = parseFloat(req.body.price) || 0;
+  if(!newPrice || newPrice < 0){//元
     return next({err: userError.price_error});
   }
+
+  newPrice = newPrice * 100;
 
 
   async.auto({
@@ -266,7 +268,7 @@ exports.setDoctorPrice  =function(req, res, next){
       });
     },
     onShelf: ['getDoctor', function(autoCallback, result){
-      userLogic.setDoctorPrice(req.user, result.getDoctor, newPrice, function(err){
+      userLogic.setDoctorPrice(req.user, result.getDoctor, parseInt(newPrice), function(err){
         if(err){
           return autoCallback(err);
         }
@@ -285,7 +287,7 @@ exports.setDoctorPrice  =function(req, res, next){
   });
 };
 
-//获取医生所有时间段的号源
+//获取医生所有时间段的号源--manager
 exports.getDoctorSchedules = function(req, res, next){
   var doctorId = req.query.doctor_id || '';
   if(!doctorId){
@@ -396,7 +398,7 @@ exports.addDoctorSchedule = function(req, res, next){
     return next();
   });
 };
-exports.deleteSchedule = function(){};
+exports.deleteSchedule = function(req, res, next){};
 exports.modifyDoctorSchedule = function(req, res, next){
   var doctorId = req.body.doctor_id || '';
   if(!doctorId){

@@ -130,7 +130,7 @@ var UserSchema = new Schema({
     type: Boolean,
     default: false,
   },
-  price: {//role为doctor时，有挂号费价格
+  price: {//role为doctor时，有挂号费价格，金额：分
     type: Number
   },
   recent_modify_user: {

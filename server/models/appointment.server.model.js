@@ -12,17 +12,22 @@ var AppointmentSchema = new Schema({
     type: String,
     default: 'Appointment',
   },
-  client: {//用户
-    type: Schema.Types.ObjectId,
-    required: true,
-    ref: 'Client'
-  },
-  IDCard: {
+  order_number: {
     type: String,
     required: true,
     index: true
   },
-  card_type: {//就诊卡类型
+  member: {//用户
+    type: Schema.Types.ObjectId,
+    required: true,
+    ref: 'Member'
+  },
+  IDCard: {//member有可能换绑定的身份证，但在付款那刻一定不会变
+    type: String,
+    required: true,
+    index: true
+  },
+  card_type: {//就诊卡类型 //member有可能换绑定的卡，但在付款那刻一定不会变
     type: String
   },
   card_number: {//就诊卡号

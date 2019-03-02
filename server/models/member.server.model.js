@@ -20,9 +20,7 @@ var MemberSchema = new Schema({
     type: Schema.Types.Mixed
   },
   IDCard: {
-    type: String,
-    required: true,
-    unique: true
+    type: String
   },
   nickname: {
     type: String,
@@ -33,8 +31,7 @@ var MemberSchema = new Schema({
     default: 'unknown',
   },
   mobile_phone: {
-    type: String,
-    required: true
+    type: String
   },
   head_photo: {
     type: String,

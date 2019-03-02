@@ -1,10 +1,8 @@
-/**
- * Created by elinaguo on 16/2/26.
- */
 'use strict';
 var cryptoLib = require('../libraries/crypto');
 var systemError = require('../errors/system');
 var userLogic = require('../logics/user');
+var memberLogic = require('../logics/member');
 
 exports.requireAdmin = function(req, res, next){
   var token;
@@ -82,6 +80,18 @@ exports.requireUserDetailById = function(req, res, next){
 
     req.detail_user = user;
     req.body.hospital_id = req.detail_user.hospital;
+    next();
+  });
+};
+
+exports.requireMemberByOpenId = function(req, res, next){
+  var openId = req.body.open_id || req.query.open_id || '';
+  memberLogic.getMemberInfoByOpenId(openId, function(err, member){
+    if(err){
+      return next(err);
+    }
+
+    req.member = member;
     next();
   });
 };

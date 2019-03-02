@@ -17,23 +17,33 @@ var PaymentSchema = new Schema({
     default: 'wechat'
   },
   appointment: {
-    type: Schema.Types.ObjectId
-  },
-  order_number: {//订单号
-    type: String
-  },
-  open_id: {
-    type: String
-  },
-  client: {//用户
     type: Schema.Types.ObjectId,
     required: true,
-    ref: 'Client'
+    ref: 'Appointment'
   },
-  IDCard: {
+  payment_order: {//支付单号
+    type: String,
+    required: true
+  },
+  open_id: {
+    type: String,
+    required: true
+  },
+  member: {//用户
+    type: Schema.Types.ObjectId,
+    required: true,
+    ref: 'Member'
+  },
+  IDCard: {//用于搜索 appointment中不会变，member有可能换绑定的身份证，但在付款那刻一定不会变
     type: String,
     required: true,
     index: true
+  },
+  card_type: {//用于搜索 appointment中不会变，member有可能换绑定的卡，但在付款那刻一定不会变
+    type: String
+  },
+  card_number: {//用于搜索
+    type: String
   },
   doctor_schedule: {//预定安排记录
     type: Schema.Types.ObjectId,

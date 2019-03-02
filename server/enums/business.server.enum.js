@@ -22,3 +22,10 @@ exports.outpatient_types = {
     return this.enums.indexOf(type) >= 0;
   }
 };
+
+exports.payment_methods = {
+  enums: ['offline', 'wechat'],
+  valid: function(method) {
+    return this.enums.indexOf(method) >= 0;
+  }
+};

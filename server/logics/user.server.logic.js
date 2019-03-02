@@ -355,7 +355,7 @@ exports.addDoctorSchedule = function(user, doctor, scheduleInfo, callback) {
           start_time_string: scheduleInfo.start_time.Format('hh:mm'),
           end_time: scheduleInfo.end_time,
           end_time_string: scheduleInfo.end_time.Format('hh:mm'),
-          number_count: scheduleInfo.number_count,
+          number_count: scheduleInfo.number_count
         });
         doctorSchedule.save(function(err, saved) {
           if (err) {
@@ -450,5 +450,20 @@ exports.updateDoctorSchedule = function(user, doctor, scheduleInfo, callback) {
           }
           return callback();
         });
+      });
+};
+
+exports.getScheduleDetail = function(scheduleId, callback){
+  DoctorSchedule.findOne({ _id: scheduleId }).
+      exec(function(err, doctorSchedule) {
+        if (err) {
+          return callback({ err: systemError.database_query_error });
+        }
+
+        if (!doctorSchedule) {
+          return callback({ err: userError.doctor_schedule_not_exist });
+        }
+
+        return callback(null, doctorSchedule);
       });
 };

@@ -24,6 +24,20 @@ exports.isMember = function(openId, callback){
         return callback(null, true);
   });
 };
+exports.getMemberInfoByOpenId = function(openId, callback){
+  Member.findOne({open_id: openId})
+  .exec(function(err, member){
+    if(err){
+      return callback({err: systemError.database_query_error});
+    }
+
+    if(!member){
+      return callback({err: memberError.member_not_exist});
+    }
+
+    return callback(null, member);
+  });
+};
 exports.createMemberBaseInfo = function(openId, wechatInfo, callback){
   Member.findOne({open_id: openId})
       .exec(function(err, member){
@@ -47,6 +61,7 @@ exports.createMemberBaseInfo = function(openId, wechatInfo, callback){
         }
         member.save(function(err, newMember){
           if(err){
+            console.error(err)
             return callback({err: systemError.database_save_error});
           }
           return callback(null, newMember);
