@@ -3,7 +3,8 @@ var async = require('async');
 var cryptoLib = require('../libraries/crypto'),
     publicLib = require('../libraries/public'),
   enumLib = require('../enums/business');
-var userLogic  = require('../logics/user');
+var userLogic  = require('../logics/user'),
+    appointmentLogic = require('../logics/appointment');
 var systemError = require('../errors/system'),
 userError = require('../errors/user');
 
@@ -430,7 +431,6 @@ exports.addDoctorSchedule = function(req, res, next){
     return next();
   });
 };
-exports.deleteSchedule = function(req, res, next){};
 exports.modifyDoctorSchedule = function(req, res, next){
   var doctorId = req.body.doctor_id || '';
   if(!doctorId){
@@ -487,6 +487,69 @@ exports.modifyDoctorSchedule = function(req, res, next){
       });
     }]
   }, function(err, results){
+    if(err){
+      return next(err);
+    }
+
+    req.data = {
+      success: true
+    };
+    return next();
+  });
+};
+exports.deleteDoctorSchedule = function(req, res, next){
+  var doctorId = req.body.doctor_id || '';
+  if(!doctorId){
+    return next({err: systemError.param_null_error});
+  }
+  var scheduleId = req.body.schedule_id || '';
+  if(!scheduleId){
+    return next({err: systemError.param_null_error});
+  }
+
+  async.auto({
+    getDoctor: function(autoCallback){
+      userLogic.getUserById(doctorId, function(err, user){
+        if(err){
+          return autoCallback(err);
+        }
+
+        if(user.role !== 'doctor'){
+          return autoCallback({err: userError.not_a_doctor});
+        }
+
+        if(user.on_shelf){//已上架不能删除
+          return autoCallback({err: userError.doctor_on_shelf});
+        }
+
+        return autoCallback(null, user);
+
+      });
+    },
+    getSchedule: function(autoCallback){
+      userLogic.getScheduleDetail(scheduleId, function(err, schedule){
+        return autoCallback(err, schedule);
+      });
+    },
+    hasBookedSchedule: ['getSchedule', function(autoCallback){
+      appointmentLogic.getScheduleAppointmentCount(scheduleId, function(err, count){
+        if(err){
+          return autoCallback(err);
+        }
+
+        if(count > 0){
+          return autoCallback({err: userError.has_booked_not_delete});
+        }
+
+        return autoCallback(null, count > 0);
+      });
+    }],
+    removeSchedule: ['getDoctor', 'hasBookedSchedule', function(autoCallback){
+      userLogic.deleteDoctorSchedule(scheduleId, function(err){
+        return autoCallback(err);
+      });
+    }]
+  }, function(err){
     if(err){
       return next(err);
     }

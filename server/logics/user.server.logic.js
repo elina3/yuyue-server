@@ -537,3 +537,13 @@ exports.getScheduleDetail = function(scheduleId, callback){
         return callback(null, doctorSchedule);
       });
 };
+
+exports.deleteDoctorSchedule  =function(scheduleId, callback){
+  DoctorSchedule.remove({_id: scheduleId}, function(err){
+    if(err){
+      return callback({err: systemError.database_remove_error});
+    }
+
+    return callback();
+  });
+};

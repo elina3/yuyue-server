@@ -25,6 +25,7 @@ module.exports = function (app) {
   app.route('/user/doctor/schedule_list').get(userController.getDoctorSchedules);
   app.route('/user/doctor/add_schedule').post(authFilter.requireUser, userController.addDoctorSchedule);
   app.route('/user/doctor/modify_schedule').post(authFilter.requireUser, userController.modifyDoctorSchedule);
+  app.route('/user/doctor/delete_schedule').post(authFilter.requireUser, userController.deleteDoctorSchedule);
 
 
   // app.route('/user/sign_up').post(authFilter.requireUser, userController.signUp);

@@ -38,7 +38,8 @@ var AppointmentSchema = new Schema({
   },
   doctor_schedule: {//预定安排记录
     type: Schema.Types.ObjectId,
-    ref: 'DoctorSchedule'
+    ref: 'DoctorSchedule',
+    index: true
   },
   doctor: {
     type: Schema.Types.ObjectId,

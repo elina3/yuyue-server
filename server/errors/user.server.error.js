@@ -27,4 +27,5 @@ module.exports = _.extend(exports, {
   doctor_schedule_not_exist: {type: 'doctor_schedule_not_exist', message: 'The doctor schedule is not exist', zh_message: '该医生的时间安排记录不存在'},
   username_exist: {type: 'username_exist', message: 'The username has been exist', zh_message: '该用户工号已存在'},
   IDCard_exist: {type: 'IDCard_exist', message: 'The IDCard has been binded', zh_message: '该用户身份证已绑定其他账号！'},
+  has_booked_not_delete: {type: 'has_booked_not_delete', message: 'The schedule has not deleted', zh_message: '该号源已经有人预定不能删除！'},
 });
