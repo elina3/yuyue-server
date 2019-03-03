@@ -319,6 +319,12 @@ ul{
   text-overflow: ellipsis;
   word-break: break-all;
 }
+.multi-ellipsis(){
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  overflow: hidden;
+}
 
 .zz-view {
   height: 100%;
@@ -577,6 +583,14 @@ ul{
         &.edit {
           padding: 5px 0;
         }
+      }
+    }
+  }
+
+  .list-info{
+    .text-3-line{
+      >span{
+        .multi-ellipsis();
       }
     }
   }
