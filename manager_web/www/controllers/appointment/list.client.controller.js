@@ -10,9 +10,10 @@ angular.module('YYWeb').controller('AppointmentListController',
       'Auth',
       'HospitalService',
       'AppointmentService',
+      'MemberService',
       function(
           $window, $rootScope, $scope, GlobalEvent, $state, UserService, Auth,
-          HospitalService, AppointmentService) {
+          HospitalService, AppointmentService, MemberService) {
         var user = Auth.getUser();
         if (!user) {
           $state.go('user_sign_in');
@@ -42,8 +43,8 @@ angular.module('YYWeb').controller('AppointmentListController',
                     orderNumber: item.order_number,
                     name: item.nickname,
                     IDCard: item.IDCard,
-                    cardType: item.card_type || '--',
-                    cardNumber: item.card_number || '--',
+                    cardType: MemberService.translateCardType(item.card_type) || '无',
+                    cardNumber: item.card_number || '无',
                     role: UserService.translateUserRole(item.role),
                   };
                 });

@@ -28,7 +28,7 @@ angular.module('YYWeb').controller('SickerListController',
                 nickname: item.nickname || '--',
                 IDCard: item.IDCard || '--',
                 cardType: MemberService.translateCardType(item.card_type) || '--',
-                cardNumber: item.card_number,
+                cardNumber: item.card_number || '--',
               };
             });
           }
