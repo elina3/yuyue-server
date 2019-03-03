@@ -8,14 +8,14 @@
             </div>
             <div class="yy-panel-item no-top">
                 <div class="print-info row">
-                    <label class="col-xs-4">预约单号：<span>14207369231</span></label>
-                    <label class="col-xs-3">姓名：<span>张艺兴</span></label>
-                    <label class="col-xs-5">身份证号：<span>410825198766553212</span></label>
+                    <label class="col-xs-4">预约单号：<span>{{ pageConfig.appointment.orderNumber }}</span></label>
+                    <label class="col-xs-3">姓名：<span>{{ pageConfig.appointment.name }}</span></label>
+                    <label class="col-xs-5">身份证号：<span>{{ pageConfig.appointment.IDCard }}</span></label>
                 </div>
                 <div class="print-info row">
-                    <label class="col-xs-4">联系电话：<span>17659235222</span></label>
-                    <label class="col-xs-3">就诊卡类型：<span>医保卡</span></label>
-                    <label class="col-xs-5">就诊卡号：<span>3u2fewfewqre3423</span></label>
+                    <label class="col-xs-4">联系电话：<span>{{ pageConfig.appointment.mobile }}</span></label>
+                    <label class="col-xs-3">就诊卡类型：<span>{{ pageConfig.appointment.cardType }}</span></label>
+                    <label class="col-xs-5">就诊卡号：<span>{{ pageConfig.appointment.cardNumber }}</span></label>
                 </div>
             </div>
             <div class="yy-panel-item" style="padding-top:0;">
@@ -58,7 +58,7 @@
                                         <span>{{pageConfig.appointment.date}}</span>
                                     </div>
                                     <div class="col-xs-2">
-                                        <span>{{pageConfig.appointment.startTime+'-'+pageConfig.appointment.endTime}}</span>
+                                        <span>{{pageConfig.appointment.startTime+'~'+pageConfig.appointment.endTime}}</span>
                                     </div>
                                 </div>
                             </div>

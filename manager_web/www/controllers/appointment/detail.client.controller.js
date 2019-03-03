@@ -63,7 +63,7 @@ angular.module('YYWeb').controller('AppointmentDetailController',
         $scope.pageConfig = {
           navIndexes: [0],
           appointmentId: '',
-          appointment: {id: '1', orderNumber: '201893421343', name: '牛二', IDCard: '410825198805177889', cardType: '医保卡', cardNumber: 'yibaoewr3809582035'},
+          appointment: {},
         };
 
 
