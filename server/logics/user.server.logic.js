@@ -267,6 +267,21 @@ exports.getUserDetailById = function(userId, callback) {
         return callback(null, user);
       });
 };
+exports.getDoctorByUsername = function(username, callback) {
+  User.findOne({ username: username }).
+      populate('department job_title').
+      exec(function(err, user) {
+        if (err) {
+          return callback({ err: systemError.internal_system_error });
+        }
+
+        if (!user || user.deleted_status) {
+          return callback(userError.user_not_exist);
+        }
+
+        return callback(null, user);
+      });
+};
 
 exports.signIn = function(username, password, terminalType, callback) {
   User.findOne({ username: username }).

@@ -301,6 +301,19 @@ ul.yy-checkbox{
   }
 }
 
+.yy-row{
+  &.right{
+    display: inline-block;
+    float: right;
+
+  }
+  display: block;
+  .left, .right{
+    display: inline-block;
+    float: left;
+  }
+}
+
 html {
   height: 100%;
 }
@@ -1067,21 +1080,23 @@ select {
     }
   }
   &.import{
-    background: url("../../images/global/import.png") left center no-repeat;
+    width: 120px;
+    height: 40px;
+    background: url("../../images/global/import.png") left center no-repeat !important;
     overflow: hidden;
     span{
       margin-left: 20px;
+      line-height: 40px;
     }
     &:hover {
       cursor: pointer;
     }
-    .filename {
-      opacity: 0;
-      cursor: pointer;
-      margin-left: -60px;
-      margin-top: -40px;
-      height: 40px;
-      //width: 100px;
+    input.filename {
+      opacity: 0 !important;
+      cursor: pointer !important;;
+      margin-top: -40px !important;;
+      height: 40px !important;;
+      width: 100px;
     }
   }
 }

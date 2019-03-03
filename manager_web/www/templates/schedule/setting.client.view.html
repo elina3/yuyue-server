@@ -3,16 +3,8 @@
     <div class="yy-wrapper">
         <h2 ng-show="!pageConfig.isSelfUser">{{pageConfig.doctor.name}} 排班</h2>
         <div class="yy-whiter-board">
-            <!--<div class="yy-panel-item">-->
-                <!--<div class="row">-->
-                    <!--<div class="z-header-button import">-->
-                        <!--<span>批量导入排班</span>-->
-                        <!--<input id="card-filename" class="filename" type="file"-->
-                               <!--onchange="angular.element(this).scope().onFileSelect(this)">-->
-                    <!--</div>-->
-                    <!--<button class=" col-lg-2 col-md-4" ng&#45;&#45;click="batchImportSchedules()" >导入</button>-->
-                <!--</div>-->
-            <!--</div>-->
+            <div class="yy-panel-item">
+            </div>
             <div class="yy-panel-item">
                 <div class="yy-date-picker-area">
                         <input type="text" date-range-picker class="e-date-picker info-input date-picker dropdown"
@@ -22,7 +14,21 @@
                                 placeholder="点击选择日期"
                                 />
                 </div>
+
                 <button class="yy-green-button" ng-click="pageConfig.changeDate()">筛选</button>
+
+                <div class="yy-row right">
+                    <div class="left">
+                        <div class="z-header-button import">
+                            <span>选择排班文件</span>
+                            <input id="card-filename" class="filename" type="file"
+                                   onchange="angular.element(this).scope().onFileSelect(this)">
+                        </div>
+                    </div>
+                    <div class="right">
+                        <button class="yy-green-button" ng-click="batchImportSchedules()">导入排班</button>
+                    </div>
+                </div>
             </div>
             <div class="yy-panel-item">
                 <div class="yy-custom-canlendar">

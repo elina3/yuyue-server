@@ -370,12 +370,18 @@ angular.module('YYWeb').controller('ScheduleSettingController',
         function generateImportScheduleList(data, extDatas) {
           var scheduleList = [];
           for (var i = 0; i < data.length; i++) {
+            var startTimeString = data[i][importSheet.B1] + ' ' + data[i][importSheet.C1];
+            var endTimeString = data[i][importSheet.B1] + ' ' + data[i][importSheet.D1];
+            var startTime = new Date(startTimeString);
+            var endTime = new Date(endTimeString);
             var obj = {
               username: data[i][importSheet.A1],
               date: data[i][importSheet.B1],
               start_time: data[i][importSheet.C1],
               end_time: data[i][importSheet.D1],
               number_count: data[i][importSheet.E1],
+              start_timestamp: startTime.getTime(),
+              end_timestamp: endTime.getTime()
             };
             scheduleList.push(obj);
           }
@@ -486,7 +492,7 @@ angular.module('YYWeb').controller('ScheduleSettingController',
             console.log(data);
             if (scheduleInfo[i]) {
               var newParam = {
-                card_list: scheduleInfo[i++],
+                schedule_infos: scheduleInfo[i++],
                 append_method: 'append'
               };
               uploadSchedule(scheduleInfo, newParam, i, callback);
@@ -517,7 +523,7 @@ angular.module('YYWeb').controller('ScheduleSettingController',
           }
 
           var param = {
-            card_list: queue[0],
+            schedule_infos: queue[0],
             append_method: 'replace'
           };
           uploadSchedule(queue, param, 1, callback);

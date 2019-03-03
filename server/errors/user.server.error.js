@@ -28,4 +28,6 @@ module.exports = _.extend(exports, {
   username_exist: {type: 'username_exist', message: 'The username has been exist', zh_message: '该用户工号已存在'},
   IDCard_exist: {type: 'IDCard_exist', message: 'The IDCard has been binded', zh_message: '该用户身份证已绑定其他账号！'},
   has_booked_not_delete: {type: 'has_booked_not_delete', message: 'The schedule has not deleted', zh_message: '该号源已经有人预定不能删除！'},
+  at_least_one: {type: 'at_least_one', message: 'The schedule at least one', zh_message: '至少传递一条数据！'},
+  username_null: {type: 'username_null', message: 'The username is null', zh_message: 'username 参数为空！'},
 });

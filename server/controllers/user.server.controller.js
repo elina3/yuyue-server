@@ -369,6 +369,7 @@ exports.getDoctorSchedules = function(req, res, next){
     return next();
   });
 };
+
 //添加号源
 exports.addDoctorSchedule = function(req, res, next){
   var doctorId = req.body.doctor_id || '';
@@ -429,6 +430,94 @@ exports.addDoctorSchedule = function(req, res, next){
       schedule: results.addSchedule
     };
     return next();
+  });
+};
+
+
+function addOneDoctorSchedule(user, doctor, scheduleInfo, callback){
+  var startTimeStamp = parseInt(scheduleInfo.start_timestamp) || 0;
+  var endTimeStamp = parseInt(scheduleInfo.end_timestamp) || 0;
+  var startTime = new Date(startTimeStamp);
+  var endTime = new Date(endTimeStamp);
+  if(!startTimeStamp || !endTimeStamp || !startTime || !endTime){
+    return callback({err: systemError.invalid_timestamp_param});
+  }
+
+  if(startTimeStamp - endTimeStamp > 0){
+    return callback({err: userError.start_end_time_invalid});
+  }
+
+  var numberCount = parseInt(scheduleInfo.number_count) || 0;
+  if(numberCount <= 0){
+    return callback({err: userError.schedule_number_count_error});
+  }
+
+  userLogic.addDoctorSchedule(user, doctor,
+      {
+        start_time: startTime,
+        end_time: endTime,
+        number_count: numberCount
+      }, function(err, schedule){
+        return callback(err, schedule);
+      });
+}
+
+//批量添加号源
+exports.batchAddDoctorSchedule = function(req, res, next){
+  var scheduleInfos = req.body.schedule_infos || [];
+  if(scheduleInfos.length === 0){
+    return next({err: userError.at_least_one});
+  }
+
+  var successCount = 0;
+  var userDic = {};
+  async.eachSeries(scheduleInfos, function(scheduleInfo, eachCallback){
+
+    async.auto({
+      getDoctor: function(autoCallback){
+        if(!scheduleInfo.username){
+          return autoCallback({err: userError.username_null});
+        }
+        if(userDic[scheduleInfo.username]){
+          return autoCallback(null, userDic[scheduleInfo.username]);
+        }
+        userLogic.getDoctorByUsername(scheduleInfo.username, function(err, user){
+          if(err){
+            return autoCallback(err);
+          }
+
+          if(user.role !== 'doctor'){
+            return autoCallback({err: userError.not_a_doctor});
+          }
+
+          if(user.on_shelf){//已上架不能设置号源
+            return autoCallback({err: userError.doctor_on_shelf});
+          }
+
+          userDic[scheduleInfo.username]  = user;
+          return autoCallback(null, user);
+
+        });
+      },
+      addSchedule: ['getDoctor', function(autoCallback, result){
+        addOneDoctorSchedule(req.user, result.getDoctor, scheduleInfo, function(err, schedule){
+          if(err){
+            return autoCallback(err);
+          }
+
+          successCount++;
+          return autoCallback(null, schedule);
+        });
+      }]
+    }, function(err, results){
+      return eachCallback(err, results.addSchedule);
+    });
+
+  }, function(err){
+    req.data = {
+      success_count: successCount
+    };
+    return next(err);
   });
 };
 exports.modifyDoctorSchedule = function(req, res, next){
