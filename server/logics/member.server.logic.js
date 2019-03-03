@@ -186,6 +186,7 @@ exports.unbindCard = function(openId, callback){
         member.card_number = '';
         member.save(function(err, saved){
           if(err){
+            console.error(err);
             return callback({err: systemError.database_save_error});
           }
 
