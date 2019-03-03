@@ -36,7 +36,9 @@ angular.module('YYWeb').controller('SickerDetailController',
         $scope.pageConfig = {
           navIndexes: [1, 5],
           member_id: '',
-          member: {},
+          member: {
+            wechatInfo: {}
+          },
         };
 
 
