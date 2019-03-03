@@ -48,7 +48,7 @@ angular.module('YYWeb').controller('SickerListController',
         searchKey: '',
         pagination: {
           currentPage: 1,
-          limit: 2,
+          limit: 10,
           totalCount: 0,
           isShowTotalInfo: true,
           onCurrentPageChanged: function (callback) {
