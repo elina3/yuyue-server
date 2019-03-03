@@ -287,8 +287,7 @@ angular.module('YYWeb').controller('ScheduleSettingController',
 
           $scope.pageConfig.isSelfUser = assignDoctorId === user._id;//用户是否为自己，不是自己则显示姓名
 
-          $scope.pageConfig.doctorId = assignDoctorId || user.id;
-          $scope.pageConfig.calendar.initBoard(new Date(moment().format('YYYY/MM/DD')));
+          $scope.pageConfig.doctorId = assignDoctorId || user._id;
 
           if($scope.pageConfig.isSelfUser){//如果是自己为自己设置号源，自己必须为医生
             if(user.role !== 'doctor'){
@@ -296,10 +295,7 @@ angular.module('YYWeb').controller('ScheduleSettingController',
             }
           }
 
-          $scope.$emit(GlobalEvent.onShowLoading, true);
-          loadDoctorSchedules(assignDoctorId, function(){
-            $scope.$emit(GlobalEvent.onShowLoading, false);
-          });
+          $scope.pageConfig.calendar.initBoard(new Date(moment().format('YYYY/MM/DD')));
         }
 
         init();

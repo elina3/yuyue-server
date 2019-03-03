@@ -26,7 +26,6 @@ exports.signIn = function(req, res, next){
     var accessToken = cryptoLib.encrypToken({_id: user._id, time: new Date()}, 'secret1');
     delete user._doc.password;
     delete user._doc.salt;
-    delete user._doc._id;
     req.data = {
       user: user,
       access_token: accessToken
