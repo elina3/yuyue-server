@@ -77,10 +77,28 @@ var AppointmentSchema = new Schema({
   paid_time: {
     type: Date
   },
+  picked: {
+    type: Boolean,
+    default: false
+  },
+  picked_time: {
+    type: Date
+  },
+  picked_user: {
+    type: Schema.Types.ObjectId,
+    ref: 'User'
+  },
   printed: {
     type: Boolean
   },
   print_time: {
+    type: Date
+  },
+  canceled: {
+    type: Boolean,
+    default: false
+  },
+  canceled_time: {
     type: Date
   }
 });

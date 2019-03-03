@@ -280,6 +280,51 @@ exports.getPickupList = function(filter, callback) {
     return callback(null, appointments);
   });
 };
+exports.pickupAppointment = function(user, appointmentId, callback) {
+  var query = {
+    _id: appointmentId
+  };
+
+  Appointment.findOne(query, function(err, appointment){
+    if(err){
+      return callback({err: systemError.database_query_error});
+    }
+
+    if(!appointment){
+      return callback({err: appointmentError.appointment_not_exist});
+    }
+
+    if(appointment.picked){
+      return callback({err: appointmentError.has_been_picked});
+    }
+
+    if(appointment.canceled){
+      return callback({err: appointmentError.has_been_canceled});
+    }
+
+    var updateObj = {
+      picked: true,
+      picked_time: new Date(),
+      picked_user: user._id,
+      status: 'picked_up'
+    };
+    Appointment.update(query, {$set: updateObj}, function(err){
+      if(err){
+        return callback({err: systemError.database_update_error});
+      }
+
+      Appointment.findOne(query)//前端需要返回完整的数据用于重新渲染页面
+          .populate('doctor department member')
+          .exec(function(err, newObj){
+            if(err){
+              return callback({err: systemError.database_query_error});
+            }
+
+        return callback(null, newObj);
+      });
+    });
+  });
+};
 
 //app端获取自己的所有预约内容
 exports.getMyAppointments = function(member, callback) {
@@ -311,7 +356,7 @@ exports.getAppointmentDetailById = function(appointmentId, callback){
         }
 
         if(!appointment){
-          return callback({err: appointmentError.appoitment_not_exist});
+          return callback({err: appointmentError.appointment_not_exist});
         }
 
         return callback(null, appointment);

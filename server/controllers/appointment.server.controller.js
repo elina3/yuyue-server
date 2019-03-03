@@ -46,6 +46,21 @@ exports.getPickupList = function(req, res, next){
     return next();
   });
 };
+exports.pickupAppointment = function(req, res, next){
+  var appointmentId = req.body.appointment_id || '';
+  if(!appointmentId){
+    return next({err: appointmentError.no_appointment_id});
+  }
+  appointmentLogic.pickupAppointment(req.user, appointmentId, function(err, appointment){
+    if(err){
+      return next(err);
+    }
+    req.data= {
+      appointment: appointment
+    };
+    return next();
+  });
+};
 
 //获取医生所有可预约时间段的号源--app
 exports.getAllUnBookSchedules = function(req, res, next){

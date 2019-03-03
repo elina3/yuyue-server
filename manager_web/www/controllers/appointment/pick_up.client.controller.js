@@ -8,6 +8,29 @@ angular.module('YYWeb').controller('AppointmentPickUpController',
         return;
       }
 
+      function generateObj(item){
+        return {
+          id: item._id,
+          orderNumber: item.order_number,
+          name: item.nickname,
+          IDCard: item.IDCard,
+          cardType: MemberService.translateCardType(item.card_type) || '无',
+          cardNumber: item.card_number || '无',
+          role: UserService.translateUserRole(item.role),
+          doctor: item.doctor.nickname,
+          department: item.department.name,
+          outpatient_type: UserService.translateOutpatientType(item.doctor.outpatient_type),
+          payMethodString: AppointmentService.translateAppointmentPayMethod(item.pay_method),
+          payMethod: item.pay_method,
+          timeRange: new Date(item.start_time).Format('yyyy/MM/dd hh:mm') + '~' + new Date(item.end_time).Format('hh:mm'),
+          paid: item.paid,
+          status: item.status,
+          mobile: item.member.mobile,
+          statusString: AppointmentService.translateAppointmentStatus(item.status),
+          picked: item.picked
+        };
+      }
+
 
       function loadAppointments(callback) {
 
@@ -24,43 +47,29 @@ angular.module('YYWeb').controller('AppointmentPickUpController',
           data.appointments = data.appointments || [];
           $scope.pageConfig.appointmentList = data.appointments.map(
               function(item) {
-                return {
-                  id: item._id,
-                  orderNumber: item.order_number,
-                  name: item.nickname,
-                  IDCard: item.IDCard,
-                  cardType: MemberService.translateCardType(item.card_type) || '无',
-                  cardNumber: item.card_number || '无',
-                  role: UserService.translateUserRole(item.role),
-                  doctor: item.doctor.nickname,
-                  department: item.department.name,
-                  outpatient_type: UserService.translateOutpatientType(item.doctor.outpatient_type),
-                  payMethodString: AppointmentService.translateAppointmentPayMethod(item.pay_method),
-                  payMethod: item.pay_method,
-                  timeRange: new Date(item.start_time).Format('yyyy/MM/dd hh:mm') + '~' + new Date(item.end_time).Format('hh:mm'),
-                  paid: item.paid,
-                  status: item.status,
-                  mobile: item.member.mobile,
-                  statusString: AppointmentService.translateAppointmentStatus(item.status)
-                };
+                return generateObj(item);
               });
 
           return callback();
         });
       }
 
-      // function loadAppointments(callback){
-      //   $scope.pageConfig.appointmentList = [
-      //     {id: '1', orderNumber: '201893421343', name: '牛二', IDCard: '410825198805177889', cardType: '医保卡', cardNumber: 'yibaoewr3809582035'},
-      //     {id: '2', orderNumber: '201893421344', name: '王二小', IDCard: '28082519880517788X', cardType: '--', cardNumber: '--'},
-      //     {id: '3', orderNumber: '201893421345', name: '辛加', IDCard: '320825198805177833', cardType: '就诊卡', cardNumber: 'etfewr3809582035'}
-      //   ];
-      //
-      //   $scope.pageConfig.pagination.totalCount = 3;
-      //   $scope.pageConfig.pagination.limit = 2;
-      //   $scope.pageConfig.pagination.pageCount = Math.ceil($scope.pageConfig.pagination.totalCount / $scope.pageConfig.pagination.limit);
-      //   return callback();
-      // }
+      $scope.pickup = function(appointment){
+        $scope.$emit(GlobalEvent.onShowLoading, true);
+        AppointmentService.pickup({appointment_id: appointment.id}, function(err, data){
+          $scope.$emit(GlobalEvent.onShowLoading, false);
+          if(err){
+            return $scope.$emit(GlobalEvent.onShowAlert, err);
+          }
+
+          if(data.appointment){
+            appointment.picked = data.appointment.picked;
+            appointment.status = data.appointment.status;
+            appointment.statusString = AppointmentService.translateAppointmentStatus(data.appointment.status);
+          }
+          $scope.$emit(GlobalEvent.onShowAlert, '成功取号，您可以打印您的票据');
+        });
+      };
 
       $scope.pageConfig = {
         navIndexes: [0],
@@ -69,8 +78,8 @@ angular.module('YYWeb').controller('AppointmentPickUpController',
         appointmentList: [],
       };
 
-      $scope.goPrint = function(){
-        var url = $state.href('appointment_print',{id: 3});
+      $scope.goPrint = function(item){
+        var url = $state.href('appointment_print',{id: item.id});
         window.open(url,'_blank');
       };
 

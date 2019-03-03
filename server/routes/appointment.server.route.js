@@ -11,6 +11,7 @@ module.exports = function (app) {
   //manager获取所有预约
   app.route('/appointment/list').get(paginationFilter.requirePagination, appointmentController.getAllAppointments);
   app.route('/appointment/pick_up_list').get(appointmentController.getPickupList);
+  app.route('/appointment/pick_up').post(authFilter.requireUser, appointmentController.pickupAppointment);
 
   //app端获取医生可预约时间段
   app.route('/app/doctor/schedules').get(appointmentController.getAllUnBookSchedules);
