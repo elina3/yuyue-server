@@ -27,6 +27,26 @@ exports.getAllAppointments = function(req, res, next){
   });
 };
 
+exports.getPickupList = function(req, res, next){
+  var IDCard = req.query.IDCard || '';
+  var orderNumber = req.query.order_number || '';
+  if(!IDCard && !orderNumber){
+    return next({err: appointmentError.id_card_order_number_error});
+  }
+  appointmentLogic.getPickupList({
+    IDCard: IDCard,
+    order_number: orderNumber
+  }, function(err, appointments){
+    if(err){
+      return next(err);
+    }
+    req.data= {
+      appointments: appointments
+    };
+    return next();
+  });
+};
+
 //获取医生所有可预约时间段的号源--app
 exports.getAllUnBookSchedules = function(req, res, next){
   var doctorId = req.query.doctor_id || '';

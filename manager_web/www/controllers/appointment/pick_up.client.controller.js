@@ -1,7 +1,7 @@
 'use strict';
 angular.module('YYWeb').controller('AppointmentPickUpController',
-  ['$window', '$rootScope', '$scope', 'GlobalEvent', '$state', 'UserService', 'Auth',
-    function ($window, $rootScope, $scope, GlobalEvent, $state, UserService, Auth) {
+  ['$window', '$rootScope', '$scope', 'GlobalEvent', '$state', 'UserService', 'Auth', 'AppointmentService', 'MemberService',
+    function ($window, $rootScope, $scope, GlobalEvent, $state, UserService, Auth, AppointmentService, MemberService) {
       var user = Auth.getUser();
       if (!user) {
         $state.go('user_sign_in');
@@ -9,38 +9,64 @@ angular.module('YYWeb').controller('AppointmentPickUpController',
       }
 
 
-      function loadAppointments(callback){
-        $scope.pageConfig.appointmentList = [
-          {id: '1', orderNumber: '201893421343', name: '牛二', IDCard: '410825198805177889', cardType: '医保卡', cardNumber: 'yibaoewr3809582035'},
-          {id: '2', orderNumber: '201893421344', name: '王二小', IDCard: '28082519880517788X', cardType: '--', cardNumber: '--'},
-          {id: '3', orderNumber: '201893421345', name: '辛加', IDCard: '320825198805177833', cardType: '就诊卡', cardNumber: 'etfewr3809582035'}
-        ];
+      function loadAppointments(callback) {
 
-        $scope.pageConfig.pagination.totalCount = 3;
-        $scope.pageConfig.pagination.limit = 2;
-        $scope.pageConfig.pagination.pageCount = Math.ceil($scope.pageConfig.pagination.totalCount / $scope.pageConfig.pagination.limit);
-        return callback();
+        $scope.$emit(GlobalEvent.onShowLoading, true);
+        AppointmentService.pickUpList({
+          IDCard: $scope.pageConfig.IDCard,
+          order_number: $scope.pageConfig.orderNumber
+        }, function(err, data) {
+          $scope.$emit(GlobalEvent.onShowLoading, false);
+          if (err) {
+            return $scope.$emit(GlobalEvent.onShowAlert, err);
+          }
+
+          data.appointments = data.appointments || [];
+          $scope.pageConfig.appointmentList = data.appointments.map(
+              function(item) {
+                return {
+                  id: item._id,
+                  orderNumber: item.order_number,
+                  name: item.nickname,
+                  IDCard: item.IDCard,
+                  cardType: MemberService.translateCardType(item.card_type) || '无',
+                  cardNumber: item.card_number || '无',
+                  role: UserService.translateUserRole(item.role),
+                  doctor: item.doctor.nickname,
+                  department: item.department.name,
+                  outpatient_type: UserService.translateOutpatientType(item.doctor.outpatient_type),
+                  payMethodString: AppointmentService.translateAppointmentPayMethod(item.pay_method),
+                  payMethod: item.pay_method,
+                  timeRange: new Date(item.start_time).Format('yyyy/MM/dd hh:mm') + '~' + new Date(item.end_time).Format('hh:mm'),
+                  paid: item.paid,
+                  status: item.status,
+                  mobile: item.member.mobile,
+                  statusString: AppointmentService.translateAppointmentStatus(item.status)
+                };
+              });
+
+          return callback();
+        });
       }
+
+      // function loadAppointments(callback){
+      //   $scope.pageConfig.appointmentList = [
+      //     {id: '1', orderNumber: '201893421343', name: '牛二', IDCard: '410825198805177889', cardType: '医保卡', cardNumber: 'yibaoewr3809582035'},
+      //     {id: '2', orderNumber: '201893421344', name: '王二小', IDCard: '28082519880517788X', cardType: '--', cardNumber: '--'},
+      //     {id: '3', orderNumber: '201893421345', name: '辛加', IDCard: '320825198805177833', cardType: '就诊卡', cardNumber: 'etfewr3809582035'}
+      //   ];
+      //
+      //   $scope.pageConfig.pagination.totalCount = 3;
+      //   $scope.pageConfig.pagination.limit = 2;
+      //   $scope.pageConfig.pagination.pageCount = Math.ceil($scope.pageConfig.pagination.totalCount / $scope.pageConfig.pagination.limit);
+      //   return callback();
+      // }
 
       $scope.pageConfig = {
         navIndexes: [0],
-        currentDepartment: {id: '', text: '全部科室'},
-        departments: [{id: '', text: '全部科室'}, {text: '心脏内科', id: '1'}, {text: '呼吸内科', id: '2'}],
-        currentType: {id: '', text: '全部门诊类型'},
-        types: [{id: '', text: '全部门诊类型'}, {id: '1', text: '专家门诊'}, {id: '2', text: '普通门诊'}],
+        IDCard: '',
+        orderNumber: '',
         appointmentList: [],
-        pagination: {
-          currentPage: 1,
-          limit: 2,
-          totalCount: 0,
-          isShowTotalInfo: true,
-          onCurrentPageChanged: function (callback) {
-            loadAppointments(function(){
-              alert('page changed!');
-            });
-          }
-        },
-        groupList: []
       };
 
       $scope.goPrint = function(){
@@ -103,14 +129,10 @@ angular.module('YYWeb').controller('AppointmentPickUpController',
         // myElement10.src="data:image/jpeg;base64,"+photobase;
       };
 
-      function init() {
-
+      $scope.search = function() {
         $scope.$emit(GlobalEvent.onShowLoading, true);
         loadAppointments(function(){
-          $scope.pageConfig.pagination.totalCount = 3;
           $scope.$emit(GlobalEvent.onShowLoading, false);
         });
-      }
-
-      init();
+      };
     }]);

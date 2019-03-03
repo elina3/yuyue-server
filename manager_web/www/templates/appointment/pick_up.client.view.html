@@ -5,7 +5,7 @@
             <form>
 
                 <div class="yy-panel-item">
-                    <label>身份证号码：<input ng-model="IDNumber" type="text" placeholder="" /></label>
+                    <label>身份证号码：<input ng-model="pageConfig.IDCard" type="text" placeholder="" /></label>
                     <input type="button" ng-click="readIDCard()" class="yy-default-button" value="读取"/>
                     <img ng-show="IDImage" ng-src="{{ IDImage }}"/>
                     <object id="plugin0" type="application/x-syncard" width="0" height="0">
@@ -13,8 +13,8 @@
                     </object>
                 </div>
                 <div class="yy-panel-item no-top">
-                    <label>预约患者号：<input type="text" placeholder="" /></label>
-                    <input class="yy-green-button" onclick="alert('change!');" value="查询" type="submit"></input>
+                    <label>预约患者号：<input type="text" ng-model="pageConfig.orderNumber" placeholder="" /></label>
+                    <input class="yy-green-button" ng-click="search()" value="查询" type="submit"></input>
                 </div>
 
             </form>
@@ -22,84 +22,86 @@
         <div class="yy-whiter-board">
             <div class="yy-panel-item">
                 <ul class="yy-card-list">
-                    <li class="yy-card-item">
+                    <li class="yy-card-item" ng-repeat="item in pageConfig.appointmentList">
                         <div class="yy-card-left">
                             <div class="yy-card-info row">
-                                <label class="col-xs-4">姓名：<span>张艺兴</span></label>
-                                <label class="col-xs-4">预约号：<span>14207369231</span></label>
-                                <label class="col-xs-4">就诊卡号：<span>3u2fewfewqre3423</span></label>
+                                <label class="col-xs-4">姓名：<span>{{ item.name }}</span></label>
+                                <label class="col-xs-4">预约号：<span>{{ item.orderNumber }}</span></label>
+                                <label class="col-xs-4">就诊卡号：<span>{{ item.cardNumber }}</span></label>
                             </div>
                             <div class="yy-card-info row">
-                                <label class="col-xs-8">身份证号：<span>410825198766553212</span></label>
-                                <label class="col-xs-4">联系电话：<span>17659235222</span></label>
+                                <label class="col-xs-8">身份证号：<span>{{ item.IDCard }}</span></label>
+                                <label class="col-xs-4">联系电话：<span>{{ item.mobile }}</span></label>
                             </div>
                             <div class="yy-card-info row">
-                                <label class="col-xs-4">预约科室：<span>心脏内科</span></label>
-                                <label class="col-xs-4">医生：<span>张医生</span></label>
-                                <label class="col-xs-4">门诊类型：<span>专家门诊</span></label>
+                                <label class="col-xs-4">预约科室：<span>{{ item.department }}</span></label>
+                                <label class="col-xs-4">医生：<span>{{ item.doctor }}</span></label>
+                                <label class="col-xs-4">门诊类型：<span>{{ item.outpatient_type }}</span></label>
                             </div>
                             <div class="yy-card-info row">
-                                <label class="col-xs-8">预约时间:<span>2019/10/1 12:00-24:00</span></label>
-                                <label class="col-xs-4">支付方式:<span>微信支付</span></label>
+                                <label class="col-xs-8">预约时间：<span>{{ item.timeRange }}</span></label>
+                                <label class="col-xs-4">支付方式：<span>{{ item.payMethodString }}</span></label>
                             </div>
                         </div>
                         <div class="yy-card-right">
-                             <span class="status paid">已交费</span>   
-                             <button class="yy-default-bit-button">取号</button>
+                             <span ng-show="item.payMethod !== 'offline'" ng-class="item.paid ? 'paid' : 'unpaid'" class="status">{{ item.paid ? '已交费' : '未缴费' }}</span>
+                            <span ng-show="item.status === 'booked'" ng-class="item.status === 'booked' ? 'booked' : ''" class="status">{{ item.statusString }}</span>
+                             <button ng-show="item.status === 'booked'" class="yy-default-bit-button">取号</button>
+                            <button ng-show="item.status === 'picked_up'" class="yy-default-bit-button" ng-click="goPrint()">打印</button>
                         </div>
                     </li>
-                    <li class="yy-card-item">
-                        <div class="yy-card-left">
-                            <div class="yy-card-info row">
-                                <label class="col-xs-4">姓名：<span>张艺兴</span></label>
-                                <label class="col-xs-4">预约号：<span>14207369231</span></label>
-                                <label class="col-xs-4">就诊卡号：<span>3u2fewfewqre3423</span></label>
-                            </div>
-                            <div class="yy-card-info row">
-                                <label class="col-xs-8">身份证号：<span>410825198766553212</span></label>
-                                <label class="col-xs-4">联系电话：<span>17659235222</span></label>
-                            </div>
-                            <div class="yy-card-info row">
-                                <label class="col-xs-4">预约科室：<span>心脏内科</span></label>
-                                <label class="col-xs-4">医生：<span>张医生</span></label>
-                                <label class="col-xs-4">门诊类型：<span>专家门诊</span></label>
-                            </div>
-                            <div class="yy-card-info row">
-                                <label class="col-xs-8">预约时间:<span>2019/10/1 12:00-24:00</span></label>
-                                <label class="col-xs-4">支付方式:<span>微信支付</span></label>
-                            </div>
-                        </div>
-                        <div class="yy-card-right">
-                             <span class="status unpaid">未交费</span>   
-                             <button class="yy-default-bit-button">取号</button>
-                        </div>
-                    </li>
-                    <li class="yy-card-item">
-                        <div class="yy-card-left">
-                            <div class="yy-card-info row">
-                                <label class="col-xs-4">姓名：<span>张艺兴</span></label>
-                                <label class="col-xs-4">预约号：<span>14207369231</span></label>
-                                <label class="col-xs-4">就诊卡号：<span>3u2fewfewqre3423</span></label>
-                            </div>
-                            <div class="yy-card-info row">
-                                <label class="col-xs-8">身份证号：<span>410825198766553212</span></label>
-                                <label class="col-xs-4">联系电话：<span>17659235222</span></label>
-                            </div>
-                            <div class="yy-card-info row">
-                                <label class="col-xs-4">预约科室：<span>心脏内科</span></label>
-                                <label class="col-xs-4">医生：<span>张医生</span></label>
-                                <label class="col-xs-4">门诊类型：<span>专家门诊</span></label>
-                            </div>
-                            <div class="yy-card-info row">
-                                <label class="col-xs-8">预约时间:<span>2019/10/1 12:00-24:00</span></label>
-                                <label class="col-xs-4">支付方式:<span>微信支付</span></label>
-                            </div>
-                        </div>
-                        <div class="yy-card-right">
-                             <span class="status booked">已预约</span>   
-                             <button class="yy-default-bit-button" ng-click="goPrint()">打印</button>
-                        </div>
-                    </li>
+                    <!--<li class="yy-card-item">-->
+                        <!--<div class="yy-card-left">-->
+                            <!--<div class="yy-card-info row">-->
+                                <!--<label class="col-xs-4">姓名：<span>张艺兴</span></label>-->
+                                <!--<label class="col-xs-4">预约号：<span>14207369231</span></label>-->
+                                <!--<label class="col-xs-4">就诊卡号：<span>3u2fewfewqre3423</span></label>-->
+                            <!--</div>-->
+                            <!--<div class="yy-card-info row">-->
+                                <!--<label class="col-xs-8">身份证号：<span>410825198766553212</span></label>-->
+                                <!--<label class="col-xs-4">联系电话：<span>17659235222</span></label>-->
+                            <!--</div>-->
+                            <!--<div class="yy-card-info row">-->
+                                <!--<label class="col-xs-4">预约科室：<span>心脏内科</span></label>-->
+                                <!--<label class="col-xs-4">医生：<span>张医生</span></label>-->
+                                <!--<label class="col-xs-4">门诊类型：<span>专家门诊</span></label>-->
+                            <!--</div>-->
+                            <!--<div class="yy-card-info row">-->
+                                <!--<label class="col-xs-8">预约时间:<span>2019/10/1 12:00-24:00</span></label>-->
+                                <!--<label class="col-xs-4">支付方式:<span>微信支付</span></label>-->
+                            <!--</div>-->
+                        <!--</div>-->
+                        <!--<div class="yy-card-right">-->
+                             <!--<span class="status unpaid">未交费</span>   -->
+                             <!--<button class="yy-default-bit-button" ng-show="">取号</button>-->
+                        <!--</div>-->
+                    <!--</li>-->
+                    <!--<li class="yy-card-item">-->
+                        <!--<div class="yy-card-left">-->
+                            <!--<div class="yy-card-info row">-->
+                                <!--<label class="col-xs-4">姓名：<span>张艺兴</span></label>-->
+                                <!--<label class="col-xs-4">预约号：<span>14207369231</span></label>-->
+                                <!--<label class="col-xs-4">就诊卡号：<span>3u2fewfewqre3423</span></label>-->
+                            <!--</div>-->
+                            <!--<div class="yy-card-info row">-->
+                                <!--<label class="col-xs-8">身份证号：<span>410825198766553212</span></label>-->
+                                <!--<label class="col-xs-4">联系电话：<span>17659235222</span></label>-->
+                            <!--</div>-->
+                            <!--<div class="yy-card-info row">-->
+                                <!--<label class="col-xs-4">预约科室：<span>心脏内科</span></label>-->
+                                <!--<label class="col-xs-4">医生：<span>张医生</span></label>-->
+                                <!--<label class="col-xs-4">门诊类型：<span>专家门诊</span></label>-->
+                            <!--</div>-->
+                            <!--<div class="yy-card-info row">-->
+                                <!--<label class="col-xs-8">预约时间:<span>2019/10/1 12:00-24:00</span></label>-->
+                                <!--<label class="col-xs-4">支付方式:<span>微信支付</span></label>-->
+                            <!--</div>-->
+                        <!--</div>-->
+                        <!--<div class="yy-card-right">-->
+                             <!--<span class="status booked">已预约</span>   -->
+                             <!--<button class="yy-default-bit-button" ng-click="goPrint()">打印</button>-->
+                        <!--</div>-->
+                    <!--</li>-->
                 </ul>
             </div>
         </div>

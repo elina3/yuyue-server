@@ -255,6 +255,31 @@ exports.getAllAppointments = function(filter, pagination, callback) {
 
   });
 };
+exports.getPickupList = function(filter, callback) {
+  var query = {};
+  if(filter.IDCard && filter.order_number){
+    query = {
+      $or: [{IDcard: {$regex: filter.IDCard, $options: '$i'}}, {order_number: {$regex: filter.order_number, $options: '$i'}}]
+    };
+  }else{
+    if(filter.IDCard){
+      query.IDCard = {$regex: filter.IDCard, $options: '$i'};
+    }
+    if(filter.order_number){
+      query.order_number = {$regex: filter.order_number, $options: '$i'};
+    }
+  }
+  Appointment.find(query)
+  .sort({appointment_time: 1})
+  .populate('doctor department member')
+  .exec(function(err, appointments){
+    if(err){
+      return callback({err: systemError.database_query_error});
+    }
+
+    return callback(null, appointments);
+  });
+};
 
 //app端获取自己的所有预约内容
 exports.getMyAppointments = function(member, callback) {
