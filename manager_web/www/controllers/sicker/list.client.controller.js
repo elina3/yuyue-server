@@ -10,15 +10,17 @@ angular.module('YYWeb').controller('SickerListController',
 
 
       function loadMembers(callback){
+        console.log($scope.pageConfig);
         MemberService.getList({
           search_key: $scope.pageConfig.searchKey,
-          current_page: $scope.pageConfig.currentPage,
-          limit: $scope.pageConfig.limit
+          current_page: $scope.pageConfig.pagination.currentPage,
+          limit: $scope.pageConfig.pagination.limit
         }, function(err, data){
           if(err){
             return $scope.$emit(GlobalEvent.onShowAlert, err.zh_message);
           }
 
+          console.log(data);
           console.log(data.members);
           if(data.members && data.members.length > 0){
             $scope.pageConfig.memberList = data.members.map(function(item){
