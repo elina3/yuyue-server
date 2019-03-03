@@ -68,7 +68,7 @@ angular.module('YYWeb').controller('AppointmentListController',
           appointmentList: [],
           pagination: {
             currentPage: 1,
-            limit: 2,
+            limit: 20,
             totalCount: 0,
             isShowTotalInfo: true,
             onCurrentPageChanged: function(callback) {
