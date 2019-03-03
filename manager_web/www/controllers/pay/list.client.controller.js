@@ -10,7 +10,7 @@ angular.module('YYWeb').controller('PayListController',
 
 
       function loadAppointments(callback){
-        $scope.pageConfig.appointmentList = [
+        $scope.pageConfig.paymentList = [
           {id: '1', orderNumber: '201893421343', name: '牛二', IDCard: '410825198805177889', cardType: '医保卡', cardNumber: 'yibaoewr3809582035'},
           {id: '2', orderNumber: '201893421344', name: '王二小', IDCard: '28082519880517788X', cardType: '--', cardNumber: '--'},
           {id: '3', orderNumber: '201893421345', name: '辛加', IDCard: '320825198805177833', cardType: '就诊卡', cardNumber: 'etfewr3809582035'}
@@ -28,7 +28,7 @@ angular.module('YYWeb').controller('PayListController',
         departments: [{id: '', text: '全部科室'}, {text: '心脏内科', id: '1'}, {text: '呼吸内科', id: '2'}],
         currentType: {id: '', text: '全部门诊类型'},
         types: [{id: '', text: '全部门诊类型'}, {id: '1', text: '专家门诊'}, {id: '2', text: '普通门诊'}],
-        appointmentList: [],
+        paymentList: [],
         pagination: {
           currentPage: 1,
           limit: 2,
