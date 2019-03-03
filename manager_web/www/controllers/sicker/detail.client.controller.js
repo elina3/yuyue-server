@@ -25,7 +25,8 @@ angular.module('YYWeb').controller('SickerDetailController',
                 IDCard: data.member.IDCard,
                 cardType: MemberService.translateCardType(data.member.card_type),
                 cardNumber: data.member.card_number || '--',
-                mobile: data.member.mobile_phone || '--'
+                mobile: data.member.mobile_phone || '--',
+                wechatInfo: data.member.wechat_info || {}
               };
             }
             return callback();
