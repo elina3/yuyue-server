@@ -76,6 +76,7 @@ exports.registerAndBindCard = function(req, res, next){
   if(!memberInfo.IDCard){
     return next({err: memberError.member_no_IDCard});
   }
+
   if(memberInfo.card_type && !memberInfo.card_number){
     return next({err: memberError.member_no_card});
   }
