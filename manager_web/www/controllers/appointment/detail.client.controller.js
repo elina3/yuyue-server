@@ -1,7 +1,7 @@
 'use strict';
 angular.module('YYWeb').controller('AppointmentDetailController',
-    ['$window', '$rootScope', '$scope', '$stateParams', 'GlobalEvent', '$state', 'UserService', 'Auth', 'AppointmentService',
-      function ($window, $rootScope, $scope, $stateParams, GlobalEvent, $state, UserService, Auth, AppointmentService) {
+    ['$window', '$rootScope', '$scope', '$stateParams', 'GlobalEvent', '$state', 'UserService', 'Auth', 'AppointmentService', 'MemberService',
+      function ($window, $rootScope, $scope, $stateParams, GlobalEvent, $state, UserService, Auth, AppointmentService, MemberService) {
         var user = Auth.getUser();
         if (!user) {
           $state.go('user_sign_in');
