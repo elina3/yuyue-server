@@ -9,9 +9,10 @@ angular.module('YYWeb').controller('ScheduleSettingController',
       '$state',
       'UserService',
       'Auth',
+      'ExcelReadSupport',
       function(
           $window, $rootScope, $scope, $stateParams, GlobalEvent, $state,
-          UserService, Auth) {
+          UserService, Auth, ExcelReadSupport) {
         var user = Auth.getUser();
         if (!user) {
           $state.go('user_sign_in');
@@ -178,26 +179,26 @@ angular.module('YYWeb').controller('ScheduleSettingController',
           popBox: {
             show: false,
             dateString: '',
-            inputNumber: 0,
+            inputNumber: 50,
             startTime: {
               hour: 8,
-              minute: 30,
+              minute: 0,
             },
             endTime: {
-              hour: 9,
-              minute: 30,
+              hour: 11,
+              minute: 0,
             },
             currentSchedule: null,
             reset: function() {
               this.currentSchedule = null;
-              this.inputNumber = 0;
+              this.inputNumber = 50;
               this.startTime = {
                 hour: 8,
-                minute: 30,
+                minute: 0,
               };
               this.endTime = {
-                hour: 9,
-                minute: 30,
+                hour: 11,
+                minute: 0,
               };
             },
             open: function(schedule) {
@@ -360,4 +361,187 @@ angular.module('YYWeb').controller('ScheduleSettingController',
         }
 
         init();
+
+
+        //<editor-fold desc="导入相关">
+
+        var importSheet = {A1: '工号', B1: '日期', C1: '开始时间', D1: '结束时间', E1: '号源数量'};
+
+        function generateImportScheduleList(data, extDatas) {
+          var scheduleList = [];
+          for (var i = 0; i < data.length; i++) {
+            var obj = {
+              username: data[i][importSheet.A1],
+              date: data[i][importSheet.B1],
+              start_time: data[i][importSheet.C1],
+              end_time: data[i][importSheet.D1],
+              number_count: data[i][importSheet.E1],
+            };
+            scheduleList.push(obj);
+          }
+          return scheduleList;
+        }
+
+        function formatUnitExcel(dataObj) {
+          for (var prop in importSheet) {
+            if (!dataObj[importSheet[prop]]) {
+              dataObj[importSheet[prop]] = '';
+            }
+          }
+        }
+
+        function validExcelData(data) {
+          var errors = [];
+          for (var i = 0; i < data.length; i++) {
+            formatUnitExcel(data[i]);
+            for (var key in data[i]) {
+              switch (key) {
+                case importSheet.A1:
+                  if (!data[i][key]) {
+                    data[i].index = i + 1;
+                    data[i].error = {
+                      index: i,
+                      message: importSheet.A1 + '未填'
+                    };
+                    errors.push(data[i]);
+                  }
+                  break;
+                case importSheet.B1:
+                  if (!data[i][key]) {
+                    data[i].error = {
+                      index: i,
+                      message: importSheet.B1 + '未填'
+                    };
+                    errors.push(data[i]);
+                  }
+                  break;
+                default :
+                  break;
+              }
+            }
+          }
+
+          return {errors: errors};
+        }
+
+        function transferExcelData(data) {
+          var result = validExcelData(data);
+          return {
+            success: result.errors.length === 0,
+            errors: result.errors,
+            schedules: result.errors.length === 0 ? generateImportScheduleList(data, result.extDatas) : []
+          };
+        }
+
+        $scope.importScheduleArray = [];
+
+        $scope.onFileSelect = function (element) {
+          var file = element.files[0];
+          var suffix_file = file.name.substring(file.name.lastIndexOf('.') + 1).toLowerCase();
+          document.getElementById('card-filename').outerHTML = document.getElementById('card-filename').outerHTML;
+          document.getElementById('card-filename').value = '';
+          if (suffix_file !== 'xls' && suffix_file !== 'xlsx') {
+            return $scope.$emit(GlobalEvent.onShowAlert, {content: '选择的文件不是Excel文件'});
+          }
+
+          $scope.$apply(function () {
+            var sheetColumn = [];//{key: 'A1', value: '姓名'},
+            for (var prop in importSheet) {
+              sheetColumn.push({
+                key: prop,
+                value: importSheet[prop]
+              });
+            }
+            ExcelReadSupport.generalDataByExcelFile(file, sheetColumn, function (err, data) {
+              if (err) {
+                $scope.$emit(GlobalEvent.onShowAlert, {content: err});
+                $scope.$apply();
+                return;
+              }
+              var result = transferExcelData(data);
+              if (!result.success) {
+                $scope.$emit(GlobalEvent.onShowAlert, {content: '数据格式有误，第' + (result.errors[0].error.index + 1) + '条' + result.errors[0].error.message});
+                $scope.$apply();
+                return;
+              }
+              console.log('result:', result.schedules);
+              $scope.importScheduleArray = result.schedules;
+            });
+          });
+        };
+
+
+
+        var importSchedules = [];
+        var existSchedules = [];
+        function uploadSchedule(scheduleInfo, param, i, callback) {
+          UserService.batchImportSchedules(param, function (err, data) {
+
+            if (err) {
+              return callback(err);
+            }
+
+            importSchedules = importSchedules.concat(data.cards);
+            existSchedules = existSchedules.concat(data.existCards);
+            console.log(data);
+            if (scheduleInfo[i]) {
+              var newParam = {
+                card_list: scheduleInfo[i++],
+                append_method: 'append'
+              };
+              uploadSchedule(scheduleInfo, newParam, i, callback);
+            }
+            else {
+              return callback();
+            }
+          }, function (data) {
+            console.log(data);
+            return callback(data);
+          });
+        }
+
+        function batchUploadSchedules(callback) {
+          var scheduleInfos = $scope.importScheduleArray;
+          var queue = [];
+
+          var blockSize = 4;
+
+          var queueSize = Math.ceil(scheduleInfos.length / blockSize);
+          for (var i = 1; i <= queueSize; i++) {
+            var cardInfoBlock = scheduleInfos.slice((i - 1) * blockSize, i * blockSize);
+            var subQueue = [];
+            cardInfoBlock.forEach(function (cardInfo) {
+              subQueue.push(cardInfo);
+            });
+            queue.push(subQueue);
+          }
+
+          var param = {
+            card_list: queue[0],
+            append_method: 'replace'
+          };
+          uploadSchedule(queue, param, 1, callback);
+        }
+
+
+        $scope.batchImportSchedules = function () {
+          if ($scope.importScheduleArray.length === 0)
+            return;
+          $scope.$emit(GlobalEvent.onShowLoading, true);
+          importSchedules = [];
+          existSchedules = [];
+
+          $scope.$emit(GlobalEvent.onShowLoading, true);
+          batchUploadSchedules(function(err){
+
+            $scope.$emit(GlobalEvent.onShowLoading, false);
+            if(err){
+              return $scope.$emit(GlobalEvent.onShowAlert, err);
+            }
+
+            return $scope.$emit(GlobalEvent.onShowAlert, '成功导入'+importSchedules.length+'个饭卡!已存在'+ existSchedules.length+'个');
+          });
+        };
+        //</editor-fold>
+
       }]);
