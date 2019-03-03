@@ -103,7 +103,7 @@ function createOnePayment(member, doctor, schedule, appointment, callback) {
 }
 
 function substringById(objectIdString) {
-  return objectIdString.substring(objectIdString.length - 6,
+  return objectIdString.substring(objectIdString.length - 3,
       objectIdString.length);
 }
 
