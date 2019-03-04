@@ -52,6 +52,7 @@ angular.module('YYWeb').controller('ScheduleSettingController',
                 } else {
                   console.log(data);
                   $scope.pageConfig.doctor.name = data.doctor ? data.doctor.nickname : '';
+                  $scope.pageConfig.doctor.department = data.doctor ? data.doctor.department_name : '';
                   $scope.pageConfig.doctor.on_shelf = data.doctor.on_shelf;
                   $scope.pageConfig.showButton = true;
                   $scope.pageConfig.doctorSchedules = data.schedules.map(

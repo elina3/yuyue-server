@@ -335,7 +335,7 @@ exports.getDoctorSchedules = function(req, res, next){
 
   async.auto({
     getDoctor: function(autoCallback){
-      userLogic.getUserById(doctorId, function(err, user){
+      userLogic.getUserDetailById(doctorId, function(err, user){
         if(err){
           return autoCallback(err);
         }
@@ -344,7 +344,7 @@ exports.getDoctorSchedules = function(req, res, next){
           return autoCallback({err: userError.not_a_doctor});
         }
 
-        return autoCallback(null, {_id: doctorId, nickname: user.nickname, on_shelf: user.on_shelf});
+        return autoCallback(null, {_id: doctorId, nickname: user.nickname, on_shelf: user.on_shelf, department_name: user.department.name});
 
       });
     },
