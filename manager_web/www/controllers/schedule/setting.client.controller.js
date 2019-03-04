@@ -480,11 +480,16 @@ angular.module('YYWeb').controller('ScheduleSettingController',
 
         var importSchedules = [];
         var existSchedules = [];
+        var successCount = 0;
         function uploadSchedule(scheduleInfo, param, i, callback) {
           UserService.batchImportSchedules(param, function (err, data) {
 
             if (err) {
               return callback(err);
+            }
+
+            if(data.success_count > 0){
+              successCount+=data.success_count;
             }
 
             importSchedules = importSchedules.concat(data.cards);
@@ -506,10 +511,10 @@ angular.module('YYWeb').controller('ScheduleSettingController',
           });
         }
 
+
         function batchUploadSchedules(callback) {
           var scheduleInfos = $scope.importScheduleArray;
           var queue = [];
-
           var blockSize = 4;
 
           var queueSize = Math.ceil(scheduleInfos.length / blockSize);
@@ -536,6 +541,7 @@ angular.module('YYWeb').controller('ScheduleSettingController',
           $scope.$emit(GlobalEvent.onShowLoading, true);
           importSchedules = [];
           existSchedules = [];
+          successCount = 0;
 
           $scope.$emit(GlobalEvent.onShowLoading, true);
           batchUploadSchedules(function(err){
@@ -545,7 +551,7 @@ angular.module('YYWeb').controller('ScheduleSettingController',
               return $scope.$emit(GlobalEvent.onShowAlert, err);
             }
 
-            return $scope.$emit(GlobalEvent.onShowAlert, '成功导入'+importSchedules.length+'个饭卡!已存在'+ existSchedules.length+'个');
+            return $scope.$emit(GlobalEvent.onShowAlert, '成功导入' + successCount+ '条记录');
           });
         };
         //</editor-fold>

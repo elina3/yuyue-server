@@ -116,7 +116,7 @@ angular.module('YYWeb').controller('AppointmentPickUpController',
 
         var cardno1 = plugin().CardNo;
         console.log(cardno1);
-        $scope.IDNumber = cardno1;
+        $scope.pageConfig.IDCard = cardno1;
 
         var police1 = plugin().Police;
         console.log(police1);
