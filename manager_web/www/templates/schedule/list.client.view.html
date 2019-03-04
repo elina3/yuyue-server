@@ -3,6 +3,20 @@
 <div class="ee-admin-index ee-body">
     <div class="yy-wrapper">
         <h2>排班管理</h2>
+
+        <div class="yy-row right">
+            <div class="right">
+                <button class="yy-green-button" ng-click="batchImportSchedules()">导入排班</button>
+            </div>
+            <div class="left">
+                <div class="z-header-button import">
+                    <span>选择排班文件</span>
+                    <input id="card-filename" class="filename" type="file"
+                           onchange="angular.element(this).scope().onFileSelect(this)">
+                </div>
+            </div>
+        </div>
+
         <div class="yy-whiter-board">
             <div class="yy-panel-item row">
                 <div class=" col-xs-3">
@@ -26,6 +40,7 @@
                         <span class="yy-search-bar-icon"></span>
                     </form>
                 </div>
+
             </div>
             <div class="yy-panel-item">
                 <div class="ee-table-list">

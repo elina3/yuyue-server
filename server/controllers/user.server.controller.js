@@ -344,7 +344,7 @@ exports.getDoctorSchedules = function(req, res, next){
           return autoCallback({err: userError.not_a_doctor});
         }
 
-        return autoCallback(null, {_id: doctorId, nickname: user.nickname});
+        return autoCallback(null, {_id: doctorId, nickname: user.nickname, on_shelf: user.on_shelf});
 
       });
     },

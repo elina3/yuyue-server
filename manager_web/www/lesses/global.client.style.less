@@ -302,16 +302,23 @@ ul.yy-checkbox{
 }
 
 .yy-row{
-  &.right{
-    display: inline-block;
-    float: right;
-
-  }
   display: block;
+  overflow: hidden;
+  margin-top: -45px;
+  &.right{
+    .left, .right{
+      overflow: hidden;
+      float: right;
+      button{
+        margin-right: 45px;
+      }
+    }
+  }
   .left, .right{
     display: inline-block;
     float: left;
   }
+
 }
 
 html {
