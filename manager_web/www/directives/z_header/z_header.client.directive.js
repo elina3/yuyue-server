@@ -44,6 +44,10 @@ angular.module('YYWeb').directive('zHeader',
                            return $state.go('sign_in');
                         }
 
+                        if(scope.user.role === 'pick_up' || scope.user.role === 'doctor'){
+                          return;
+                        }
+
                         $state.go('user_index');
                     };
                 }
