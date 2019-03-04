@@ -35,6 +35,7 @@ angular.module('YYWeb').controller('AppointmentListController',
               return $scope.$emit(GlobalEvent.onShowAlert, err);
             }
 
+            console.log('card_type', data);
             data.appointments = data.appointments || [];
             $scope.pageConfig.appointmentList = data.appointments.map(
                 function(item) {
@@ -43,8 +44,8 @@ angular.module('YYWeb').controller('AppointmentListController',
                     orderNumber: item.order_number,
                     name: item.nickname,
                     IDCard: item.IDCard,
-                    cardType: MemberService.translateCardType(item.card_type) || '无',
-                    cardNumber: item.card_number || '无',
+                    cardType: MemberService.translateCardType(item.member.card_type) || '无',
+                    cardNumber: item.member.card_number || '无',
                     role: UserService.translateUserRole(item.role),
                   };
                 });

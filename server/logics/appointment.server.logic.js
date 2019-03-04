@@ -245,6 +245,7 @@ exports.getAllAppointments = function(filter, pagination, callback) {
         skip(pagination.skip_count).
         limit(pagination.limit).
         sort({ appointment_time: 1 }).
+        populate('member').
         exec(function(err, appointments) {
           if (err) {
             return callback({ err: systemError.database_query_error });
