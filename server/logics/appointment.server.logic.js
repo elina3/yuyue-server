@@ -154,6 +154,7 @@ exports.createAppointment = function(
   var query = {
     member: member._id,
     doctor_schedule: schedule._id,
+    canceled: {$ne: true}
   };
   Appointment.findOne(query).exec(function(err, appointment) {
     if (err) {
@@ -375,6 +376,43 @@ exports.getScheduleAppointmentCount = function(scheduleId, callback) {
         }
 
         return callback(null, totalCount);
+      });
+};
+
+exports.cancelAppointment = function(memberId, appointmentId, callback) {
+  Appointment.findOne({ _id: appointmentId }).
+      exec(function(err, appointment) {
+        if (err) {
+          return callback({ err: systemError.database_query_error });
+        }
+
+        if (memberId.toString() !== appointment.member.toString()) {
+          return callback({ err: appointmentError.no_permission_to_cancel });
+        }
+
+        if (appointment.canceled) {
+          return callback({err: appointmentError.has_been_canceled });
+        }
+
+        if (appointment.picked) {
+          return callback({ err: appointmentError.has_been_picked });
+        }
+
+        if ( new Date() >= appointment.start_time ){
+          return callback({err: appointmentError.not_cancel_for_over_time});
+        }
+
+        Appointment.update({_id: appointmentId}, {$set: {
+          canceled: true,
+            canceled_time: new Date(),
+            status: 'canceled'
+          }}, function(err){
+          if(err){
+            return callback({err: systemError.database_update_error});
+          }
+
+          return callback(null, appointment);
+        });
       });
 };
 

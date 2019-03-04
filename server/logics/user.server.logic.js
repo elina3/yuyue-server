@@ -553,12 +553,21 @@ exports.getScheduleDetail = function(scheduleId, callback){
       });
 };
 
-exports.deleteDoctorSchedule  =function(scheduleId, callback){
-  DoctorSchedule.remove({_id: scheduleId}, function(err){
+exports.deleteDoctorSchedule  =function(user, doctorId, schedule, callback){
+  DoctorSchedule.remove({_id: schedule._id}, function(err){
     if(err){
       return callback({err: systemError.database_remove_error});
     }
 
+    doctorActionHistoryLogic.addDoctorActionHistory(user,
+        doctorId,
+        'delete_schedule',
+        {
+          schedule_id: schedule._id,//已删除
+          start_time: schedule.start_time,
+          end_time: schedule.end_time,
+          number_count: schedule.number_count,
+        }, function() {});
     return callback();
   });
 };

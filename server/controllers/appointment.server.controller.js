@@ -267,3 +267,21 @@ exports.getAppointmentDetail  =function(req, res, next){
   });
 };
 
+//取消新预约
+exports.cancelAppointment = function(req, res, next){
+  var appointmentId = req.query.appointment_id || '';
+  if(!appointmentId){
+    return next({err: systemError.param_null_error});
+  }
+
+  appointmentLogic.cancelAppointment(req.member._id, appointmentId, function(err){
+    if(err){
+      return next(err);
+    }
+
+    req.data = {
+      success: true
+    };
+    return next();
+  });
+};

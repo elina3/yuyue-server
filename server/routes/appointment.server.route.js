@@ -22,4 +22,6 @@ module.exports = function (app) {
   app.route('/app/doctor/appointment_list').get(authFilter.requireMemberByOpenId, appointmentController.getMyAppointments);
   //app,manger看详情的接口
   app.route('/app/doctor/appointment_detail').get(appointmentController.getAppointmentDetail);
+  //取消预约
+  app.route('/app/doctor/cancel_appointment').post(authFilter.requireMemberByOpenId, appointmentController.cancelAppointment);
 };

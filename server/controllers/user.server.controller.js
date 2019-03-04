@@ -633,8 +633,8 @@ exports.deleteDoctorSchedule = function(req, res, next){
         return autoCallback(null, count > 0);
       });
     }],
-    removeSchedule: ['getDoctor', 'hasBookedSchedule', function(autoCallback){
-      userLogic.deleteDoctorSchedule(scheduleId, function(err){
+    removeSchedule: ['getDoctor', 'getSchedule', 'hasBookedSchedule', function(autoCallback, results){
+      userLogic.deleteDoctorSchedule(req.user, doctorId, results.getSchedule, function(err){
         return autoCallback(err);
       });
     }]
