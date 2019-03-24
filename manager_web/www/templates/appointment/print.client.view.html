@@ -1,4 +1,4 @@
-<div class="pickup-page ee-body-xx">
+<div class="pickup-page print-page ee-body-xx">
     <div class="yy-wrapper">
         <h3>民航上海医院-瑞金医院古北分院-微信预约单</h3>
         <div class="yy-whiter-board">
@@ -10,14 +10,16 @@
             </div>
             <div class="yy-panel-item no-top">
                 <div class="print-info row">
-                    <label class="col-xs-5">预约单号：<span>{{ pageConfig.appointment.orderNumber }}</span></label>
-                    <label class="col-xs-2">姓名：<span>{{ pageConfig.appointment.name }}</span></label>
-                    <label class="col-xs-5">身份证号：<span>{{ pageConfig.appointment.IDCard }}</span></label>
+                    <label class="col-xs-8">预约单号：<span>{{ pageConfig.appointment.orderNumber }}</span></label>
+                    <label class="col-xs-4">姓名：<span>{{ pageConfig.appointment.name }}</span></label>
                 </div>
                 <div class="print-info row">
-                    <label class="col-xs-5">联系电话：<span>{{ pageConfig.appointment.mobile }}</span></label>
-                    <label class="col-xs-2">就诊卡类型：<span>{{ pageConfig.appointment.cardType }}</span></label>
-                    <label class="col-xs-5">就诊卡号：<span>{{ pageConfig.appointment.cardNumber }}</span></label>
+                    <label class="col-xs-8">身份证号：<span>{{ pageConfig.appointment.IDCard }}</span></label>
+                    <label class="col-xs-4">联系电话：<span>{{ pageConfig.appointment.mobile }}</span></label>
+                </div>
+                <div class="print-info row">
+                    <label class="col-xs-8">就诊卡号：<span>{{ pageConfig.appointment.cardNumber }}</span></label>
+                    <label class="col-xs-4">就诊卡类型：<span>{{ pageConfig.appointment.cardType }}</span></label>
                 </div>
             </div>
             <div class="yy-panel-item" style="padding-top:0;">
