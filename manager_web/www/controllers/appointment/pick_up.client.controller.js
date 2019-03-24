@@ -25,7 +25,7 @@ angular.module('YYWeb').controller('AppointmentPickUpController',
           timeRange: new Date(item.start_time).Format('yyyy/MM/dd hh:mm') + '~' + new Date(item.end_time).Format('hh:mm'),
           paid: item.paid,
           status: item.status,
-          mobile: item.member.mobile,
+          mobile: item.member.mobile_phone,
           statusString: AppointmentService.translateAppointmentStatus(item.status),
           picked: item.picked
         };
