@@ -26,6 +26,7 @@ var initData = require('./config/initData');
 initData.createDefaultHospital();
 console.log(config.wechat.getUserInfoUrl);
 console.log('======================');
+console.log(config.wechat_ext.app_id);
 
 
 

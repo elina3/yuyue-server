@@ -142,7 +142,7 @@ exports.getUserInfo = function (accessToken, openId, callback) {
 //</editor-fold>
 
 exports.getWechatUserInfo = function (code, callback) {
-  var tokenUrl = wechatApi.token + '?appid=' + Config.wechat.app_id + '&secret=' + Config.wechat.app_secret + '&code=' + code + '&grant_type=authorization_code';
+  var tokenUrl = wechatApi.token + '?appid=' + Config.wechat_ext.app_id + '&secret=' + Config.wechat_ext.app_secret + '&code=' + code + '&grant_type=authorization_code';
   console.log('get wechat user info:==================');
   console.log(tokenUrl);
   getAccessToken(tokenUrl, function (err, result) {

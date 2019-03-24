@@ -8,7 +8,7 @@ var wechatError = require('../errors/wechat');
 var config = require('../config/config');
 //微信前端通过code获取用户信息
 exports.getOpenIdByCode = function(code, callback){
-  var tokenUrl = `${config.wechat.getTokenByCodeUrl}?appid=${config.wechat.app_id}&secret=${config.wechat.app_secret}&code=${code}&grant_type=authorization_code`;
+  var tokenUrl = `${config.wechat.getTokenByCodeUrl}?appid=${config.wechat_ext.app_id}&secret=${config.wechat_ext.app_secret}&code=${code}&grant_type=authorization_code`;
   console.error(tokenUrl);
   agent.get(tokenUrl)
       .end(function(err, res){
@@ -61,7 +61,7 @@ exports.getOpenIdByCode = function(code, callback){
 
 //微信后台事件获取accessToken
 function getAccessTokenByServer(callback){
-  agent.get(config.wechat.getTokenUrl + '?grant_type=client_credential&appid=' + config.wechat.app_id + '&secret=' + config.wechat.app_secret)
+  agent.get(config.wechat.getTokenUrl + '?grant_type=client_credential&appid=' + config.wechat_ext.app_id + '&secret=' + config.wechat_ext.app_secret)
   .end(function (err, res) {
 
     var accessToken = res.body.access_token;
