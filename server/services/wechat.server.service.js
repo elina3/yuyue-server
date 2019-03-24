@@ -6,7 +6,7 @@ var agent = require('superagent').agent();
 var wechatError = require('../errors/wechat');
 
 var config = require('../config/config');
-
+//微信前端通过code获取用户信息
 exports.getOpenIdByCode = function(code, callback){
   var tokenUrl = `${config.wechat.getTokenByCodeUrl}?appid=${config.wechat.app_id}&secret=${config.wechat.app_secret}&code=${code}&grant_type=authorization_code`;
   console.error(tokenUrl);
@@ -59,51 +59,56 @@ exports.getOpenIdByCode = function(code, callback){
 
 //https://api.weixin.qq.com/sns/userinfo?access_token=ACCESS_TOKEN&openid=OPENID&lang=zh_CN
 
+//微信后台事件获取accessToken
+function getAccessTokenByServer(callback){
+  agent.get(config.wechat.getTokenUrl + '?grant_type=client_credential&appid=' + config.wechat.app_id + '&secret=' + config.wechat.app_secret)
+  .end(function (err, res) {
+
+    var accessToken = res.body.access_token;
+    if(!accessToken){
+      return callback({err: {type: 'access_token_null'}});
+    }
+
+    return callback(null, accessToken);
+  });
+}
 
 //微信后台事件获取用户信息
 exports.getUserInfo = function(openId, callback){
-  agent.get(config.wechat.getTokenUrl + '?grant_type=client_credential&appid=' + config.wechat.app_id + '&secret=' + config.wechat.app_secret)
+
+  getAccessTokenByServer(function(err, accessToken){
+    if(err){
+      return callback(err);
+    }
+
+    agent.get(config.wechat.getUserInfoUrl + '?access_token=' + accessToken + '&openid=' + openId)
     .end(function (err, res) {
-
-      var accessToken = res.body.access_token;
-      if(!accessToken){
-        return callback({err: {type: 'access_token_null'}});
-      }
-
-      agent.get(config.wechat.getUserInfoUrl + '?access_token=' + accessToken + '&openid=' + openId)
-        .end(function (err, res) {
-          return callback(err, res.body);
-        });
+      return callback(err, res.body);
     });
+  });
 };
 exports.autoReplyText = function(openId, callback){
-  var postData = {
-    touser: openId,
-    msgtype: 'text',
-    text:
-    {
-      content: '终于等到您！谢谢关注民航医院瑞金古北分院！'
+  getAccessTokenByServer(function(err, accessToken){
+    if(err){
+      return callback(err);
     }
-  };
 
-  console.log('auto post:', postData);
-  var api = config.wechat.getTokenUrl + '?grant_type=client_credential&appid=' + config.wechat.app_id + '&secret=' + config.wechat.app_secret;
-  console.log(api);
-  agent.get(api)
+    var postData = {
+      touser: openId,
+      msgtype: 'text',
+      text:
+          {
+            content: '终于等到您！谢谢关注民航医院瑞金古北分院！'
+          }
+    };
+    console.log('auto post:', postData);
+    agent.post(config.wechat.autoReplyUrl + '?access_token=' + accessToken)
+    .send(postData)
     .end(function (err, res) {
-
-      var accessToken = res.body.access_token;
-      if(!accessToken){
-        return callback({err: {type: 'access_token_null'}});
-      }
-
-      agent.post(config.wechat.autoReplyUrl + '?access_token=' + accessToken)
-        .send(postData)
-        .end(function (err, res) {
-          console.log('wechat auto reply:');
-          console.log(res.body);
-          console.log('=======auto reply end========');
-          return callback(err, res.body);
-        });
+      console.log('wechat auto reply:');
+      console.log(res.body);
+      console.log('=======auto reply end========');
+      return callback(err, res.body);
     });
+  });
 };
