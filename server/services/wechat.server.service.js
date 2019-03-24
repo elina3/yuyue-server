@@ -115,6 +115,50 @@ exports.autoReplyText = function(openId, callback){
 };
 
 //模版消息推送
-exports.sendTemplateMessage = function(){
+exports.sendTemplateMessage = function(openId, templateId, redirectUrl, callback){
+  getAccessTokenByServer(function(err, accessToken){
+    if(err){
+      return callback(err);
+    }
 
+    var postData = {
+      touser: openId,
+      template_id: templateId,
+      url: redirectUrl,
+      data: {
+        "first": {
+          "value":"您已经成功预约！",
+          "color":"#173177"
+        },
+        "keyword1":{
+          "value":"张三丰",
+          "color":"#173177"
+        },
+        "keyword3": {
+          "value":"心外科医生",
+          "color":"#173177"
+        },
+        "keyword4": {
+          "value":"张医生",
+          "color":"#173177"
+        },
+        "keyword2": {
+          "value":"2019-3-25 09:00~10:00",
+          "color":"#173177"
+        },
+        "remark":{
+          "value":"温馨提示：张三您已预约民航医院心外科，请您提前30分钟前往医院，预约签到，挂号就诊，如您无法按时就诊，请至少提前一个工作日取消预约。",
+          "color":"#173177"
+        }
+      }
+    };
+    console.log('auto post:', postData);
+    agent.post(config.wechat.templateSendUrl + '?access_token=' + accessToken)
+    .send(postData)
+    .end(function (err, res) {
+      console.log(res.body);
+      console.log('=======send template message========');
+      return callback(err, res.body);
+    });
+  });
 };

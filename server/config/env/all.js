@@ -20,6 +20,6 @@ module.exports = {
       getTokenByCodeUrl: 'https://api.weixin.qq.com/sns/oauth2/access_token',
       getUserInfoByToken: 'https://api.weixin.qq.com/sns/userinfo',
       //模版消息发送
-      getTemplateSendUrl: 'https://api.weixin.qq.com/cgi-bin/message/template/send'
+      templateSendUrl: 'https://api.weixin.qq.com/cgi-bin/message/template/send'
     }
 };
