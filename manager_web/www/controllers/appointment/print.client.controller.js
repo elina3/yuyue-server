@@ -83,6 +83,8 @@ angular.module('YYWeb').controller('AppointmentPrintController',
         loadAppointment(function(){
           $scope.$emit(GlobalEvent.onShowLoading, false);
 
+          JsBarcode('#barcode', $scope.pageConfig.appointment.orderNumber);
+
           setTimeout(function(){
             window.print();
           }, 1000);
