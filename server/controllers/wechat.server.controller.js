@@ -48,7 +48,7 @@ exports.vertificate = function (req, res, next) {
   }
 };
 
-function updateUserBaseInfo(openId, callback) {
+function getWechatUserInfo(openId, callback) {
   wechatService.getUserInfo(openId, function (err, wechatInfo) {
     if (err) {
       return callback(err);
@@ -81,8 +81,6 @@ exports.onWechatUserAction = function (req, res, next) {
     wechatPostParam.FromUserName = wechatPostParam.FromUserName[0];
   }
   if (wechatPostParam.Event && Array.isArray(wechatPostParam.Event) && wechatPostParam.Event.length > 0) {
-    console.log('原始事件信息:');
-    console.log(wechatPostParam.Event[0]);
     wechatPostParam.Event = wechatPostParam.Event[0];
   }
   console.log('重新赋值后的事件信息:');
@@ -99,7 +97,7 @@ exports.onWechatUserAction = function (req, res, next) {
       }
     });
 
-    updateUserBaseInfo(wechatPostParam.FromUserName, function (err) {
+    getWechatUserInfo(wechatPostParam.FromUserName, function (err) {
       if (err) {
         console.error('update user base info failed', err);
       }

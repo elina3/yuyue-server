@@ -87,6 +87,7 @@ exports.getUserInfo = function(openId, callback){
     });
   });
 };
+//主动回复消息
 exports.autoReplyText = function(openId, callback){
   getAccessTokenByServer(function(err, accessToken){
     if(err){
@@ -111,4 +112,9 @@ exports.autoReplyText = function(openId, callback){
       return callback(err, res.body);
     });
   });
+};
+
+//模版消息推送
+exports.sendTemplateMessage = function(){
+
 };
