@@ -24,6 +24,8 @@ console.log('YUYUE-SYSTEM application started on port ' + config.port);
 console.log('init default data');
 var initData = require('./config/initData');
 initData.createDefaultHospital();
+console.log(config.wechat.getUserInfoUrl);
+console.log('======================');
 
 
 
