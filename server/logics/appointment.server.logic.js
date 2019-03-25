@@ -382,6 +382,7 @@ exports.getScheduleAppointmentCount = function(scheduleId, callback) {
 
 exports.cancelAppointment = function(memberId, appointmentId, callback) {
   Appointment.findOne({ _id: appointmentId }).
+      populate('doctor department').
       exec(function(err, appointment) {
         if (err) {
           return callback({ err: systemError.database_query_error });

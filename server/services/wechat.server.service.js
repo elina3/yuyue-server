@@ -173,38 +173,38 @@ exports.sendAppointmentSuccess = function(wechatId, redirectUrl, appointmentInfo
   });
 };
 
-exports.sendAppointmentFailed = function(wechatId, redirectUrl, appointmentInfo, callback){
+exports.sendCancelAppointmentMessage = function(wechatId, redirectUrl, appointmentInfo, callback){
   var postData = {
     touser: wechatId,
     template_id: 'ude3bVcu-7vJmg-3R15WHQenHWmN_W1UcDLNRwL4K4s',
     url: '',
     data: {
       first: {
-        "DATA":"您好，您的预约已经成功取消！",
+        "value":"您好，您的预约已经成功取消！",
         "color":"#173177"
       },
       keyword1: {
-        "DATA": appointmentInfo.nickname + '（' +appointmentInfo.card_number + '）',
+        "value": appointmentInfo.nickname + '（' +appointmentInfo.card_number + '）',
         "color":"#173177"
       },
       keyword2: {
-        "DATA": '民航医院',
+        "value": '民航医院',
         "color":"#173177"
       },
       keyword3:{
-        "DATA":appointmentInfo.department.name,
+        "value":appointmentInfo.department.name,
         "color":"#173177"
       },
       keyword4:{
-        "DATA":appointmentInfo.doctor.nickname,
+        "value":appointmentInfo.doctor.nickname,
         "color":"#173177"
       },
       keyword5:{
-        "DATA":appointmentInfo.start_time.Format('yyyy-MM-dd hh:mm') + '~' + appointmentInfo.end_time.Format('hh:mm'),
+        "value":appointmentInfo.start_time.Format('yyyy-MM-dd hh:mm') + '~' + appointmentInfo.end_time.Format('hh:mm'),
         "color":"#173177"
       },
       remark:{
-        "DATA":"温馨提示："+ appointmentInfo.nickname +"，您已成功取消民航医院"+appointmentInfo.department.name+"的预约。祝您早日康复！",
+        "value":"温馨提示："+ appointmentInfo.nickname +"，您已成功取消民航医院"+appointmentInfo.department.name+"的预约。祝您早日康复！",
         "color":"#173177"
       }
     }

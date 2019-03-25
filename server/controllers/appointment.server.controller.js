@@ -288,10 +288,19 @@ exports.cancelAppointment = function(req, res, next){
     return next({err: systemError.param_null_error});
   }
 
-  appointmentLogic.cancelAppointment(req.member._id, appointmentId, function(err){
+  appointmentLogic.cancelAppointment(req.member._id, appointmentId, function(err, appointment){
     if(err){
       return next(err);
     }
+
+    wechatService.sendCancelAppointmentMessage(req.member.open_id, 'http://datonghao.com/client/#/me/appointment', {
+      doctor: appointment.getDoctor,
+      nickname: req.member.nickname,
+      department: appointment.getDoctor.department,
+      start_time: appointment.start_time,
+      end_time: appointment.end_time,
+      card_number: appointment.getDoctor.card_number
+    }, function(err){});
 
     req.data = {
       success: true
