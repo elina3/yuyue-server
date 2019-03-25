@@ -232,6 +232,7 @@ exports.createNewAppointmentInfo = function(req, res, next){
 
         wechatService.sendAppointmentSuccess(req.member.open_id, 'http://datonghao.com/client/#/me/appointment', {
           doctor: results.getDoctor,
+          nickname: req.member.nickname,
           department: results.getDoctor.department,
           start_time: results.getSchedule.start_time,
           end_time: results.getSchedule.end_time,

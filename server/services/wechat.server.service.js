@@ -139,27 +139,27 @@ exports.sendAppointmentSuccess = function(wechatId, redirectUrl, appointmentInfo
     url: '',
     data: {
       first: {
-        "DATA":"您已经成功预约！",
+        "value":"您已经成功预约！",
         "color":"#173177"
       },
       keyword1: {
-        "DATA": appointmentInfo.card_number,
+        "value": appointmentInfo.card_number,
         "color":"#173177"
       },
       keyword2: {
-        "DATA": appointmentInfo.start_time.Format('yyyy-MM-dd hh:mm') + '~' + appointmentInfo.end_time.Format('hh:mm'),
+        "value": appointmentInfo.start_time.Format('yyyy-MM-dd hh:mm') + '~' + appointmentInfo.end_time.Format('hh:mm'),
         "color":"#173177"
       },
       keyword3:{
-        "DATA":appointmentInfo.doctor.nickname+'('+ appointmentInfo.department.name +')',
+        "value":appointmentInfo.doctor.nickname+'('+ appointmentInfo.department.name +')',
         "color":"#173177"
       },
       keyword4:{
-        "DATA":appointmentInfo.nickname,
+        "value":appointmentInfo.nickname,
         "color":"#173177"
       },
       remark:{
-        "DATA":"温馨提示："+ appointmentInfo.nickname +"，您已预约民航医院"+appointmentInfo.department.name+"，请您提前30分钟前往医院，预约签到，挂号就诊，如您无法按时就诊，请至少提前一个工作日取消预约。",
+        "value":"温馨提示："+ appointmentInfo.nickname +"，您已预约民航医院"+appointmentInfo.department.name+"，请您提前30分钟前往医院，预约签到，挂号就诊，如您无法按时就诊，请至少提前一个工作日取消预约。",
         "color":"#173177"
       }
     }
