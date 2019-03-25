@@ -294,7 +294,7 @@ exports.cancelAppointment = function(req, res, next){
     }
 
     wechatService.sendCancelAppointmentMessage(req.member.open_id, 'http://datonghao.com/client/#/me/appointment', {
-      doctor: appointment.getDoctor,
+      doctor: appointment.doctor,
       nickname: req.member.nickname,
       department: appointment.department,
       start_time: appointment.start_time,
