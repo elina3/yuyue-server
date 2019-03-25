@@ -136,7 +136,7 @@ exports.sendAppointmentSuccess = function(wechatId, redirectUrl, appointmentInfo
   var postData = {
     touser: wechatId,
     template_id: 'Yfq-gXXiCPv9bxjOuKQ9f_s_CAdu6C7VgH22z-Wc_zE',
-    url: '',
+    url: redirectUrl,
     data: {
       first: {
         "value":"您已经成功预约！",
@@ -177,7 +177,7 @@ exports.sendCancelAppointmentMessage = function(wechatId, redirectUrl, appointme
   var postData = {
     touser: wechatId,
     template_id: 'ude3bVcu-7vJmg-3R15WHQenHWmN_W1UcDLNRwL4K4s',
-    url: '',
+    url: redirectUrl,
     data: {
       first: {
         "value":"您好，您的预约已经成功取消！",
