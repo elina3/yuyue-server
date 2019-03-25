@@ -21,5 +21,6 @@ module.exports = _.extend(exports, {
   no_open_id: {type: 'no_open_id', message: 'the open id is null', zh_message: '无open_id'},
   access_token_failed: {type: 'access_token_failed', message: 'the access_token by code id failed', zh_message: '通过code获取access_token失败'},
   openid_failed: {type: 'openid_failed', message: 'the openid by code id failed', zh_message: '通过code获取openid失败'},
+  send_template_message_error: {type: 'send_template_message_error', message: 'Send template message failed', zh_message: '发送模版失败！'},
 
 });

@@ -4,7 +4,8 @@ var cryptoLib = require('../libraries/crypto'),
     publicLib = require('../libraries/public'),
   enumLib = require('../enums/business');
 var userLogic  = require('../logics/user'),
-  appointmentLogic = require('../logics/appointment');
+  appointmentLogic = require('../logics/appointment'),
+    wechatService = require('../services/wechat');
 var systemError = require('../errors/system'),
 userError = require('../errors/user'),
 appointmentError = require('../errors/appointment');
@@ -205,7 +206,8 @@ exports.createNewAppointmentInfo = function(req, res, next){
           nickname: user.nickname,
           department: user.department,
           outpatient_type: user.outpatient_type,
-          price: user.price
+          price: user.price,
+          card_number: user.card_number
         });
       });
     },
@@ -224,7 +226,18 @@ exports.createNewAppointmentInfo = function(req, res, next){
     },
     createAppointment: ['getDoctor', 'getSchedule', function(autoCallback, results){
       appointmentLogic.createAppointment(req.member, results.getDoctor, results.getSchedule, paymentMethod, function(err, appointment){
-        return autoCallback(err, appointment);
+        if(err){
+          return autoCallback(err);
+        }
+
+        wechatService.sendAppointmentSuccess(req.member.open_id, 'http://datonghao.com/client/#/me/appointment', {
+          doctor: results.getDoctor,
+          department: results.getDoctor.department,
+          start_time: results.getSchedule.start_time,
+          end_time: results.getSchedule.end_time,
+          card_number: results.getDoctor.card_number
+        }, function(err){});
+        return autoCallback(null, appointment);
       });
     }]
   }, function(err, results){

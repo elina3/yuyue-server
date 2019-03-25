@@ -115,43 +115,12 @@ exports.autoReplyText = function(openId, callback){
 };
 
 //模版消息推送
-exports.sendTemplateMessage = function(openId, templateId, redirectUrl, callback){
+function sendTemplateMessage(postData, callback){
   getAccessTokenByServer(function(err, accessToken){
     if(err){
       return callback(err);
     }
 
-    var postData = {
-      touser: openId,
-      template_id: templateId,
-      url: redirectUrl,
-      data: {
-        "first": {
-          "value":"您已经成功预约！",
-          "color":"#173177"
-        },
-        "keyword1":{
-          "value":"张三丰",
-          "color":"#173177"
-        },
-        "keyword3": {
-          "value":"心外科医生",
-          "color":"#173177"
-        },
-        "keyword4": {
-          "value":"张医生",
-          "color":"#173177"
-        },
-        "keyword2": {
-          "value":"2019-3-25 09:00~10:00",
-          "color":"#173177"
-        },
-        "remark":{
-          "value":"温馨提示：张三您已预约民航医院心外科，请您提前30分钟前往医院，预约签到，挂号就诊，如您无法按时就诊，请至少提前一个工作日取消预约。",
-          "color":"#173177"
-        }
-      }
-    };
     console.log('auto post:', postData);
     agent.post(config.wechat.templateSendUrl + '?access_token=' + accessToken)
     .send(postData)
@@ -160,5 +129,91 @@ exports.sendTemplateMessage = function(openId, templateId, redirectUrl, callback
       console.log('=======send template message========');
       return callback(err, res.body);
     });
+  });
+}
+
+exports.sendAppointmentSuccess = function(wechatId, redirectUrl, appointmentInfo, callback){
+  var postData = {
+    touser: wechatId,
+    template_id: 'Yfq-gXXiCPv9bxjOuKQ9f_s_CAdu6C7VgH22z-Wc_zE',
+    url: '',
+    data: {
+      first: {
+        "DATA":"您已经成功预约！",
+        "color":"#173177"
+      },
+      keyword1: {
+        "DATA": appointmentInfo.card_number,
+        "color":"#173177"
+      },
+      keyword2: {
+        "DATA": appointmentInfo.start_time.Format('yyyy-MM-dd hh:mm') + '~' + appointmentInfo.end_time.Format('hh:mm'),
+        "color":"#173177"
+      },
+      keyword3:{
+        "DATA":appointmentInfo.doctor.nickname+'('+ appointmentInfo.department.name +')',
+        "color":"#173177"
+      },
+      keyword4:{
+        "DATA":appointmentInfo.nickname,
+        "color":"#173177"
+      },
+      remark:{
+        "DATA":"温馨提示："+ appointmentInfo.nickname +"，您已预约民航医院"+appointmentInfo.department.name+"，请您提前30分钟前往医院，预约签到，挂号就诊，如您无法按时就诊，请至少提前一个工作日取消预约。",
+        "color":"#173177"
+      }
+    }
+  };
+  sendTemplateMessage(postData, function(err, data){
+    if(err){
+      console.error(err);
+      return callback({err: wechatError.send_template_message_error });
+    }
+    return callback(null, data);
+  });
+};
+
+exports.sendAppointmentFailed = function(wechatId, redirectUrl, appointmentInfo, callback){
+  var postData = {
+    touser: wechatId,
+    template_id: 'ude3bVcu-7vJmg-3R15WHQenHWmN_W1UcDLNRwL4K4s',
+    url: '',
+    data: {
+      first: {
+        "DATA":"您好，您的预约已经成功取消！",
+        "color":"#173177"
+      },
+      keyword1: {
+        "DATA": appointmentInfo.nickname + '（' +appointmentInfo.card_number + '）',
+        "color":"#173177"
+      },
+      keyword2: {
+        "DATA": '民航医院',
+        "color":"#173177"
+      },
+      keyword3:{
+        "DATA":appointmentInfo.department.name,
+        "color":"#173177"
+      },
+      keyword4:{
+        "DATA":appointmentInfo.doctor.nickname,
+        "color":"#173177"
+      },
+      keyword5:{
+        "DATA":appointmentInfo.start_time.Format('yyyy-MM-dd hh:mm') + '~' + appointmentInfo.end_time.Format('hh:mm'),
+        "color":"#173177"
+      },
+      remark:{
+        "DATA":"温馨提示："+ appointmentInfo.nickname +"，您已成功取消民航医院"+appointmentInfo.department.name+"的预约。祝您早日康复！",
+        "color":"#173177"
+      }
+    }
+  };
+  sendTemplateMessage(postData, function(err, data){
+    if(err){
+      console.error(err);
+      return callback({err: wechatError.send_template_message_error });
+    }
+    return callback(null, data);
   });
 };
