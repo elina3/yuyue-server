@@ -21,6 +21,14 @@
                         <p>{{ pageConfig.department.description }}</p>
                     </div>
                     <div class="yy-form-item">
+                        <label>是否允许浏览</label>
+                        <p>{{ pageConfig.department.canView ? '允许浏览' : '关闭' }}</p>
+                    </div>
+                    <div class="yy-form-item">
+                        <label>是否允许预约</label>
+                        <p>{{ pageConfig.department.canOrder ? '允许预约' : '关闭' }}</p>
+                    </div>
+                    <div class="yy-form-item">
                         <label>是否开放</label>
                         <p>{{ pageConfig.department.opened ? '开放' : '关闭' }}</p>
                     </div>

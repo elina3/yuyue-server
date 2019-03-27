@@ -11,10 +11,14 @@ angular.module('YYWeb').controller('DepartmentAddController',
         $scope.pageConfig = {
           navIndexes: [1, 1],
           opened: [{ id: true, text: '开放' }, { id: false, text: '关闭' }],
+          canOrder: [{ id: true, text: '可预约' }, { id: false, text: '关闭' }],
+          canView: [{ id: true, text: '可浏览' }, { id: false, text: '关闭' }],
           department: {
             name: '',
             description: '',
-            opened: {id: true, text: '开放'}
+            opened: {id: true, text: '开放'},
+            canOrder: {id: true, text: '可预约'},
+            canView: {id: true, text: '可浏览'}
           }
         };
 
@@ -83,7 +87,9 @@ angular.module('YYWeb').controller('DepartmentAddController',
           var params = {
             name: $scope.pageConfig.department.name,
             description: $scope.pageConfig.department.description,
-            opened: $scope.pageConfig.department.opened.id
+            opened: $scope.pageConfig.department.opened.id,
+            can_order: $scope.pageConfig.department.canOrder.id,
+            can_view: $scope.pageConfig.department.canView.id,
           };
           console.log('params:', params);
 

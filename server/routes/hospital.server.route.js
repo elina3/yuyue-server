@@ -17,7 +17,10 @@ module.exports = function (app) {
 
   // app端获取公开的科室列表
   app.route('/hospital/department/open_list').get(hospitalController.getOpenDepartmentList);
-  app.route('/hospital/department/').get(hospitalController.getOpenDepartmentList);
+  // app段获取可浏览的科室列表
+  app.route('/hospital/department/open_view_list').get(hospitalController.getOpenViewDepartmentList);
+  // app段获取可预约的科室列表
+  app.route('/hospital/department/open_order_list').get(hospitalController.getOpenOrderDepartmentList);
 
   app.route('/hospital/job_title/create').post(authFilter.requireAdmin, hospitalController.createJobTitle);
   app.route('/hospital/job_title/edit').post(authFilter.requireAdmin, hospitalFilter.requireJobTitle, hospitalController.editJobTitle);

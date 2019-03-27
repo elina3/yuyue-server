@@ -22,7 +22,9 @@ angular.module('YYWeb').controller('DepartmentDetailController',
               description: data.department.description || '--',
               titlePic: data.department.title_pic ? Config.imageUrl + data.department.title_pic : '../../images/global/default_user.png',
               descPic: data.department.desc_pic ? Config.imageUrl + data.department.desc_pic : '../../images/global/default_user.png',
-              opened: data.department.opened
+              opened: data.department.opened,
+              canOrder: data.department.canOrder,
+              canView: data.department.canView
             };
             return callback();
           });

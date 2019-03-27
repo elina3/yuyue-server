@@ -43,6 +43,14 @@ var departmentSchema = new Schema({
     type: Boolean,
     default: false
   },
+  canOrder: {//微信端可以预约
+    type: Boolean,
+    default: false
+  },
+  canView: {//微信端可以查看
+    type: Boolean,
+    default: false
+  },
   title_pic: {//key
     type: String
   },

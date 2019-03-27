@@ -22,6 +22,22 @@
                     </div>
 
                     <div class="yy-form-item has-select">
+                        <label>是否允许浏览</label>
+                        <z-dropdown z-dropdown-model="pageConfig.department.canView"
+                                    z-dropdown-options="pageConfig.canView"
+                                    z-dropdown-label="允许浏览"
+                        >
+                        </z-dropdown>
+                    </div>
+                    <div class="yy-form-item has-select">
+                        <label>是否允许预约</label>
+                        <z-dropdown z-dropdown-model="pageConfig.department.canOrder"
+                                    z-dropdown-options="pageConfig.canOrder"
+                                    z-dropdown-label="允许预约"
+                        >
+                        </z-dropdown>
+                    </div>
+                    <div class="yy-form-item has-select">
                         <label>是否开放</label>
                         <z-dropdown z-dropdown-model="pageConfig.department.opened"
                                     z-dropdown-options="pageConfig.opened"

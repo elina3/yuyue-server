@@ -25,10 +25,14 @@ angular.module('YYWeb').controller('DepartmentEditController',
           navIndexes: [1, 1],
           department_id: '',
           opened: [{ id: true, text: '开放' }, { id: false, text: '关闭' }],
+          canOrder: [{ id: true, text: '允许预约' }, { id: false, text: '关闭' }],
+          canView: [{ id: true, text: '允许浏览' }, { id: false, text: '关闭' }],
           department: {
             name: '',
             description: '',
             opened: { id: true, text: '开放' },
+            canOrder: {id: true, text: '允许预约'},
+            canView: {id: true, text: '允许浏览'}
           },
         };
 
@@ -99,6 +103,8 @@ angular.module('YYWeb').controller('DepartmentEditController',
             name: $scope.pageConfig.department.name,
             description: $scope.pageConfig.department.description,
             opened: $scope.pageConfig.department.opened.id,
+            can_order: $scope.pageConfig.department.canOrder.id,
+            can_view: $scope.pageConfig.department.canView.id,
           };
           if($scope.pageConfig.department.desc_pic_key){
             params.desc_pic = $scope.pageConfig.department.desc_pic_key;
@@ -141,6 +147,14 @@ angular.module('YYWeb').controller('DepartmentEditController',
                   opened: {
                     id: data.department.opened ? true : false,
                     text: data.department.opened ? '开放' : '关闭',
+                  },
+                  canOrder: {
+                    id: data.department.canOrder ? true : false,
+                    text: data.department.canOrder ? '允许预约' : '关闭',
+                  },
+                  canView: {
+                    id: data.department.canView ? true : false,
+                    text: data.department.canView ? '允许浏览' : '关闭',
                   },
                   title_pic: data.department.title_pic ? imageUrl + data.department.title_pic : '',
                   title_pic_key: data.department.title_pic,

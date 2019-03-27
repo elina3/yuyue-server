@@ -46,9 +46,11 @@ exports.createDepartment = function(req, res, next) {
         name: departmentName,
         hospitalId: req.user.hospital,
         description: req.body.description || '',
-        opened: publicLib.isTrue(req.body.opened) || false,
         title_pic: req.body.title_pic,
         desc_pic: req.body.desc_pic,
+        opened: publicLib.isTrue(req.body.opened) || false,
+        canOrder: publicLib.isTrue(req.body.can_order) || false,
+        canView: publicLib.isTrue(req.body.can_view) || false,
       },
       function(err, newDepartment) {
         if (err) {
@@ -71,6 +73,8 @@ exports.modifyDepartment = function(req, res, next) {
         name: modifyName,
         description: req.body.description || '',
         opened: publicLib.isTrue(req.body.opened) || false,
+        canView: publicLib.isTrue(req.body.can_view) || false,
+        canOrder: publicLib.isTrue(req.body.can_order) || false,
         title_pic: req.body.title_pic,
         desc_pic: req.body.desc_pic,
       },
@@ -180,6 +184,30 @@ exports.getJobTitleDetail = function(req, res, next) {
 
 exports.getOpenDepartmentList = function(req, res, next) {
   departmentLogic.getAllOpenDepartments(function(err, departments) {
+    if (err) {
+      return next(err);
+    }
+
+    req.data = {
+      departments: departments,
+    };
+    return next();
+  });
+};
+exports.getOpenViewDepartmentList = function(req, res, next) {
+  departmentLogic.getAllOpenViewDepartments(function(err, departments) {
+    if (err) {
+      return next(err);
+    }
+
+    req.data = {
+      departments: departments,
+    };
+    return next();
+  });
+};
+exports.getOpenOrderDepartmentList = function(req, res, next) {
+  departmentLogic.getAllOpenOrderDepartments(function(err, departments) {
     if (err) {
       return next(err);
     }

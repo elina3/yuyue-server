@@ -26,10 +26,16 @@
                                 <div class="col-xs-4">
                                     <span>科室简介</span>
                                 </div>
-                                <div class="col-xs-2">
+                                <div class="col-xs-1">
+                                    <span>允许浏览</span>
+                                </div>
+                                <div class="col-xs-1">
+                                    <span>允许预约</span>
+                                </div>
+                                <div class="col-xs-1">
                                     <span>对外可见</span>
                                 </div>
-                                <div class="col-xs-2">
+                                <div class="col-xs-3">
                                     <span>操作</span>
                                 </div>
                             </div>
@@ -40,10 +46,16 @@
                                 <div class="col-xs-4 text-3-line">
                                     <span>{{department.description}}</span>
                                 </div>
-                                <div class="col-xs-2">
+                                <div class="col-xs-1">
+                                    <span>{{department.canView ? '允许' : '关闭'}}</span>
+                                </div>
+                                <div class="col-xs-1">
+                                    <span>{{department.canOrder ? '允许' : '关闭'}}</span>
+                                </div>
+                                <div class="col-xs-1">
                                     <span>{{department.opened ? '开放' : '关闭'}}</span>
                                 </div>
-                                <div class="col-xs-2 handle">
+                                <div class="col-xs-3 handle">
                                     <a href="#/department/detail/{{ department._id }}">查看</a>
                                     <a href="#/department/edit/{{ department._id }}">编辑</a>
                                 </div>

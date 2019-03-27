@@ -28,7 +28,9 @@ angular.module('YYWeb').controller('DepartmentListController',
               _id: item._id,
               name: item.name,
               description: item.description || '--',
-              opened: item.opened || false
+              opened: item.opened || false,
+              canView: item.canView || false,
+              canOrder: item.canOrder || false,
             };
           });
           // $scope.pageConfig.pagination.totalCount = data.total_count;

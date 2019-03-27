@@ -25,6 +25,8 @@ exports.createDepartment = function(departmentInfo, callback) {
           opened: departmentInfo.opened,
           title_pic: departmentInfo.title_pic || '',
           desc_pic: departmentInfo.desc_pic || '',
+          canOrder: departmentInfo.canOrder,
+          canView: departmentInfo.canView
         });
         department.save(function(err, saved) {
           if (err) {
@@ -41,6 +43,8 @@ exports.modifyDepartment = function(departmentId, departmentInfo, callback) {
     description: departmentInfo.description || '',
     update_time: new Date(),
     opened: departmentInfo.opened,
+    canView: departmentInfo.canView,
+    canOrder: departmentInfo.canOrder,
     title_pic: departmentInfo.title_pic || '',
     desc_pic: departmentInfo.desc_pic || '',
   };
@@ -89,6 +93,24 @@ exports.getDepartmentDetail = function(departmentId, callback) {
 
 exports.getAllOpenDepartments = function(callback) {
   DepartmentModel.find({ opened: true }, function(err, list) {
+    if (err) {
+      return callback({ err: systemError.database_query_error });
+    }
+
+    return callback(null, list);
+  });
+};
+exports.getAllOpenViewDepartments = function(callback) {
+  DepartmentModel.find({ opened: true, canView: true }, function(err, list) {
+    if (err) {
+      return callback({ err: systemError.database_query_error });
+    }
+
+    return callback(null, list);
+  });
+};
+exports.getAllOpenOrderDepartments = function(callback) {
+  DepartmentModel.find({ opened: true, canOrder: true }, function(err, list) {
     if (err) {
       return callback({ err: systemError.database_query_error });
     }
