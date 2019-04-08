@@ -100,6 +100,11 @@ exports.getAllUnBookSchedules = function(req, res, next){
         }
         return autoCallback(null, schedules);
       });
+    }],
+    loadScheduleAppointmentCount: ['schedules', function(autoCallback, result){
+      appointmentLogic.loadScheduleAppointmentCount(result.schedules, function(err){
+        return autoCallback(err);
+      });
     }]
   }, function(err, results){
     if(err){
