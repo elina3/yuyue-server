@@ -101,8 +101,8 @@ exports.getAllUnBookSchedules = function(req, res, next){
         return autoCallback(null, schedules);
       });
     }],
-    loadScheduleAppointmentCount: ['schedules', function(autoCallback, result){
-      appointmentLogic.loadScheduleAppointmentCount(result.schedules, function(err){
+    loadScheduleNumbers: ['schedules', function(autoCallback, result){
+      appointmentLogic.getAppointmentCountByDateSchedules(result.schedules, function(err){
         return autoCallback(err);
       });
     }]

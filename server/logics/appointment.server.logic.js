@@ -437,4 +437,21 @@ exports.loadScheduleAppointmentCount = function(schedules, callback){
     return callback(err);
   });
 };
+exports.getAppointmentCountByDateSchedules = function(dateSchedules, callback){
+  async.each(dateSchedules, function(dateSchedule, eachCallback){
+    async.each(dateSchedule.schedules, function(schedule, innerEachCallback){
+      getScheduleAppointmentCount(schedule._id, function(err, count){
+        if(err){
+          return innerEachCallback(err);
+        }
+        schedule.booked = count;
+        return innerEachCallback();
+      });
+    }, function(err){
+      return eachCallback(err);
+    });
+  }, function(err){
+    return callback(err);
+  });
+};
 
