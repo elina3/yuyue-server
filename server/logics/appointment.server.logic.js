@@ -259,11 +259,12 @@ exports.getAllAppointments = function(filter, pagination, callback) {
 };
 exports.getPickupList = function(filter, callback) {
   var query = {};
-  if (filter.IDCard && filter.order_number) {
+  if (filter.IDCard && filter.order_number && filter.card_number) {
     query = {
       $or: [
         { IDcard: { $regex: filter.IDCard, $options: '$i' } },
-        { order_number: { $regex: filter.order_number, $options: '$i' } }],
+        { card_number: { $regex: filter.card_number, $options: '$i' } },
+        { order_number: { $regex: filter.order_number, $options: '$i' } }]
     };
   } else {
     if (filter.IDCard) {
@@ -271,6 +272,9 @@ exports.getPickupList = function(filter, callback) {
     }
     if (filter.order_number) {
       query.order_number = { $regex: filter.order_number, $options: '$i' };
+    }
+    if (filter.card_number) {
+      query.card_number = { $regex: filter.card_number, $options: '$i' };
     }
   }
   Appointment.find(query).

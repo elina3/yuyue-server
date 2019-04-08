@@ -37,7 +37,8 @@ angular.module('YYWeb').controller('AppointmentPickUpController',
         $scope.$emit(GlobalEvent.onShowLoading, true);
         AppointmentService.pickUpList({
           IDCard: $scope.pageConfig.IDCard,
-          order_number: $scope.pageConfig.orderNumber
+          order_number: $scope.pageConfig.orderNumber,
+          card_number: $scope.pageConfig.cardNumber
         }, function(err, data) {
           $scope.$emit(GlobalEvent.onShowLoading, false);
           if (err) {
@@ -75,6 +76,7 @@ angular.module('YYWeb').controller('AppointmentPickUpController',
         navIndexes: [0],
         IDCard: '',
         orderNumber: '',
+        cardNumber: '',
         appointmentList: [],
       };
 

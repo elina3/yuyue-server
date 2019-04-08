@@ -31,12 +31,14 @@ exports.getAllAppointments = function(req, res, next){
 exports.getPickupList = function(req, res, next){
   var IDCard = req.query.IDCard || '';
   var orderNumber = req.query.order_number || '';
-  if(!IDCard && !orderNumber){
+  var cardNumber = req.query.card_number || '';
+  if(!IDCard && !orderNumber && !cardNumber){
     return next({err: appointmentError.id_card_order_number_error});
   }
   appointmentLogic.getPickupList({
     IDCard: IDCard,
-    order_number: orderNumber
+    order_number: orderNumber,
+    card_number: cardNumber
   }, function(err, appointments){
     if(err){
       return next(err);
