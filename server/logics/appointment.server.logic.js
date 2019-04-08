@@ -366,9 +366,10 @@ exports.getAppointmentDetailById = function(appointmentId, callback) {
       });
 };
 
-exports.getScheduleAppointmentCount = function(scheduleId, callback) {
+function getScheduleAppointmentCount(scheduleId, callback){
   var query = {
     doctor_schedule: scheduleId,
+    canceled: false
   };
   Appointment.count(query).
       exec(function(err, totalCount) {
@@ -378,7 +379,8 @@ exports.getScheduleAppointmentCount = function(scheduleId, callback) {
 
         return callback(null, totalCount);
       });
-};
+}
+exports.getScheduleAppointmentCount = getScheduleAppointmentCount;
 
 exports.cancelAppointment = function(memberId, appointmentId, callback) {
   Appointment.findOne({ _id: appointmentId }).
@@ -416,5 +418,19 @@ exports.cancelAppointment = function(memberId, appointmentId, callback) {
           return callback(null, appointment);
         });
       });
+};
+
+exports.loadScheduleAppointmentCount = function(schedules, callback){
+  async.each(schedules, function(schedule, eachCallback){
+    getScheduleAppointmentCount(schedule._id, function(err, count){
+      if(err){
+        return eachCallback(err);
+      }
+      schedule._doc.booked = count;
+      return eachCallback();
+    });
+  }, function(err){
+    return callback(err);
+  });
 };
 

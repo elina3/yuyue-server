@@ -133,6 +133,11 @@ yyWeb.config(['$stateProvider', '$urlRouterProvider', function ($stateProvider, 
       url: '/schedule/setting/:id',
       templateUrl: 'templates/schedule/setting.client.view.html',
       controller: 'ScheduleSettingController'
+    })
+   .state('setting_role', {
+      url: '/schedule/setting_role',
+      templateUrl: 'templates/schedule/setting_role.client.view.html',
+      controller: 'SettingRoleController'
     });
 
   $urlRouterProvider.otherwise('/user/sign_in');

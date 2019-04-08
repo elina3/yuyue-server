@@ -73,7 +73,8 @@
     "$",
     "moment",
     "ActiveXObject",
-    "amountParse"
+    "amountParse",
+    "JsBarcode"
   ],
   "indent": 4,
   // Specify indentation spacing

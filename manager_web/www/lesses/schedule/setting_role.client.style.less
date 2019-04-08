@@ -1,0 +1,68 @@
+.setting-role-page {
+    .yy-whiter-board {
+        overflow: hidden;
+
+        .yy-panel-item.status-line {
+            >span.status{
+                display: inline-block;
+                overflow: hidden;
+                float: left;
+            }
+            >button{
+                display: inline-block;
+                overflow: hidden;
+                float: left;
+            }
+        }
+        .yy-panel-item{
+
+            .yy-custom-calendar{
+                position: relative;
+                overflow: hidden;
+
+                background: #F6F8F9;
+
+                width: 90%;
+                margin: 0 5%;
+                height: 60px;
+
+                >ul.cal-middle{
+                    width: 100%;
+                    height: 59px;
+
+                    li{
+                        display: inline-block;
+                        list-style: none;
+                        float: left;
+                        width: 14.2%;
+                        a{
+                            padding-top: 10px;
+                            height: 60px;
+                            line-height: 60px;
+                            display: block;
+                            font-weight: bold;
+                            color: @font-dark-color;
+                            text-align: center;
+
+                            &:hover{
+
+                                background: @icon-green-color;
+                                color: #fff;
+                                text-decoration: none;
+                                cursor: pointer;
+                            }
+                            &.current{
+                                border-top: 2px solid @icon-green-color;
+                                padding-top: 8px;
+                                background: #fff;
+                                color: @icon-green-color;
+                                border-bottom: none;;
+                            }
+                        }
+                    }
+                }
+
+            }
+        }
+    }
+}

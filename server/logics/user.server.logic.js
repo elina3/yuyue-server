@@ -391,11 +391,11 @@ function isInvalidScheduleRange(existsSchedules, newStartTime, newEndTime) {
   for (var i = 0; i < existsSchedules.length; i++) {
     var item = existsSchedules[i];
     if (newStartTime.getTime() >= item.start_time.getTime() &&
-        newStartTime.getTime() <= item.end_time.getTime()) {
+        newStartTime.getTime() < item.end_time.getTime()) {
       hasRange = true;
       break;
     }
-    if (newEndTime.getTime() >= item.start_time.getTime() &&
+    if (newEndTime.getTime() > item.start_time.getTime() &&
         newEndTime.getTime() <= item.end_time.getTime()) {
       hasRange = true;
       break;

@@ -1,5 +1,5 @@
 'use strict';
-angular.module('YYWeb').controller('ScheduleSettingController',
+angular.module('YYWeb').controller('SettingRoleController',
     [
       '$window',
       '$rootScope',
@@ -42,7 +42,7 @@ angular.module('YYWeb').controller('ScheduleSettingController',
           return $scope.pageConfig.calendar.currentDateItem ? $scope.pageConfig.calendar.currentDateItem.date : new Date(new Date().Format('YYYY/MM/DD'));
         }
 
-          function loadDoctorSchedules(doctorId, callback) {
+        function loadDoctorSchedules(doctorId, callback) {
           var currentDate = getCurrentDate();
           UserService.getDoctorSchedules(
               { doctor_id: doctorId, timestamp: currentDate.getTime() },
@@ -62,7 +62,7 @@ angular.module('YYWeb').controller('ScheduleSettingController',
                           startTime: item.start_time_string,
                           endTime: item.end_time_string,
                           numberCount: item.number_count,
-                          booked: item.booked || 0,
+                          booked: 0,
                         };
                       });
                   return callback();
@@ -73,101 +73,36 @@ angular.module('YYWeb').controller('ScheduleSettingController',
         }
 
         $scope.pageConfig = {
-          isSelfUser: true,//默认是医生为自己设置号源
-          doctorId: '',
-          showButton: false,//控制上下架按钮显示与隐藏
-          doctor: {
-            name: '刘医生',
-            on_shelf: false//默认没有上架
-          },
+          isOpen: false,//是否开启规则
           doctorSchedules: [],
-          datePicker: {
-            createTimeRange: '',
-            createTimeMinTime: moment().format('YYYY/MM/DD'),
-            dateOptions: {
-              locale: {
-                fromLabel: '起始时间',
-                toLabel: '结束时间',
-                cancelLabel: '取消',
-                applyLabel: '确定',
-                customRangeLabel: '区间',
-                daysOfWeek: ['日', '一', '二', '三', '四', '五', '六'],
-                firstDay: 1,
-                monthNames: [
-                  '一月', '二月', '三月', '四月', '五月', '六月', '七月', '八月', '九月',
-                  '十月', '十一月', '十二月'],
-              },
-              timePicker: false,
-              timePicker12Hour: false,
-              timePickerIncrement: 1,
-              singleDatePicker: true,
-              separator: ' ~ ',
-              format: 'YYYY月MM日DD',
-            },
-            getCurrentDate: function() {
-              if (this.createTimeRange.startDate &&
-                  this.createTimeRange.startDate._d) {
-                var time = moment(this.createTimeRange.startDate);
-                return new Date(time);
-              }
-              return new Date(moment().format('YYYY/MM/DD'));//默认时间
-            },
-          },
-          changeDate: function() {
-            this.calendar.initBoard(this.datePicker.getCurrentDate());
-          },
           calendar: {
-            dateItems: [],
+            dateItems: [{
+              number: 1,
+              weekName: '星期一'
+            }, {
+              number: 2,
+              weekName: '星期二'
+            }, {
+              number: 3,
+              weekName: '星期三'
+            }, {
+              number: 4,
+              weekName: '星期四'
+            }, {
+              number: 5,
+              weekName: '星期五'
+            }, {
+              number: 6,
+              weekName: '星期六'
+            }, {
+              number: 7,
+              weekName: '星期日'
+            }],
             currentDateItem: null,
             beginIndex: 1,
             endIndex: 7,
-            initBoard: function(date) {
-              var yesterday = new Date((date.getTime() - 24 * 60 * 60 * 1000));
-              console.log('yesterday', yesterday);
-              console.log(date);
-              this.dateItems = [];
-              this.dateItems.push({
-                date: yesterday,
-                number: yesterday.Format('MM月dd日'),
-                weekName: getWeekName(yesterday),
-                show: false,
-              });
-              this.dateItems.push({
-                date: date,
-                number: date.Format('MM月dd日'),
-                weekName: getWeekName(date),
-                show: true,
-              });
-              for (var i = 1; i <= 58; i++) {
-                var currentDate = new Date(date.getTime() + i * 24 * 60 * 60 *
-                    1000);
-
-                this.dateItems.push({
-                  date: currentDate,
-                  number: currentDate.Format('MM月dd日'),
-                  weekName: getWeekName(currentDate),
-                  show: i <= 6,
-                });
-              }
-              this.clickDate(this.dateItems[1]);
-            },
-            prevDate: function() {
-              var prevDateItem = this.dateItems[this.beginIndex - 1];
-              if (prevDateItem) {
-                this.dateItems[this.endIndex].show = false;
-                prevDateItem.show = true;
-                this.beginIndex -= 1;
-                this.endIndex -= 1;
-              }
-            },
-            nextDate: function() {
-              var nextDateItem = this.dateItems[this.endIndex + 1];
-              if (nextDateItem) {
-                this.dateItems[this.beginIndex].show = false;
-                nextDateItem.show = true;
-                this.beginIndex += 1;
-                this.endIndex += 1;
-              }
+            initBoard: function() {
+              this.clickDate(this.dateItems[0]);
             },
             clickDate: function(dateItem) {
               if ($scope.pageConfig.calendar.currentDateItem) {
@@ -175,10 +110,7 @@ angular.module('YYWeb').controller('ScheduleSettingController',
               }
               dateItem.current = true;
               $scope.pageConfig.calendar.currentDateItem = dateItem;
-              $scope.$emit(GlobalEvent.onShowLoading, true);
-              loadDoctorSchedules($scope.pageConfig.doctorId, function() {
-                $scope.$emit(GlobalEvent.onShowLoading, false);
-              });
+              console.log(dateItem);
             },
           },
           popBox: {
@@ -314,7 +246,7 @@ angular.module('YYWeb').controller('ScheduleSettingController',
           },
         };
 
-        $scope.addDoctorSchedule = function() {
+        $scope.addSettingRole = function() {
           $scope.pageConfig.popBox.open();
         };
 
@@ -379,20 +311,6 @@ angular.module('YYWeb').controller('ScheduleSettingController',
 
 
         function init() {
-          let assignDoctorId = $stateParams.id;//如果传入doctorId，为指定医生设置账号
-          console.log('assignDoctorId:', assignDoctorId);
-
-          $scope.pageConfig.isSelfUser = assignDoctorId === user._id;//用户是否为自己，不是自己则显示姓名
-
-          $scope.pageConfig.doctorId = assignDoctorId || user._id;
-
-          if ($scope.pageConfig.isSelfUser) {//如果是自己为自己设置号源，自己必须为医生
-            if (user.role !== 'doctor') {
-              return $scope.$emit(GlobalEvent.onShowAlert,
-                  '很抱歉，您不是医生，不能为您设置号源！请联系管理员！');
-            }
-          }
-
           $scope.pageConfig.calendar.initBoard(
               new Date(moment().format('YYYY/MM/DD')));
         }

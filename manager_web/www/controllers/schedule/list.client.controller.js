@@ -367,6 +367,9 @@ angular.module('YYWeb').controller('ScheduleListController',
           return $scope.$emit(GlobalEvent.onShowAlert, '成功导入' + successCount+ '条记录');
         });
       };
+      $scope.goToSettingRole = function () {
+        $state.go('setting_role');
+      };
       //</editor-fold>
 
     }]);

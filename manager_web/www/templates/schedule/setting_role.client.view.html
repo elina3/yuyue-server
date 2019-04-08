@@ -1,0 +1,94 @@
+<z-header></z-header>
+<div class="schedule-setting-page ee-body-max setting-role-page">
+    <div class="yy-wrapper">
+        <h2>排班规则设定</h2>
+        <div class="yy-whiter-board">
+            <div class="yy-panel-item status-line">
+                <span class="status">{{ pageConfig.isOpen === true ? '已开启' : '已关闭' }}</span>
+                <button ng-if="!pageConfig.isOpen" class="yy-green-button" ng-click="pageConfig.open()">开启</button>
+                <button ng-if="pageConfig.isOpen" class="yy-green-button" ng-click="pageConfig.close()">关闭</button>
+            </div>
+            <div class="yy-panel-item">
+                <div class="yy-custom-calendar">
+                    <ul class="cal-middle">
+                        <li ng-click="pageConfig.calendar.clickDate(dateItem)" ng-repeat="dateItem in pageConfig.calendar.dateItems">
+                            <a>{{dateItem.weekName}}</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="yy-whiter-board">
+                <div class="yy-panel-item">
+                        <h3>医生排班规则</h3>
+                        <button ng-click="addSettingRole()" class="yy-green-button right">添加</button>
+                </div>
+
+                
+            <div class="yy-panel-item">
+                    <div class="ee-table-list">
+                        <div class="content">
+                            <div class="row list-header">
+                                <div class="col-xs-2">
+                                    <span>开始时间</span>
+                                </div>
+                                <div class="col-xs-2">
+                                    <span>结束时间</span>
+                                </div>
+                                <div class="col-xs-2">
+                                    <span>预设号数量</span>
+                                </div>
+                                <div class="col-xs-2">
+                                    <span>已预约数量</span>
+                                </div>
+                                <div class="col-xs-2">
+                                    <span>余号数量</span>
+                                </div>
+                                <div class="col-xs-2">
+                                    <span>操作</span>
+                                </div>
+                            </div>
+                            <div class="row list-info" ng-repeat="schedule in pageConfig.doctorSchedules">
+                                <div class="col-xs-2">
+                                    <span>{{schedule.startTime}}</span>
+                                </div>
+                                <div class="col-xs-2">
+                                    <span>{{schedule.endTime}}</span>
+                                </div>
+                                <div class="col-xs-2">
+                                    <span>{{schedule.numberCount}}</span>
+                                </div>
+                                <div class="col-xs-2">
+                                    <span>{{schedule.booked}}</span>
+                                </div>
+                                <div class="col-xs-2">
+                                    <span>{{schedule.numberCount - schedule.booked}}</span>
+                                </div>
+                                <div class="col-xs-2 handle">
+                                    <a  ng-click="editDoctorSchedule(schedule)">编辑</a>
+                                    <a  ng-click="deleteSchedule(schedule)">删除</a>
+                                </div>
+                            </div>
+                        </div>
+                        <z-pagination config="pageConfig.pagination"></z-pagination>
+                    </div>
+            </div> 
+        </div>
+    </div>
+</div>
+
+<div class="dialog-mask input-pop-panel" ng-show="pageConfig.popBox.show">
+    <div class="dialog-content">
+        <div class="dialog-header">{{pageConfig.popBox.currentSchedule ? '编辑' : '增加'}}{{pageConfig.popBox.dateString}}号源</div>
+        <div class="dialog-body">
+            <label>开始时间<input ng-model="pageConfig.popBox.startTime.hour" type="number" placeholder="HH" min=0 max=23 /><span>:</span><input type="number" ng-model="pageConfig.popBox.startTime.minute" placeholder="mm" min=0 max=59 /></label>
+            <label>结束时间<input ng-model="pageConfig.popBox.endTime.hour" type="number" placeholder="HH" min=0 max=23 /><span>:</span><input type="number" ng-model="pageConfig.popBox.endTime.minute" placeholder="mm" min=0 max=59 /></label>
+            <label>号源数量<input ng-model="pageConfig.popBox.inputNumber" type="number" min=0/></label>
+            <div class="dialog-footer">
+                <p class="sure" ng-click="pageConfig.popBox.sure()">保存</p>
+                <p class="cancel" ng-click="pageConfig.popBox.cancel()">取消</p>
+            </div>
+        </div>
+    </div>
+</div>
+    
