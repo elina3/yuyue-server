@@ -102,7 +102,7 @@ angular.module('YYWeb').controller('ScheduleSettingController',
               timePickerIncrement: 1,
               singleDatePicker: true,
               separator: ' ~ ',
-              format: 'YYYY月MM日DD',
+              format: 'YYYY年MM月DD日',
             },
             getCurrentDate: function() {
               if (this.createTimeRange.startDate &&

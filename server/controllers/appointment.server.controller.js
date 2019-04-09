@@ -12,11 +12,19 @@ appointmentError = require('../errors/appointment');
 
 //后台获取所有预约
 exports.getAllAppointments = function(req, res, next){
-  appointmentLogic.getAllAppointments({
+
+
+  var searchObj = {
     search_key: req.query.search_key,
     department_id: req.query.department_id,
     outpatient_type: req.query.outpatient_type
-  }, req.pagination, function(err, results){
+  };
+  var timestamp = parseInt(req.query.appointment_timestamp) || 0;
+  if(timestamp > 0){
+    searchObj.appointment_time = new Date(timestamp);
+  }
+
+  appointmentLogic.getAllAppointments(searchObj, req.pagination, function(err, results){
     if(err){
       return next(err);
     }

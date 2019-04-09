@@ -20,16 +20,30 @@ angular.module('YYWeb').controller('AppointmentListController',
           return;
         }
 
+        function getAppointmentTime(){
+          if ($scope.pageConfig.appointmentTime && $scope.pageConfig.appointmentTime.startDate &&
+              $scope.pageConfig.appointmentTime.startDate._d) {
+            var time = moment($scope.pageConfig.appointmentTime.startDate);
+            return new Date(time);
+          }else{
+            return null;
+          }
+        }
         function loadAppointments(callback) {
 
-          $scope.$emit(GlobalEvent.onShowLoading, true);
-          AppointmentService.getList({
+          let searchObj = {
             search_key: $scope.pageConfig.searchKey,
             current_page: $scope.pageConfig.pagination.currentPage,
             limit: $scope.pageConfig.pagination.limit,
             outpatient_type: $scope.pageConfig.currentType.id,
             department_id: $scope.pageConfig.currentDepartment.id,
-          }, function(err, data) {
+          };
+          if(getAppointmentTime()){
+            searchObj.appointment_timestamp = getAppointmentTime().getTime();
+          }
+
+          $scope.$emit(GlobalEvent.onShowLoading, true);
+          AppointmentService.getList(searchObj, function(err, data) {
             $scope.$emit(GlobalEvent.onShowLoading, false);
             if (err) {
               return $scope.$emit(GlobalEvent.onShowAlert, err);
@@ -62,6 +76,7 @@ angular.module('YYWeb').controller('AppointmentListController',
           departments: [{ id: '', text: '全部科室' }],
           searchKey: '',
           currentType: { id: '', text: '全部门诊类型' },
+          appointmentTime: null,
           types: [
             { id: '', text: '全部门诊类型' },
             { id: 'expert', text: '专家门诊' },
@@ -77,6 +92,39 @@ angular.module('YYWeb').controller('AppointmentListController',
             },
           },
           groupList: [],
+          datePicker: {
+            dateOptions: {
+              locale: {
+                fromLabel: '起始时间',
+                toLabel: '结束时间',
+                cancelLabel: '取消',
+                applyLabel: '确定',
+                customRangeLabel: '区间',
+                daysOfWeek: ['日', '一', '二', '三', '四', '五', '六'],
+                firstDay: 1,
+                monthNames: [
+                  '一月', '二月', '三月', '四月', '五月', '六月', '七月', '八月', '九月',
+                  '十月', '十一月', '十二月'],
+              },
+              timePicker: false,
+              timePicker12Hour: false,
+              timePickerIncrement: 1,
+              singleDatePicker: true,
+              separator: ' ~ ',
+              format: 'YYYY年MM月DD日',
+            },
+            getCurrentDate: function() {
+              if (this.createTimeRange.startDate &&
+                  this.createTimeRange.startDate._d) {
+                var time = moment(this.createTimeRange.startDate);
+                return new Date(time);
+              }
+              return new Date(moment().format('YYYY/MM/DD'));//默认时间
+            },
+          },
+          changeDate: function() {
+            this.calendar.initBoard(this.datePicker.getCurrentDate());
+          },
         };
 
         $scope.search = function() {

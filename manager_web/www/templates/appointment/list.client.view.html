@@ -4,7 +4,16 @@
     <div class="yy-wrapper">
         <h2>预约管理</h2>
         <div class="yy-whiter-board">
+
             <div class="yy-panel-item row">
+                <div class="row date-container yy-date-picker-area">
+                    <span>预约日期：</span>
+                    <input type="text" date-range-picker class="e-date-picker info-input date-picker dropdown"
+                           ng-model="pageConfig.appointmentTime"
+                           options="pageConfig.datePicker.dateOptions"
+                           placeholder="点击选择日期"
+                    />
+                </div>
                 <div class=" col-xs-3">
                     <z-dropdown z-dropdown-model="pageConfig.currentDepartment"
                                 z-dropdown-options="pageConfig.departments"
