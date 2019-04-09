@@ -226,7 +226,8 @@ exports.getAllAppointments = function(filter, pagination, callback) {
     query.outpatient_type = filter.outpatient_type;
   }
   if (filter.appointment_time) {
-    var secondDay = new Date(filter.appointment_time.getTime() + 24 * 60 * 60 * 60 * 1000)
+    var secondDay = new Date(filter.appointment_time.getTime() + 24 * 60 * 60 * 1000);
+    console.log(secondDay.Format('yyyy-MM-dd hh:mm:ss'));
     query.$and = [{start_time: {$gte: filter.appointment_time}}, {end_time: {$lt: secondDay}}];
   }
   Appointment.count(query).exec(function(err, totalCount) {
