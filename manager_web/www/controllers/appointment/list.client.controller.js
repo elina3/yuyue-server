@@ -24,7 +24,7 @@ angular.module('YYWeb').controller('AppointmentListController',
           if ($scope.pageConfig.appointmentTime && $scope.pageConfig.appointmentTime.startDate &&
               $scope.pageConfig.appointmentTime.startDate._d) {
             var time = moment($scope.pageConfig.appointmentTime.startDate);
-            return new Date(time);
+            return new Date(new Date(time).Format('yyyy-MM-dd 00:00:00'));
           }else{
             return null;
           }
