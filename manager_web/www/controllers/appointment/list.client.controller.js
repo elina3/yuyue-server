@@ -38,8 +38,9 @@ angular.module('YYWeb').controller('AppointmentListController',
             outpatient_type: $scope.pageConfig.currentType.id,
             department_id: $scope.pageConfig.currentDepartment.id,
           };
-          if(getAppointmentTime()){
-            searchObj.appointment_timestamp = getAppointmentTime().getTime();
+          var date = getAppointmentTime();
+          if(date){
+            searchObj.appointment_timestamp = date.getTime();
           }
 
           $scope.$emit(GlobalEvent.onShowLoading, true);
