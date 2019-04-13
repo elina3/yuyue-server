@@ -28,5 +28,20 @@ console.log(config.wechat.getUserInfoUrl);
 console.log('======================');
 console.log(config.wechat_ext.app_id);
 
+var sequelize = require('./libraries/sequelize');
+
+// var Sequelize=require('sequelize');
+// // var sequelize=new Sequelize('postgres://sa:1QAZ2wsx@mh-rjgb.com:6006/THIS4_TEST');
+// var sequelize=new Sequelize('THIS4_TEST','sa','1QAZ2wsx',{
+//   host:'mh-rjgb.com',
+//   dialect: 'mssql',
+//   port: '6006'
+// });
+// sequelize.authenticate().then(function(){
+//   console.log('connect success!');
+// });
+// console.log('sequelize', sequelize);
+
+
 
 
