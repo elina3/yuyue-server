@@ -269,6 +269,13 @@ exports.createNewAppointmentInfo = function(req, res, next){
 };
 
 exports.getMyAppointments = function(req, res, next){
+  var member = req.member;
+  if(!member.IDCard && !member.card_number){
+    req.data = {
+      appointments: []
+    };
+    return next();
+  }
   appointmentLogic.getMyAppointments(req.member, function(err, appointments){
     if(err){
       return next(err);
