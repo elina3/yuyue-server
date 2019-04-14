@@ -2,7 +2,7 @@
 var sequelizeLib = require('../../libraries/sequelize');
 var Sequelize = require('sequelize');
 //门诊：检验报告
-var TestReportModel = sequelizeLib.define('View_testReport', {
+var TestReportModel = sequelizeLib.define('View_testReports', {
   id: {
     type: Sequelize.INTEGER,
     primaryKey: true,
@@ -30,6 +30,7 @@ var TestReportModel = sequelizeLib.define('View_testReport', {
   receiveTime: Sequelize.DATE, //收到时间
   reportingTime: Sequelize.DATE //报告时间
 }, {
-  timestamps: false
+  timestamps: false, //表中不增加createdAt，updatedAt
+  freezeTableName: true //表名不会为复数
 });
 module.exports = TestReportModel;
