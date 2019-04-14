@@ -32,5 +32,7 @@ var InspectReportModel = sequelizeLib.define('View_inspectReport', {
   bodyParts: Sequelize.STRING, //部位
   description: Sequelize.STRING, //描述/所见
   diagnosticsConclusion: Sequelize.STRING //诊断结论
+}, {
+  timestamps: false
 });
 module.exports = InspectReportModel;

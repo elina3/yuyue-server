@@ -15,6 +15,8 @@ var TestReportItemModel = sequelizeLib.define('View_testReportItem', {
   result: Sequelize.STRING, //检测项目结果
   reference: Sequelize.STRING, //检测项目参考
   conclusion: Sequelize.STRING //检测项目结论
+}, {
+  timestamps: false
 });
 
 module.exports = TestReportItemModel;

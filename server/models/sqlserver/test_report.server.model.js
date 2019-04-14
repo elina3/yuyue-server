@@ -29,5 +29,7 @@ var TestReportModel = sequelizeLib.define('View_testReport', {
   samplingTime: Sequelize.DATE, //采样时间
   receiveTime: Sequelize.DATE, //收到时间
   reportingTime: Sequelize.DATE //报告时间
+}, {
+  timestamps: false
 });
 module.exports = TestReportModel;
