@@ -50,7 +50,8 @@ exports.getTestReportDetail = function(reportId, callback){
   TestReport.findOne({
     where: {
       id: reportId
-    }
+    },
+    attributes: ['id', 'sickerName', 'sickerSex', 'sickerAge', 'clinicalDiagnosis', 'category', 'sampleType', 'reportingTime']
   }).then((report) => {
     if(!report){
       return callback({err: memberError.report_not_exist});
