@@ -59,7 +59,8 @@ exports.getTestReportDetail = function(reportId, callback){
     TestReportItem.findAll({
       where: {
         reportID: reportId
-      }
+      },
+      attributes: ['name', 'reference', 'result', 'id']
     }).then((items) => {
       if(items && Array.isArray(items) && items.length > 0){
         report.items = items;
@@ -113,7 +114,8 @@ exports.getInspectReportDetail = function(reportId, callback){
   InspectReport.findOne({
     where: {
       id: reportId
-    }
+    },
+    attributes: ['id', 'sickerName', 'sickerSex', 'sickerAge', 'clinicalDiagnosis', 'category', 'bodyParts', 'reportingTime', 'description', 'diagnosticsConclusion']
   }).then((report) => {
     if(!report){
       return callback({err: memberError.report_not_exist});
