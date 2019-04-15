@@ -2,7 +2,7 @@
 var InspectReport = require('../models/sqlserver/inspect_report'),
     TestReport = require('../models/sqlserver/test_report'),
     TestReportItem = require('../models/sqlserver/test_report_item');
-
+var sequelize = require('sequelize');
 var memberError = require('../errors/member'),
   systemError = require('../errors/system');
 exports.getReports = function(callback){
@@ -18,12 +18,17 @@ exports.getTestReports = function(cardID, cardNumber, callback){
   if(!cardID && !cardNumber){
     return callback({err: memberError.neither_nor_CardNumber});
   }
+
   var query = {};
-  if(cardID){
-    query.sickerCardID = cardID;
-  }
-  if(cardNumber){
-    query.sickerCardNumber = cardNumber;
+  if(cardID && cardNumber){
+    query = sequelize.or({sickerCardID: cardID}, {sickerCardNumber: cardNumber});
+  }else{
+    if(cardID){
+      query.sickerCardID = cardID;
+    }
+    if(cardNumber){
+      query.sickerCardNumber = cardNumber;
+    }
   }
 
   TestReport.findAll({
@@ -85,11 +90,15 @@ exports.getInspectReports = function(cardID, cardNumber, callback){
     return callback({err: memberError.neither_nor_CardNumber});
   }
   var query = {};
-  if(cardID){
-    query.sickerCardID = cardID;
-  }
-  if(cardNumber){
-    query.sickerCardNumber = cardNumber;
+  if(cardID && cardNumber){
+    query = sequelize.or({sickerCardID: cardID}, {sickerCardNumber: cardNumber});
+  }else{
+    if(cardID){
+      query.sickerCardID = cardID;
+    }
+    if(cardNumber){
+      query.sickerCardNumber = cardNumber;
+    }
   }
 
   InspectReport.findAll({
