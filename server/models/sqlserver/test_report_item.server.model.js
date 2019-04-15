@@ -2,7 +2,8 @@
 var sequelizeLib = require('../../libraries/sequelize');
 var Sequelize = require('sequelize');
 //门诊：检验报告内容
-var TestReportItemModel = sequelizeLib.define('View_testReportItems', {
+// var TestReportItemModel = sequelizeLib.define('View_testReportItems', {
+var TestReportItemModel = sequelizeLib.define('test_report_item', {
   id: {
     type: Sequelize.INTEGER,
     primaryKey: true,

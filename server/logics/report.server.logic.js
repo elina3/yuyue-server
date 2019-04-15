@@ -116,7 +116,7 @@ exports.getInspectReportDetail = function(reportId, callback){
     where: {
       id: reportId
     },
-    attributes: ['id', 'sickerName', 'sickerSex', 'sickerAge', 'clinicalDiagnosis', 'category', 'bodyParts', 'reportingTime', 'description', 'diagnosticsConclusion']
+    attributes: ['id', 'sickerName', 'sickerSex', 'sickerAge', 'clinicalDiagnosis', 'category', 'BodyPart', 'reportingTime', 'description', 'diagnosticsConclusion']
   }).then((report) => {
     if(!report){
       return callback({err: memberError.report_not_exist});

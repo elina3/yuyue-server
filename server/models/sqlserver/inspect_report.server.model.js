@@ -2,7 +2,8 @@
 var sequelizeLib = require('../../libraries/sequelize');
 var Sequelize = require('sequelize');
 //门诊：检查报告
-var InspectReportModel = sequelizeLib.define('View_inspectReports', {
+// var InspectReportModel = sequelizeLib.define('View_inspectReports', {
+var InspectReportModel = sequelizeLib.define('inspect_report', {
   id: {
     type: Sequelize.INTEGER,
     primaryKey: true,
@@ -29,7 +30,7 @@ var InspectReportModel = sequelizeLib.define('View_inspectReports', {
   examineTime: Sequelize.DATE, //检查时间
   auditedTime: Sequelize.DATE, //审核时间
   reportingTime: Sequelize.DATE, //报告时间
-  bodyParts: Sequelize.STRING, //部位
+  BodyPart: Sequelize.STRING, //部位
   description: Sequelize.STRING, //描述/所见
   diagnosticsConclusion: Sequelize.STRING //诊断结论
 }, {
