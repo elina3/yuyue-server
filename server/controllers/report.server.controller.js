@@ -16,7 +16,7 @@ exports.test = function(req, res, next){
 
 exports.getMyReports = function(req, res, next){
   var member = req.member;
-  if(!member.IDCard){
+  if(!member.IDCard && !member.card_number){
     return next({err: memberError.member_no_IDCard});
   }
 
@@ -26,7 +26,7 @@ exports.getMyReports = function(req, res, next){
   }
 
   if(reportType === 'test_report'){
-    reportLogic.getTestReports(member.IDCard, member.cardNumber, (err, list)=>{
+    reportLogic.getTestReports(member.IDCard, member.card_number, (err, list)=>{
       if(err){
         return next(err);
       }
@@ -37,7 +37,7 @@ exports.getMyReports = function(req, res, next){
     });
   }
   else if(reportType === 'inspect_report'){
-    reportLogic.getInspectReports(member.IDCard, member.cardNumber, (err, list)=>{
+    reportLogic.getInspectReports(member.IDCard, member.card_number, (err, list)=>{
       if(err){
         return next(err);
       }

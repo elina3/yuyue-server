@@ -6,13 +6,13 @@ var mongoLib = require('../libraries/mongoose');
 var appDb = mongoLib.appDb;
 var Member = appDb.model('Member');
 
-exports.getAllMembers = function(filter, pagination, callback){
+exports.getAllMembers = function(filter, pagination, callback) {
   var query = { deleted_status: false };
   if (filter.searchKey) {
     query.$or = [
       { mobile_phone: { $regex: filter.searchKey, $options: '$i' } },
       { IDCard: { $regex: filter.searchKey, $options: '$i' } },
-      { nickname: { $regex: filter.searchKey, $options: '$i' } }
+      { nickname: { $regex: filter.searchKey, $options: '$i' } },
     ];
   }
   Member.count(query, function(err, totalCount) {
@@ -45,29 +45,27 @@ exports.getAllMembers = function(filter, pagination, callback){
   });
 };
 
-exports.getMemberDetail = function(memberId, callback){
-  Member.findOne({_id: memberId})
-      .exec(function(err, member){
-        if(err){
-          return callback({err: systemError.database_query_error});
-        }
+exports.getMemberDetail = function(memberId, callback) {
+  Member.findOne({ _id: memberId }).exec(function(err, member) {
+    if (err) {
+      return callback({ err: systemError.database_query_error });
+    }
 
-        if(!member){
-          return callback({err: memberError.member_not_exist});
-        }
+    if (!member) {
+      return callback({ err: memberError.member_not_exist });
+    }
 
-        return callback(null, member);
+    return callback(null, member);
   });
 };
 
-exports.checkMemberByOpenId = function(openId, callback){
-  Member.findOne({open_id: openId})
-  .exec(function(err, member){
-    if(err){
-      return callback({err: systemError.database_query_error});
+exports.checkMemberByOpenId = function(openId, callback) {
+  Member.findOne({ open_id: openId }).exec(function(err, member) {
+    if (err) {
+      return callback({ err: systemError.database_query_error });
     }
 
-    if(!member){
+    if (!member) {
       return callback();
     }
 
@@ -75,82 +73,126 @@ exports.checkMemberByOpenId = function(openId, callback){
   });
 };
 
-exports.isMember = function(openId, callback){
-  Member.findOne({open_id: openId})
-      .exec(function(err, member){
-        if(err){
-          return callback({err: systemError.database_query_error});
-        }
-
-        if(!member){
-          return callback(null, false);
-        }
-
-        if(!member.IDCard){
-          return callback(null, false);
-        }
-
-        return callback(null, true);
-  });
-};
-exports.getMemberInfoByOpenId = function(openId, callback){
-  Member.findOne({open_id: openId})
-  .exec(function(err, member){
-    if(err){
-      return callback({err: systemError.database_query_error});
+exports.isMember = function(openId, callback) {
+  Member.findOne({ open_id: openId }).exec(function(err, member) {
+    if (err) {
+      return callback({ err: systemError.database_query_error });
     }
 
-    if(!member){
-      return callback({err: memberError.member_not_exist});
+    if (!member) {
+      return callback(null, false);
+    }
+
+    if (!member.IDCard) {
+      return callback(null, false);
+    }
+
+    return callback(null, true);
+  });
+};
+exports.getMemberInfoByOpenId = function(openId, callback) {
+  Member.findOne({ open_id: openId }).exec(function(err, member) {
+    if (err) {
+      return callback({ err: systemError.database_query_error });
+    }
+
+    if (!member) {
+      return callback({ err: memberError.member_not_exist });
     }
 
     return callback(null, member);
   });
 };
 
-exports.registerAndBindCard = function(openId, memberInfo, wechatInfo, callback){
-  Member.findOne({open_id: openId})
-  .exec(function(err, member){
-    if(err){
-      return callback({err: systemError.database_query_error});
-    }
-
-    if(!member){
-      member = new Member({
-        open_id: openId
-      });
-    }
-    member.wechat_info = wechatInfo;
-    member.nickname = memberInfo.nickname;
-    member.IDCard = memberInfo.IDCard;
-    member.sex = memberInfo.sex || 'unknown';
-    member.mobile_phone = memberInfo.mobile_phone || '';
-    member.card_type = memberInfo.card_type || 'none';
-    member.card_number = memberInfo.card_number || '';
-    member.head_photo = wechatInfo.headimgurl || '';
-    member.save(function(err, saved){
-      if(err){
-        return callback({err: systemError.database_save_error});
+exports.registerAndBindCard = function(
+    openId, memberInfo, wechatInfo, callback) {
+  async.auto({
+    validIDCard: function(autoCallback) {
+      if (!memberInfo.IDCard) {
+        return autoCallback();
       }
 
-      return callback(null, saved);
-    });
+      Member.findOne({ IDCard: memberInfo.IDCard }).exec(function(err, member) {
+        if (err) {
+          return autoCallback({ err: systemError.database_query_error });
+        }
+
+        if (member) {
+          return autoCallback({ err: memberError.IDCard_binded });
+        }
+
+        return autoCallback();
+      });
+    },
+    validCardNumber: [
+      'validIDCard', function(autoCallback) {
+        if (!memberInfo.card_number) {
+          return autoCallback();
+        }
+
+        Member.findOne({ card_number: memberInfo.card_number }).
+            exec(function(err, member) {
+              if (err) {
+                return autoCallback({ err: systemError.database_query_error });
+              }
+
+              if (member) {
+                return autoCallback({ err: memberError.card_number_binded });
+              }
+
+              return autoCallback();
+            });
+      }],
+    bindMember: [
+      'validIDCard', 'validCardNumber', function(autoCallback) {
+        Member.findOne({ open_id: openId }).exec(function(err, member) {
+          if (err) {
+            return autoCallback({ err: systemError.database_query_error });
+          }
+
+          if (!member) {
+            member = new Member({
+              open_id: openId,
+            });
+          }
+          member.wechat_info = wechatInfo;
+          member.nickname = memberInfo.nickname;
+          member.IDCard = memberInfo.IDCard;
+          member.sex = memberInfo.sex || 'unknown';
+          member.mobile_phone = memberInfo.mobile_phone || '';
+          member.card_type = memberInfo.card_type || 'none';
+          member.card_number = memberInfo.card_number || '';
+          member.head_photo = wechatInfo.headimgurl || '';
+          member.save(function(err, saved) {
+            if (err) {
+              return autoCallback({ err: systemError.database_save_error });
+            }
+
+            return autoCallback(null, saved);
+          });
+        });
+      }],
+  }, function(err, results) {
+    if(err){
+      return callback(err);
+    }
+
+    return callback(null, results.bindMember);
   });
 };
 
-exports.bindCard = function(memberId, memberInfo, callback){
-  if(!memberInfo){
-    return callback({err: memberError.no_member_info});
+exports.bindCard = function(memberId, memberInfo, callback) {
+  if (!memberInfo) {
+    return callback({ err: memberError.no_member_info });
   }
-  Member.findOne({_id: memberId})
-  .exec(function(err, member){
-    if(err){
+  Member.findOne({ _id: memberId }).exec(function(err, member) {
+    if (err) {
       console.log(err);
-      return callback({err: systemError.database_query_error});
+      return callback({ err: systemError.database_query_error });
     }
 
-    if(!member){
-      return callback({err: memberError.member_not_exist});
+    if (!member) {
+      return callback({ err: memberError.member_not_exist });
     }
 
     member.nickname = memberInfo.nickname;
@@ -159,38 +201,37 @@ exports.bindCard = function(memberId, memberInfo, callback){
     member.mobile_phone = memberInfo.mobile_phone;
     member.card_type = memberInfo.card_type || 'none';
     member.card_number = memberInfo.card_number || '';
-    member.save(function(err, newMember){
-      if(err){
-        return callback({err: systemError.database_save_error});
+    member.save(function(err, newMember) {
+      if (err) {
+        return callback({ err: systemError.database_save_error });
       }
       return callback(null, newMember);
     });
   });
 };
-exports.unbindCard = function(openId, callback){
-  Member.findOne({open_id: openId})
-      .exec(function(err, member){
-        if(err){
-          return callback({err: systemError.database_query_error});
-        }
+exports.unbindCard = function(openId, callback) {
+  Member.findOne({ open_id: openId }).exec(function(err, member) {
+    if (err) {
+      return callback({ err: systemError.database_query_error });
+    }
 
-        if(!member){
-          return callback({err: memberError.member_not_exist});
-        }
+    if (!member) {
+      return callback({ err: memberError.member_not_exist });
+    }
 
-        member.IDCard = '';
-        member.nickname = '';
-        member.sex = 'unknown';
-        member.mobile_phone = '';
-        member.card_type = 'none';
-        member.card_number = '';
-        member.save(function(err, saved){
-          if(err){
-            console.error(err);
-            return callback({err: systemError.database_save_error});
-          }
+    member.IDCard = '';
+    member.nickname = '';
+    member.sex = 'unknown';
+    member.mobile_phone = '';
+    member.card_type = 'none';
+    member.card_number = '';
+    member.save(function(err, saved) {
+      if (err) {
+        console.error(err);
+        return callback({ err: systemError.database_save_error });
+      }
 
-          return callback(null, saved);
-        });
+      return callback(null, saved);
+    });
   });
 };

@@ -16,4 +16,6 @@ module.exports = _.extend(exports, {
   report_not_exist: {type: 'report_not_exist', message: 'The report is not exist', zh_message: '该报告不存在'},
   no_report_type: {type: 'no_report_type', message: 'The report type is not exist', zh_message: '该报告类型不存在'},
   no_report_id: {type: 'no_report_id', message: 'The param of report_id is null', zh_message: '参数report_id不存在'},
+  card_number_binded: {type: 'card_number_binded', message: 'The card number has binded ', zh_message: '该卡号已经绑定微信'},
+  IDCard_binded: {type: 'IDCard_binded', message: 'The IDCard has binded ', zh_message: '该身份证号已经绑定微信'},
 });
