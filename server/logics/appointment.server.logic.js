@@ -340,9 +340,17 @@ exports.pickupAppointment = function(user, appointmentId, callback) {
 
 //app端获取自己的所有预约内容
 exports.getMyAppointments = function(member, callback) {
-  var query = {
-    member: member._id,
-  };
+  var query = {};
+  if(member.IDCard && member.card_number){
+    query.$or = [{IDCard: member.IDCard}, {card_number: member.card_number}]
+  }else{
+    if(member.IDCard){
+      query.IDCard = member.IDCard;
+    }
+    if(member.card_number){
+      query.card_number = member.card_number;
+    }
+  }
   Appointment.find(query).
       sort({ appointment_time: -1 }).
       populate('doctor department member').
