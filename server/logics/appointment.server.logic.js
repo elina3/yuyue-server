@@ -283,7 +283,7 @@ exports.getPickupList = function(filter, callback) {
     }
   }
   Appointment.find(query).
-      sort({ appointment_time: 1 }).
+      sort({ appointment_time: -1 }).
       populate('doctor department member').
       exec(function(err, appointments) {
         if (err) {
