@@ -448,6 +448,9 @@ exports.addDoctorSchedule = function(user, doctor, scheduleInfo, callback) {
     addNew: [
       'otherSchedules', function(autoCallback) {
         var price = doctor[scheduleInfo.price_type];
+        if(price <= 0){
+          return autoCallback({err: userError.not_set_price});
+        }
         var doctorSchedule = new DoctorSchedule({
           operator_user: user._id,
           doctor: doctor._id,

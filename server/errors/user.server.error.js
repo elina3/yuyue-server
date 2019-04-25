@@ -32,4 +32,5 @@ module.exports = _.extend(exports, {
   has_booked_not_delete: {type: 'has_booked_not_delete', message: 'The schedule has not deleted', zh_message: '该号源已经有人预定不能删除！'},
   at_least_one: {type: 'at_least_one', message: 'The schedule at least one', zh_message: '至少传递一条数据！'},
   username_null: {type: 'username_null', message: 'The username is null', zh_message: 'username 参数为空！'},
+  not_set_price: {type: 'not_set_price', message: 'You have not set the price for doctor', zh_message: '您没有设置金额或金额为0'},
 });
