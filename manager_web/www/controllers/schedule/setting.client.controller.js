@@ -330,7 +330,7 @@ angular.module('YYWeb').controller('ScheduleSettingController',
                           booked: 0,
                           priceTypeString: $scope.pageConfig.doctor.outpatient_type === 'expert' ? priceTypeDic[data.schedule.price_type||'price']:'普通',
                           price_type: data.schedule.price_type,
-                          price: $scope.pageConfig.doctor[data.schedule.price_type]
+                          price: $scope.pageConfig.doctor[data.schedule.price_type] / 100
                         });
                       }
                       return $scope.$emit(GlobalEvent.onShowAlert, '保存成功');
