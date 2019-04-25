@@ -357,7 +357,7 @@ exports.setDoctorPrice = function(user, doctor, newPrice, newSpecialPrice, callb
     price: newPrice,
     recent_modify_user: user._id
   };
-  if(newSpecialPrice > 0){
+  if(newSpecialPrice >= 0){
     updateObj.special_price = newSpecialPrice;
   }
   User.update({ _id: doctor._id },
