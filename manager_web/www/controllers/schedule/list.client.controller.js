@@ -47,9 +47,9 @@ angular.module('YYWeb').controller('ScheduleListController',
               }
 
               $scope.pageConfig.popBox.currentDoctor.priceNumber = $scope.pageConfig.popBox.inputNumber;
-              $scope.pageConfig.popBox.currentDoctor.price = $scope.pageConfig.popBox.inputNumber.toString();
+              $scope.pageConfig.popBox.currentDoctor.price = $scope.pageConfig.popBox.inputNumber === 0 ? '--' : $scope.pageConfig.popBox.inputNumber.toString();
               $scope.pageConfig.popBox.currentDoctor.specialPriceNumber = $scope.pageConfig.popBox.specialPriceNumber;
-              $scope.pageConfig.popBox.currentDoctor.specialPrice = $scope.pageConfig.popBox.specialPriceNumber.toString();
+              $scope.pageConfig.popBox.currentDoctor.specialPrice = $scope.pageConfig.popBox.specialPriceNumber === 0 ? '--' : $scope.pageConfig.popBox.specialPriceNumber.toString();
               $scope.pageConfig.popBox.inputNumber = 0;
               $scope.pageConfig.popBox.specialPriceNumber = 0;
               $scope.pageConfig.popBox.show = false;
