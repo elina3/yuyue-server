@@ -25,8 +25,24 @@ exports.getMyReports = function(req, res, next){
     return next({err: memberError.no_report_type});
   }
 
+  var startDateString = req.query.start_date || '';
+  var endDateString = req.query.end_date || '';
+  if(!startDateString || !endDateString){
+    return next({err: memberError.neither_start_date_nor_end_date});
+  }
+
+  var startDate = new Date(startDateString);
+  var endDate = new Date(endDateString);
+  if(!startDate || !endDate){
+    return next({err: memberError.invalid_date});
+  }
+  startDate = new Date(startDate.Format('yyyy-MM-dd 00:00:00'));
+  endDate = new Date(endDate.Format('yyyy-MM-dd 23:59:59'));
+
+  console.log('start:', startDate);
+  console.log('end:', endDate);
   if(reportType === 'test_report'){
-    reportLogic.getTestReports(member.IDCard, member.card_number, (err, list)=>{
+    reportLogic.getTestReports(member.IDCard, member.card_number, startDate, endDate, (err, list)=>{
       if(err){
         return next(err);
       }
@@ -37,7 +53,7 @@ exports.getMyReports = function(req, res, next){
     });
   }
   else if(reportType === 'inspect_report'){
-    reportLogic.getInspectReports(member.IDCard, member.card_number, (err, list)=>{
+    reportLogic.getInspectReports(member.IDCard, member.card_number, startDate, endDate, (err, list)=>{
       if(err){
         return next(err);
       }

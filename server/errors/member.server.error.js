@@ -18,4 +18,6 @@ module.exports = _.extend(exports, {
   no_report_id: {type: 'no_report_id', message: 'The param of report_id is null', zh_message: '参数report_id不存在'},
   card_number_binded: {type: 'card_number_binded', message: 'The card number has binded ', zh_message: '该卡号已经绑定微信'},
   IDCard_binded: {type: 'IDCard_binded', message: 'The IDCard has binded ', zh_message: '该身份证号已经绑定微信'},
+  neither_start_date_nor_end_date: {type: 'neither_start_date_nor_end_date', message: 'Neither start_date nor end_date ', zh_message: '没有开始和结束时间'},
+  invalid_date: {type: 'invalid_date', message: 'The date is invalid ', zh_message: '日期不正确'},
 });

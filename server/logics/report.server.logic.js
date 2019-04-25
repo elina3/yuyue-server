@@ -14,7 +14,7 @@ exports.getReports = function(callback){
 };
 
 //获取检验报告列表
-exports.getTestReports = function(cardID, cardNumber, callback){
+exports.getTestReports = function(cardID, cardNumber, start, end, callback){
   if(!cardID && !cardNumber){
     return callback({err: memberError.neither_nor_CardNumber});
   }
@@ -31,6 +31,9 @@ exports.getTestReports = function(cardID, cardNumber, callback){
     }
   }
 
+  // query.reportingTime = {$gte: start, $lt: end};
+
+  console.log(query)
   TestReport.findAll({
     where: query,
     order: [
@@ -85,7 +88,7 @@ exports.getTestReportDetail = function(reportId, callback){
   });
 };
 //获取检查报告列表
-exports.getInspectReports = function(cardID, cardNumber, callback){
+exports.getInspectReports = function(cardID, cardNumber, start, end, callback){
   if(!cardID && !cardNumber){
     return callback({err: memberError.neither_nor_CardNumber});
   }
@@ -100,6 +103,8 @@ exports.getInspectReports = function(cardID, cardNumber, callback){
       query.sickerCardNumber = cardNumber;
     }
   }
+
+  // query.reportingTime = {$gte: start, $lt: end};
 
   InspectReport.findAll({
     where: query,
