@@ -222,6 +222,7 @@ exports.createNewAppointmentInfo = function(req, res, next){
           department: user.department,
           outpatient_type: user.outpatient_type,
           price: user.price,
+          special_price: user.special_price,
           card_number: user.card_number
         });
       });

@@ -321,6 +321,16 @@ ul.yy-checkbox{
 
 }
 
+.yy-banner-back{
+  display: inline-block;
+  float: left;
+  margin-right: 10px;
+  &:hover{
+    color: @icon-green-color;
+    cursor: pointer;
+  }
+}
+
 html {
   height: 100%;
 }
@@ -918,6 +928,17 @@ ul{
       }
       >span{
         margin-left: 20px;
+      }
+      .select-area{
+        display: inline-block;
+        width: 110px;
+        margin-left: 20px;
+        .z-select-box{
+          padding: 0 5px;
+          .z-select-ul li{
+            padding: 0 5px;
+          }
+        }
       }
     }
   }

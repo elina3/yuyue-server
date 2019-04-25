@@ -130,7 +130,10 @@ var UserSchema = new Schema({
     type: Boolean,
     default: false,
   },
-  price: {//role为doctor时，有挂号费价格，金额：分
+  price: {//role为doctor时，有挂号费价格，金额：分（如果是普通门诊，只有该价格；如果是专家门诊，这个是专家门诊价格）
+    type: Number
+  },
+  special_price: {//专家门诊价格，金额：分（如果是专家门诊，这个是特需价格）
     type: Number
   },
   recent_modify_user: {

@@ -69,6 +69,12 @@ var AppointmentSchema = new Schema({
     type: String,
     enum: ['booking', 'booked', 'picked_up', 'over_number', 'canceled']//预定中，已预定，已取号，已过号，已取消
   },
+  outpatient_type: {
+    type: String
+  },
+  price_type: {
+    type: String
+  },
   price: {
     type: Number//金额：分
   },

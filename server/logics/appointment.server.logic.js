@@ -128,7 +128,9 @@ function createOneAppointment(member, doctor, schedule, payMethod, callback) {
     pay_method: payMethod,
     status: payMethod === 'offline' ? 'booked' : 'booking',
     paid: false,
-    price: doctor.price,
+    outpatient_type: doctor.outpatient_type,
+    price_type: schedule.price_type,
+    price: schedule.price,
   });
   if (member.card_type) {
     appointment.card_type = member.card_type;
@@ -249,7 +251,7 @@ exports.getAllAppointments = function(filter, pagination, callback) {
     Appointment.find(query).
         skip(pagination.skip_count).
         limit(pagination.limit).
-        sort({ appointment_time: 1 }).
+        sort({ appointment_time: -1 }).
         populate('member').
         exec(function(err, appointments) {
           if (err) {

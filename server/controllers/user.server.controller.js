@@ -277,8 +277,13 @@ exports.setDoctorPrice  =function(req, res, next){
   if(!newPrice || newPrice < 0){//元
     return next({err: userError.price_error});
   }
+  var newSpecialPrice = parseFloat(req.body.special_price) || 0;
+  if(!newSpecialPrice || newSpecialPrice < 0){
+    newSpecialPrice = 0;
+  }
 
   newPrice = newPrice * 100;
+  newSpecialPrice = newSpecialPrice * 100;
 
 
   async.auto({
@@ -301,7 +306,7 @@ exports.setDoctorPrice  =function(req, res, next){
       });
     },
     onShelf: ['getDoctor', function(autoCallback, result){
-      userLogic.setDoctorPrice(req.user, result.getDoctor, parseInt(newPrice), function(err){
+      userLogic.setDoctorPrice(req.user, result.getDoctor, parseInt(newPrice), parseInt(newSpecialPrice), function(err){
         if(err){
           return autoCallback(err);
         }
@@ -344,7 +349,15 @@ exports.getDoctorSchedules = function(req, res, next){
           return autoCallback({err: userError.not_a_doctor});
         }
 
-        return autoCallback(null, {_id: doctorId, nickname: user.nickname, on_shelf: user.on_shelf, department_name: user.department.name});
+        return autoCallback(null, {
+          _id: doctorId,
+          nickname: user.nickname,
+          on_shelf: user.on_shelf,
+          department_name: user.department.name,
+          price: user.price,
+          special_price: user.special_price,
+          outpatient_type: user.outpatient_type
+        });
 
       });
     },
@@ -399,6 +412,11 @@ exports.addDoctorSchedule = function(req, res, next){
     return next({err: userError.schedule_number_count_error});
   }
 
+  var priceType = req.body.price_type || 'price';//默认普通价格，specialPrice：特需价格，price：专家/普通价格
+  if(['price', 'special_price'].indexOf(priceType) === -1){
+    return next({err: userError.no_price_type});
+  }
+
   async.auto({
     getDoctor: function(autoCallback){
       userLogic.getUserById(doctorId, function(err, user){
@@ -414,12 +432,20 @@ exports.addDoctorSchedule = function(req, res, next){
           return autoCallback({err: userError.doctor_on_shelf});
         }
 
+        if(priceType.price_type === 'price' && (!user.price || user.price <= 0) ){
+          return autoCallback({err: userError.doctor_no_price});
+        }
+
+        if(priceType.price_type === 'special_price' && (!user.special_price || user.special_price <= 0)){
+          return autoCallback({err: userError.doctor_no_special_price});
+        }
+
         return autoCallback(null, user);
 
       });
     },
     addSchedule: ['getDoctor', function(autoCallback, result){
-      userLogic.addDoctorSchedule(req.user, result.getDoctor, {start_time: startTime, end_time: endTime, number_count: numberCount}, function(err, schedule){
+      userLogic.addDoctorSchedule(req.user, result.getDoctor, {start_time: startTime, end_time: endTime, number_count: numberCount, price_type: priceType}, function(err, schedule){
         if(err){
           return autoCallback(err);
         }
@@ -552,6 +578,11 @@ exports.modifyDoctorSchedule = function(req, res, next){
     return next({err: userError.schedule_number_count_error});
   }
 
+  var priceType = req.body.price_type || 'price';//默认普通价格，specialPrice：特需价格，price：专家/普通价格
+  if(['price', 'special_price'].indexOf(priceType) === -1){
+    return next({err: userError.no_price_type});
+  }
+
   async.auto({
     getDoctor: function(autoCallback){
       userLogic.getUserById(doctorId, function(err, user){
@@ -573,7 +604,7 @@ exports.modifyDoctorSchedule = function(req, res, next){
     },
     updateSchedule: ['getDoctor', function(autoCallback, result){
       userLogic.updateDoctorSchedule(req.user, result.getDoctor,
-          {_id: scheduleId, start_time: startTime, end_time: endTime, number_count: numberCount}, function(err){
+          {_id: scheduleId, start_time: startTime, end_time: endTime, number_count: numberCount, price_type: priceType}, function(err){
         if(err){
           return autoCallback(err);
         }

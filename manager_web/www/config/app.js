@@ -34,6 +34,11 @@ yyWeb.config(['$stateProvider', '$urlRouterProvider', function ($stateProvider, 
       templateUrl: 'templates/user/list.client.view.html',
       controller: 'UserListController'
     })
+    .state('modify_password', {
+      url: '/user/modify_password',
+      templateUrl: 'templates/user/modify_password.client.view.html',
+      controller: 'ModifyPasswordController'
+    })
     .state('user_detail', {
       url: '/user/detail/:id',
       templateUrl: 'templates/user/detail.client.view.html',

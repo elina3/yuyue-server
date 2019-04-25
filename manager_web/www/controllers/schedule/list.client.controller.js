@@ -30,15 +30,17 @@ angular.module('YYWeb').controller('ScheduleListController',
         popBox: {
           show: false,
           inputNumber: 0,
+          specialPriceNumber: 0,
           currentDoctor: null,
           open: function(doctor){
             this.inputNumber = parseFloat(doctor.priceNumber) || 0;
+            this.specialPriceNumber = parseFloat(doctor.specialPriceNumber) || 0;
             this.currentDoctor = doctor;
             this.show = true;
           },
           sure: function(){
             $scope.$emit(GlobalEvent.onShowLoading, true);
-            UserService.setDoctorPrice({doctor_id: this.currentDoctor.id, price: this.inputNumber}, function(err, data) {
+            UserService.setDoctorPrice({doctor_id: this.currentDoctor.id, price: this.inputNumber, special_price: this.specialPriceNumber}, function(err, data) {
               $scope.$emit(GlobalEvent.onShowLoading, false);
               if(err){
                 return $scope.$emit(GlobalEvent.onShowAlert, err);
@@ -46,7 +48,10 @@ angular.module('YYWeb').controller('ScheduleListController',
 
               $scope.pageConfig.popBox.currentDoctor.priceNumber = $scope.pageConfig.popBox.inputNumber;
               $scope.pageConfig.popBox.currentDoctor.price = $scope.pageConfig.popBox.inputNumber.toString();
+              $scope.pageConfig.popBox.currentDoctor.specialPriceNumber = $scope.pageConfig.popBox.specialPriceNumber;
+              $scope.pageConfig.popBox.currentDoctor.specialPrice = $scope.pageConfig.popBox.specialPriceNumber.toString();
               $scope.pageConfig.popBox.inputNumber = 0;
+              $scope.pageConfig.popBox.specialPriceNumber = 0;
               $scope.pageConfig.popBox.show = false;
               $scope.$emit(GlobalEvent.onShowAlert, '设置成功！');
             });
@@ -69,9 +74,11 @@ angular.module('YYWeb').controller('ScheduleListController',
             console.log(err);
             return $scope.$emit(GlobalEvent.onShowAlert, '获取医生信息失败！');
           }
+          console.log(data);
 
           $scope.pageConfig.doctorList = data.doctors.map(function(item){
             var price = item.price ? parseFloat(item.price / 100) : 0;
+            var specialPrice = item.special_price ? parseFloat(item.special_price / 100) : 0;
             return {
               id: item._id,
               department: item.department.name,
@@ -79,6 +86,9 @@ angular.module('YYWeb').controller('ScheduleListController',
               outpatientType: UserService.translateOutpatientType(item.outpatient_type),
               price: price === 0 ? '--' : price,
               priceNumber: price,
+              hasSpecialPrice: item.outpatient_type === 'expert',
+              specialPrice: specialPrice === 0 ? '--' : specialPrice,
+              specialPriceNumber: specialPrice,
               statusString: item.on_shelf ? '已上架' : '未上架',
               status: item.on_shelf ? 'onShelf' : 'offShelf'
             };

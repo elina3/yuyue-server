@@ -17,6 +17,12 @@ angular.module('YYWeb').controller('ScheduleSettingController',
           $state.go('user_sign_in');
           return;
         }
+        console.log(user);
+
+        var priceTypeDic = {
+          price: '专家',
+          special_price: '特需'
+        };
 
         function getWeekName(date) {
           var day = date.getDay();
@@ -42,7 +48,7 @@ angular.module('YYWeb').controller('ScheduleSettingController',
           return $scope.pageConfig.calendar.currentDateItem ? $scope.pageConfig.calendar.currentDateItem.date : new Date(new Date().Format('YYYY/MM/DD'));
         }
 
-          function loadDoctorSchedules(doctorId, callback) {
+        function loadDoctorSchedules(doctorId, callback) {
           var currentDate = getCurrentDate();
           UserService.getDoctorSchedules(
               { doctor_id: doctorId, timestamp: currentDate.getTime() },
@@ -50,19 +56,28 @@ angular.module('YYWeb').controller('ScheduleSettingController',
                 if (err) {
                   $scope.$emit(GlobalEvent.onShowAlert, err);
                 } else {
-                  console.log(data);
+                  console.log(data.doctor);
                   $scope.pageConfig.doctor.name = data.doctor ? data.doctor.nickname : '';
                   $scope.pageConfig.doctor.department = data.doctor ? data.doctor.department_name : '';
                   $scope.pageConfig.doctor.on_shelf = data.doctor.on_shelf;
+                  $scope.pageConfig.doctor.outpatient_type = data.doctor.outpatient_type;
+                  $scope.pageConfig.doctor.price = data.doctor.price;
+                  $scope.pageConfig.doctor.special_price = data.doctor.special_price || 0;
+                  $scope.pageConfig.popBox.hasSpecialPrice = data.doctor.special_price > 0;
                   $scope.pageConfig.showButton = true;
                   $scope.pageConfig.doctorSchedules = data.schedules.map(
                       function(item) {
+                        item.price_type = item.price_type || 'price';
+                        item.price = item.price || data.doctor.price;
                         return {
                           id: item._id,
                           startTime: item.start_time_string,
                           endTime: item.end_time_string,
                           numberCount: item.number_count,
                           booked: item.booked || 0,
+                          price_type: item.price_type,
+                          priceTypeString: data.doctor.outpatient_type === 'expert' ? priceTypeDic[item.price_type]: '普通',
+                          price: item.price / 100
                         };
                       });
                   return callback();
@@ -78,7 +93,10 @@ angular.module('YYWeb').controller('ScheduleSettingController',
           showButton: false,//控制上下架按钮显示与隐藏
           doctor: {
             name: '刘医生',
-            on_shelf: false//默认没有上架
+            on_shelf: false,//默认没有上架
+            outpatient_type: '',
+            price: 0,
+            special_price: 0
           },
           doctorSchedules: [],
           datePicker: {
@@ -185,6 +203,9 @@ angular.module('YYWeb').controller('ScheduleSettingController',
             show: false,
             dateString: '',
             inputNumber: 50,
+            currentPriceType: {id: 'price', text: '专家门诊'},
+            hasSpecialPrice: true,
+            priceTypes: [{id: 'price', text: '专家门诊'}, {id: 'special_price', text: '特需门诊'}],
             startTime: {
               hour: 8,
               minute: 0,
@@ -196,6 +217,7 @@ angular.module('YYWeb').controller('ScheduleSettingController',
             currentSchedule: null,
             reset: function() {
               this.currentSchedule = null;
+              this.currentPriceType = {id: 'price', text: '专家门诊'};
               this.inputNumber = 50;
               this.startTime = {
                 hour: 8,
@@ -220,6 +242,9 @@ angular.module('YYWeb').controller('ScheduleSettingController',
                     schedule.startTime.split(':')[1]);
                 this.endTime.hour = parseInt(schedule.endTime.split(':')[0]);
                 this.endTime.minute = parseInt(schedule.endTime.split(':')[1]);
+                if(schedule.price_type){
+                 this.currentPriceType = {id: schedule.price_type, text: priceTypeDic[schedule.price_type]};
+                }
               }
               this.show = true;
             },
@@ -240,8 +265,12 @@ angular.module('YYWeb').controller('ScheduleSettingController',
                 return;
               }
 
-              if (this.currentSchedule) {
+              if (this.hasSpecialPrice && !this.currentPriceType){
+                $scope.$emit(GlobalEvent.onShowAlert, '请选择价格类型');
+                return;
+              }
 
+              if (this.currentSchedule) {
                 let currentDate = getCurrentDate();
                 let dateString = currentDate.Format('yyyy/MM/dd');
 
@@ -255,6 +284,7 @@ angular.module('YYWeb').controller('ScheduleSettingController',
                       (this.endTime.hour + ':' +
                           this.endTime.minute)).getTime(),
                   number_count: this.inputNumber,
+                  price_type: this.hasSpecialPrice ? this.currentPriceType.id : 'price'
                 }, function(err) {
                   $scope.$emit(GlobalEvent.onShowLoading, false);
                   if (err) {
@@ -270,8 +300,6 @@ angular.module('YYWeb').controller('ScheduleSettingController',
                 });
 
               } else {
-                console.log('请求保存');
-                //todo 请求保存
                 let currentDate = getCurrentDate();
                 let dateString = currentDate.Format('yyyy/MM/dd');
                 let newScheduleObj = {
@@ -283,6 +311,7 @@ angular.module('YYWeb').controller('ScheduleSettingController',
                       (this.endTime.hour + ':' +
                           this.endTime.minute)).getTime(),
                   number_count: this.inputNumber,
+                  price_type: this.hasSpecialPrice ? this.currentPriceType.id : 'price'
                 };
                 $scope.$emit(GlobalEvent.onShowLoading, true);
                 UserService.addDoctorSchedule(newScheduleObj,
@@ -299,6 +328,9 @@ angular.module('YYWeb').controller('ScheduleSettingController',
                           startTime: data.schedule.start_time_string,
                           endTime: data.schedule.end_time_string,
                           booked: 0,
+                          priceTypeString: $scope.pageConfig.doctor.outpatient_type === 'expert' ? priceTypeDic[data.schedule.price_type||'price']:'普通',
+                          price_type: data.schedule.price_type,
+                          price: $scope.pageConfig.doctor[data.schedule.price_type]
                         });
                       }
                       return $scope.$emit(GlobalEvent.onShowAlert, '保存成功');

@@ -56,8 +56,11 @@
                             <div class="col-xs-2">
                                 <span>医生</span>
                             </div>
-                            <div class="col-xs-2">
-                                <span>挂号费(元)</span>
+                            <div class="col-xs-1">
+                                <span>价格(元)</span>
+                            </div>
+                            <div class="col-xs-1">
+                                <span>特需(元)</span>
                             </div>
                             <div class="col-xs-1">
                                 <span>状态</span>
@@ -76,8 +79,11 @@
                             <div class="col-xs-2">
                                 <span>{{doctor.name}}</span>
                             </div>
-                            <div class="col-xs-2">
+                            <div class="col-xs-1">
                                 <span>{{doctor.price}}</span>
+                            </div>
+                            <div class="col-xs-1">
+                                <span>{{doctor.specialPrice}}</span>
                             </div>
                             <div class="col-xs-1">
                                 <span>{{doctor.statusString}}</span>
@@ -100,7 +106,8 @@
     <div class="dialog-content">
         <div class="dialog-header">设置{{pageConfig.popBox.currentDoctor.name}}的挂号费</div>
         <div class="dialog-body">
-            <label>价格<input ng-model="pageConfig.popBox.inputNumber" type="number"/></label>
+            <label>{{ pageConfig.popBox.currentDoctor.hasSpecialPrice ? '专家' : '' }}价格(元)<input ng-model="pageConfig.popBox.inputNumber" type="number"/></label>
+            <label ng-show="pageConfig.popBox.currentDoctor.hasSpecialPrice">特需价格(元)<input ng-model="pageConfig.popBox.specialPriceNumber" type="number"/></label>
             <div class="dialog-footer">
                 <p class="sure" ng-click="pageConfig.popBox.sure()">保存</p>
                 <p class="cancel" ng-click="pageConfig.popBox.cancel()">取消</p>

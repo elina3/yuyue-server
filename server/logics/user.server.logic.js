@@ -350,18 +350,33 @@ exports.updateDoctorShelfStatus = function(user, doctorId, onShelf, callback) {
         return callback();
       });
 };
-exports.setDoctorPrice = function(user, doctor, newPrice, callback) {
+exports.setDoctorPrice = function(user, doctor, newPrice, newSpecialPrice, callback) {
   var oldPrice = doctor.price;
+  var oldSpecialPrice = doctor.special_price;
+  var updateObj = {
+    price: newPrice,
+    recent_modify_user: user._id
+  };
+  if(newSpecialPrice > 0){
+    updateObj.special_price = newSpecialPrice;
+  }
   User.update({ _id: doctor._id },
-      { $set: { price: newPrice, recent_modify_user: user._id } },
+      { $set: updateObj},
       function(err) {
         if (err) {
           console.log(err);
           return callback({ err: systemError.database_update_error });
         }
 
+        var historyObj = {
+          oldPrice: oldPrice, newPrice: newPrice
+        };
+        if(newSpecialPrice > 0){
+          historyObj.oldSpecialPrice = oldSpecialPrice;
+          historyObj.newSpecialPrice = newSpecialPrice;
+        }
         doctorActionHistoryLogic.addDoctorActionHistory(user, doctor._id,
-            'set_price', { oldPrice: oldPrice, newPrice: newPrice },
+            'set_price', historyObj,
             function() {});
         return callback();
       });
@@ -375,7 +390,7 @@ exports.getDoctorSchedules = function(doctorId, date, callback) {
   };
   DoctorSchedule.find(query).
       select(
-          'date date_string start_time end_time start_time_string end_time_string number_count').
+          'date date_string start_time end_time start_time_string end_time_string number_count price_type price').
       exec(function(err, schedules) {
         if (err) {
           console.log(err);
@@ -432,6 +447,7 @@ exports.addDoctorSchedule = function(user, doctor, scheduleInfo, callback) {
     },
     addNew: [
       'otherSchedules', function(autoCallback) {
+        var price = doctor[scheduleInfo.price_type];
         var doctorSchedule = new DoctorSchedule({
           operator_user: user._id,
           doctor: doctor._id,
@@ -440,7 +456,9 @@ exports.addDoctorSchedule = function(user, doctor, scheduleInfo, callback) {
           start_time_string: scheduleInfo.start_time.Format('hh:mm'),
           end_time: scheduleInfo.end_time,
           end_time_string: scheduleInfo.end_time.Format('hh:mm'),
-          number_count: scheduleInfo.number_count
+          number_count: scheduleInfo.number_count,
+          price_type: scheduleInfo.price_type,
+          price: price
         });
         doctorSchedule.save(function(err, saved) {
           if (err) {
@@ -454,6 +472,8 @@ exports.addDoctorSchedule = function(user, doctor, scheduleInfo, callback) {
                 start_time: scheduleInfo.start_time,
                 end_time: scheduleInfo.end_time,
                 number_count: scheduleInfo.number_count,
+                price: price,
+                price_type: scheduleInfo.price_type
               }, function() {});
           return autoCallback(null, saved);
         });
@@ -502,7 +522,7 @@ exports.updateDoctorSchedule = function(user, doctor, scheduleInfo, callback) {
           },
           updateSchedule: [
             'otherSchedules', function(autoCallback) {
-
+              var price = doctor[scheduleInfo.price_type];
               doctorSchedule = {
                 operator_user: user._id,
                 start_time: scheduleInfo.start_time,
@@ -510,6 +530,8 @@ exports.updateDoctorSchedule = function(user, doctor, scheduleInfo, callback) {
                 end_time: scheduleInfo.end_time,
                 end_time_string: scheduleInfo.end_time.Format('hh:mm'),
                 number_count: scheduleInfo.number_count,
+                price_type: scheduleInfo.price_type,
+                price: price
               };
               DoctorSchedule.update({ _id: scheduleInfo._id },
                   { $set: doctorSchedule }, function(err) {
@@ -525,6 +547,8 @@ exports.updateDoctorSchedule = function(user, doctor, scheduleInfo, callback) {
                           start_time: scheduleInfo.start_time,
                           end_time: scheduleInfo.end_time,
                           number_count: scheduleInfo.number_count,
+                          price: price,
+                          price_type: scheduleInfo.price_type
                         }, function() {});
                     return autoCallback();
                   });

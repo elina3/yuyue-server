@@ -20,6 +20,8 @@ module.exports = _.extend(exports, {
   doctor_on_shelf: {type: 'doctor_on_shelf', message: 'The doctor has been on shelf', zh_message: '该医生已上架'},
   doctor_off_shelf: {type: 'doctor_off_shelf', message: 'The doctor has been off shelf', zh_message: '该医生已下架'},
   doctor_no_price: {type: 'doctor_no_price', message: 'The doctor has not set the price', zh_message: '该医生还未设置挂号费'},
+  doctor_no_special_price: {type: 'doctor_no_special_price', message: 'The doctor has not set the special price', zh_message: '该医生还未设置特需费用'},
+  no_price_type: {type: 'no_price_type', message: 'The price type is not exist', zh_message: '这种费用类型不存在'},
   price_error: {type: 'price_error', message: 'The price is error', zh_message: '挂号费不合法'},
   start_end_time_invalid: {type: 'start_end_time_invalid', message: 'The time range is invalid', zh_message: '开始时间必须早于结束时间'},
   schedule_number_count_error: {type: 'schedule_number_count_error', message: 'The schedule number count set error', zh_message: '医生的号源数量设置不合法'},

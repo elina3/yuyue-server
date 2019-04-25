@@ -36,7 +36,7 @@ angular.module('YYWeb').directive('zHeader',
                     };
 
                     scope.changePassword = function(){
-                        alert('changePassword');
+                      $state.go('modify_password');
                     };
 
                     scope.backHome = function () {

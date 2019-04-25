@@ -6,6 +6,8 @@ var appDb = mongoLib.appDb;
 var mongoose = require('mongoose'),
     Schema = mongoose.Schema,
     timestamps = require('mongoose-timestamp');
+var enumLib = require('../enums/business');
+var outpatientTypeEnums = enumLib.outpatient_types.enums;
 
 var DoctorScheduleSchema = new Schema({
   object: {
@@ -16,6 +18,14 @@ var DoctorScheduleSchema = new Schema({
     type: Schema.Types.ObjectId,
     required: true,
     ref: 'User'
+  },
+  outpatient_type: {
+    type: String,
+    enum: outpatientTypeEnums,//专家门诊，普通门诊
+  },//门诊类型
+  price_type: {type: String},//普通价格，特殊价格
+  price: {//单位：分
+    type: Number
   },
   date_string: {//2019/1/31
     type: String,
