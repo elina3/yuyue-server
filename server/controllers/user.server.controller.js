@@ -483,11 +483,17 @@ function addOneDoctorSchedule(user, doctor, scheduleInfo, callback){
     return callback({err: userError.schedule_number_count_error});
   }
 
+  var priceType = scheduleInfo.price_type || 'price';//默认普通价格，specialPrice：特需价格，price：专家/普通价格
+  if(['price', 'special_price'].indexOf(priceType) === -1){
+    return callback({err: userError.no_price_type});
+  }
+
   userLogic.addDoctorSchedule(user, doctor,
       {
         start_time: startTime,
         end_time: endTime,
-        number_count: numberCount
+        number_count: numberCount,
+        price_type: priceType
       }, function(err, schedule){
         return callback(err, schedule);
       });
@@ -521,13 +527,19 @@ exports.batchAddDoctorSchedule = function(req, res, next){
             return autoCallback({err: userError.not_a_doctor});
           }
 
-          if(user.on_shelf){//已上架不能设置号源
-            return autoCallback({err: userError.doctor_on_shelf});
+          if(!user.on_shelf){//已下架
+            userDic[scheduleInfo.username]  = user;
+            return autoCallback(null, user);
           }
 
-          userDic[scheduleInfo.username]  = user;
-          return autoCallback(null, user);
+          //下架医生
+          userLogic.updateDoctorShelfStatus(req.user, user._id, false, function(err){
+            if(err){
+              return autoCallback(err);
+            }
 
+            return autoCallback(null, user);
+          });
         });
       },
       addSchedule: ['getDoctor', function(autoCallback, result){
@@ -537,7 +549,14 @@ exports.batchAddDoctorSchedule = function(req, res, next){
           }
 
           successCount++;
-          return autoCallback(null, schedule);
+          //上架医生
+          userLogic.updateDoctorShelfStatus(req.user, result.getDoctor._id, true, function(err){
+            if(err){
+              return autoCallback(err);
+            }
+
+            return autoCallback(null, schedule);
+          });
         });
       }]
     }, function(err, results){

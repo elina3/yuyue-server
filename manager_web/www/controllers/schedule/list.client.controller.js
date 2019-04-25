@@ -188,11 +188,17 @@ angular.module('YYWeb').controller('ScheduleListController',
 
       //<editor-fold desc="导入相关">
 
-      var importSheet = {A1: '工号', B1: '日期', C1: '开始时间', D1: '结束时间', E1: '号源数量'};
+      var priceTypeDic = {
+        '普通': 'price',
+        '专家': 'price',
+        '特需': 'special_price'
+      };
+      var importSheet = {A1: '工号', B1: '日期', C1: '开始时间', D1: '结束时间', E1: '号源数量', F1: '价格类型'};
 
       function generateImportScheduleList(data, extDatas) {
         var scheduleList = [];
         for (var i = 0; i < data.length; i++) {
+          console.log('F1:', importSheet.F1);
           var startTimeString = data[i][importSheet.B1] + ' ' + data[i][importSheet.C1];
           var endTimeString = data[i][importSheet.B1] + ' ' + data[i][importSheet.D1];
           var startTime = new Date(startTimeString);
@@ -204,7 +210,8 @@ angular.module('YYWeb').controller('ScheduleListController',
             end_time: data[i][importSheet.D1],
             number_count: data[i][importSheet.E1],
             start_timestamp: startTime.getTime(),
-            end_timestamp: endTime.getTime()
+            end_timestamp: endTime.getTime(),
+            price_type: priceTypeDic[data[i][importSheet.F1]] || 'price'
           };
           scheduleList.push(obj);
         }

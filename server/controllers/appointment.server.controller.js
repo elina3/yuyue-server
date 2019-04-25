@@ -176,8 +176,9 @@ exports.previewAppointmentInfo = function(req, res, next){
       appointment_info: {
         doctor_name: results.getDoctor.nickname,
         department_name: results.getDoctor.department.name,
-        outpatient_type: results.getDoctor.outpatient_type,
-        price: results.getDoctor.price,
+        outpatient_type: results.getSchedule.outpatient_type || results.getDoctor.outpatient_type,
+        price_type: results.getSchedule.price_type || 'price',
+        price: results.getSchedule.price || results.getDoctor.price,
         date_string: results.getSchedule.date_string,
         start_time_string: results.getSchedule.start_time_string,
         end_time_string: results.getSchedule.end_time_string

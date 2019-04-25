@@ -118,6 +118,7 @@ function createOneAppointment(member, doctor, schedule, payMethod, callback) {
         doctor._id.toString()),
     member: member._id,
     IDCard: member.IDCard,
+    card_type: member.card_type,
     nickname: member.nickname,
     doctor_schedule: schedule._id,
     doctor: doctor._id,
@@ -370,7 +371,6 @@ exports.getAppointmentDetailById = function(appointmentId, callback) {
     _id: appointmentId,
   };
   Appointment.findOne(query).
-      sort({ appointment_time: -1 }).
       populate('doctor department member').
       exec(function(err, appointment) {
         if (err) {
