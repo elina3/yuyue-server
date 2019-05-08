@@ -69,8 +69,8 @@ exports.getTestReportDetail = function(reportId, callback){
       return callback({err: memberError.report_not_exist});
     }
 
-    let timeString = report.reportingTime.toISOString().replace('T', ' ').replace('Z', '');
-    report.reportingTime = new Date(timeString).Format('yyyy-MM-dd hh:mm:ss');
+    let timeString = report.dataValues.reportingTime.toISOString().replace('T', ' ').replace('Z', '');
+    report.dataValues.reportingTime = new Date(timeString).Format('yyyy-MM-dd hh:mm:ss');
 
     TestReportItem.findAll({
       where: {
@@ -148,8 +148,8 @@ exports.getInspectReportDetail = function(reportId, callback){
     if(!report){
       return callback({err: memberError.report_not_exist});
     }
-    let timeString = report.reportingTime.toISOString().replace('T', ' ').replace('Z', '');
-    report.reportingTime = new Date(timeString).Format('yyyy-MM-dd hh:mm:ss');
+    let timeString = report.dataValues.reportingTime.toISOString().replace('T', ' ').replace('Z', '');
+    report.dataValues.reportingTime = new Date(timeString).Format('yyyy-MM-dd hh:mm:ss');
     return callback(null, report);
   }).catch(err => {
     console.error(err);
