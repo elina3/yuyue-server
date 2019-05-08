@@ -45,7 +45,8 @@ exports.getTestReports = function(cardID, cardNumber, start, end, callback){
     console.log(list);
     if(list && Array.isArray(list) && list.length > 0){
       list.map(item => {
-        item.reportingTime = new Date(item.reportingTime.replace('T', ' ').replace('Z', '')).Format('yyyy-MM-dd hh:mm:ss');
+        let timeString = item.reportingTime.toISOString().replace('T', ' ').replace('Z', '');
+        item.reportingTime = new Date(timeString).Format('yyyy-MM-dd hh:mm:ss');
       });
       return callback(null, list);
     }else{
@@ -67,7 +68,9 @@ exports.getTestReportDetail = function(reportId, callback){
     if(!report){
       return callback({err: memberError.report_not_exist});
     }
-    report.reportingTime = new Date(report.reportingTime.replace('T', ' ').replace('Z', '')).Format('yyyy-MM-dd hh:mm:ss');
+
+    let timeString = report.reportingTime.toISOString().replace('T', ' ').replace('Z', '');
+    report.reportingTime = new Date(timeString).Format('yyyy-MM-dd hh:mm:ss');
 
     TestReportItem.findAll({
       where: {
@@ -123,7 +126,8 @@ exports.getInspectReports = function(cardID, cardNumber, start, end, callback){
     console.log(list);
     if(list && Array.isArray(list) && list.length > 0){
       list.map(item => {
-        item.reportingTime = new Date(item.reportingTime.replace('T', ' ').replace('Z', '')).Format('yyyy-MM-dd hh:mm:ss');
+        let timeString = item.reportingTime.toISOString().replace('T', ' ').replace('Z', '');
+        item.reportingTime = new Date(timeString).Format('yyyy-MM-dd hh:mm:ss');//时间存的是通用时间格式但是实际上是东八区的时间，所以必须-8小时读取
       });
       return callback(null, list);
     }else{
@@ -144,7 +148,8 @@ exports.getInspectReportDetail = function(reportId, callback){
     if(!report){
       return callback({err: memberError.report_not_exist});
     }
-    report.reportingTime = new Date(report.reportingTime.replace('T', ' ').replace('Z', '')).Format('yyyy-MM-dd hh:mm:ss');
+    let timeString = report.reportingTime.toISOString().replace('T', ' ').replace('Z', '');
+    report.reportingTime = new Date(timeString).Format('yyyy-MM-dd hh:mm:ss');
     return callback(null, report);
   }).catch(err => {
     console.error(err);
