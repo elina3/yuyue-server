@@ -106,6 +106,8 @@ exports.getInspectReports = function(cardID, cardNumber, start, end, callback){
 
   // query.reportingTime = {$gte: start, $lt: end};
 
+  console.log('report', query);
+
   InspectReport.findAll({
     where: query,
     order: [
