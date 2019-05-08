@@ -44,6 +44,9 @@ exports.getTestReports = function(cardID, cardNumber, start, end, callback){
   }).then((list) => {
     console.log(list);
     if(list && Array.isArray(list) && list.length > 0){
+      list.map(item => {
+        item.reportingTime = new Date(item.reportingTime.replace('T', ' ').replace('Z', '')).Format('yyyy-MM-dd hh:mm:ss');
+      });
       return callback(null, list);
     }else{
       return callback(null, []);
@@ -64,6 +67,7 @@ exports.getTestReportDetail = function(reportId, callback){
     if(!report){
       return callback({err: memberError.report_not_exist});
     }
+    report.reportingTime = new Date(report.reportingTime.replace('T', ' ').replace('Z', '')).Format('yyyy-MM-dd hh:mm:ss');
 
     TestReportItem.findAll({
       where: {
@@ -118,6 +122,9 @@ exports.getInspectReports = function(cardID, cardNumber, start, end, callback){
   }).then((list) => {
     console.log(list);
     if(list && Array.isArray(list) && list.length > 0){
+      list.map(item => {
+        item.reportingTime = new Date(item.reportingTime.replace('T', ' ').replace('Z', '')).Format('yyyy-MM-dd hh:mm:ss');
+      });
       return callback(null, list);
     }else{
       return callback(null, []);
@@ -137,7 +144,7 @@ exports.getInspectReportDetail = function(reportId, callback){
     if(!report){
       return callback({err: memberError.report_not_exist});
     }
-
+    report.reportingTime = new Date(report.reportingTime.replace('T', ' ').replace('Z', '')).Format('yyyy-MM-dd hh:mm:ss');
     return callback(null, report);
   }).catch(err => {
     console.error(err);
