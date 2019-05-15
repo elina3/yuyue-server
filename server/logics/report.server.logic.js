@@ -2,6 +2,7 @@
 var InspectReport = require('../models/sqlserver/inspect_report'),
     TestReport = require('../models/sqlserver/test_report'),
     TestReportItem = require('../models/sqlserver/test_report_item');
+    // TTTest = require('../models/sqlserver/tt_test');
 var sequelize = require('sequelize');
 var memberError = require('../errors/member'),
   systemError = require('../errors/system');
@@ -155,4 +156,7 @@ exports.getInspectReportDetail = function(reportId, callback){
     console.error(err);
     return callback({err: systemError.database_query_error});
   });
+};
+exports.importTTTest = (testInfo, callback) => {
+  var testInfo = {};
 };

@@ -8,10 +8,10 @@ module.exports = {
   app: {
     title: 'YUYUE-SYSTEM - Production Environment'
   },
-  serverAddress:'https://localhost:3302/',
-  port: process.env.PORT || 3302,
+  serverAddress:'http://datonghao.com/',
+  port: process.env.PORT || 80,
   wechat_ext: {
-    app_id: "",
-    app_secret: ""
+    app_id: 'wx84f82babe25f6b05',
+    app_secret: 'df2d1036887d6a2ecfc28d20eca0fe64'
   },
 };
