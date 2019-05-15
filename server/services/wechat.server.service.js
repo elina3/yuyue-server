@@ -99,7 +99,7 @@ exports.autoReplyText = function(openId, callback){
       msgtype: 'text',
       text:
           {
-            content: '终于等到您！谢谢关注民航医院瑞金古北分院！'
+            content: '终于等到您！谢谢关注瑞金医院古北分院！'
           }
     };
     console.log('auto post:', postData);
