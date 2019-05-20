@@ -44,6 +44,7 @@ exports.checkMemberByOpenId = function(req, res, next){
       return next(err);
     }
 
+    console.log(member);
     req.data = {
       member: member
     };
