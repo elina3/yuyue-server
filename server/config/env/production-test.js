@@ -8,7 +8,7 @@ module.exports = {
   app: {
     title: 'YUYUE-SYSTEM - Production Test Environment'
   },
-  serverAddress:'http://datonghao.com/',
+  serverAddress:'http://localhost/',
   port: process.env.PORT || 80,
   wechat_ext: {
     app_id: "wxa6210d998dd41246",

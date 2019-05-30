@@ -9,4 +9,5 @@ module.exports = function (app) {
   app.route('/test/pay').post(testController.testPay);
   app.route('/test/xml').get(testController.testXML);
   app.route('/test/notify').post(testController.notifyPayResult);
+  app.route('/test/add_data').post(testController.addData);
 };

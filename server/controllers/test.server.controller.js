@@ -58,6 +58,20 @@ exports.testXML = function(req, res, next){
   });
 };
 
+var testLogic = require('../logics/test');
+exports.addData = function(req, res, next){
+  testLogic.addData({reportingTime: new Date()}, (err, result)=>{
+    if(err){
+      return next(err);
+    }
+
+    req.data = {
+      data: result
+    };
+    return next();
+  });
+};
+
 
 function generateNewPartnerTradeNo(){
   return (new Date()).valueOf().toString().substring(3,9) + (new Date()).valueOf().toString().substring(8,13) + (new Date()).valueOf().toString();
