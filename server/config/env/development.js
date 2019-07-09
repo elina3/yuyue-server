@@ -11,4 +11,7 @@ module.exports = {
         app_id: "",
         app_secret: ""
     },
+    sql: {
+        host: 'mh-rjgb.com'
+    }
 };
