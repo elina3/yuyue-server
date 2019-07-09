@@ -108,7 +108,7 @@ module.exports = function () {
 
 
   // Setting the app router and static folder
-  app.use('/', express.static(path.resolve('../manager_web/www')));
+  app.use('/manager_web', express.static(path.resolve('../manager_web/www')));
   app.use('/client', express.static(path.resolve('../../yuyue-vue-app/yuyue-client/dist')));
   app.use(function (req, res, next) {
 

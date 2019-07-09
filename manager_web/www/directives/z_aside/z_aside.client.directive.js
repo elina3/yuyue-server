@@ -42,7 +42,7 @@ angular.module('YYWeb').directive('zAside',
                       });
 
                       let defaultNavs = [];
-                      const baseImageUrl = '../../images/directive/aside/';
+                      const baseImageUrl = 'images/directive/aside/';
                       // if(permissionDic['首页']){
                       defaultNavs.push({
                         name: '首页',
