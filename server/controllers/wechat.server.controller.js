@@ -83,8 +83,11 @@ exports.onWechatUserAction = function (req, res, next) {
   if (wechatPostParam.Event && Array.isArray(wechatPostParam.Event) && wechatPostParam.Event.length > 0) {
     wechatPostParam.Event = wechatPostParam.Event[0];
   }
+  if (wechatPostParam.MsgType && Array.isArray(wechatPostParam.MsgType) && wechatPostParam.MsgType.length > 0) {
+    wechatPostParam.MsgType = wechatPostParam.MsgType[0];
+  }
   console.log('重新赋值后的事件信息:');
-  console.log('FromUserName:', wechatPostParam.FromUserName, ' ', wechatPostParam.Event, '!');
+  console.log('FromUserName:', wechatPostParam.FromUserName, ',Event: ', wechatPostParam.Event, ',', 'MsgType:', wechatPostParam.MsgType);
 
   if (wechatPostParam.Event === 'subscribe') {  //订阅
     console.log('用户' + wechatPostParam.FromUserName + '已关注！');
@@ -101,33 +104,15 @@ exports.onWechatUserAction = function (req, res, next) {
       if (err) {
         console.error('update user base info failed', err);
       }
-      req.data = {
-        success: true
-      };
-      return next();
+      res.send('');
     });
   }
   else if (wechatPostParam.Event === 'unsubscribe') {
     console.log('用户' + wechatPostParam.FromUserName + '已取消关注！');
-    req.data = {
-      success: true
-    };
-    return next();
-  }
-  else if (wechatPostParam.Event === 'text') {
-    wechatService.autoReplyByContent(wechatPostParam.FromUserName, '', function(err){
-      console.log('用户发送文本' + wechatPostParam.FromUserName + '！');
-    });
-    req.data = {
-      success: true
-    };
-    return next();
+    res.send('');
   }
   else {
-    req.data = {
-      success: true
-    };
-    return next();
+    res.send('');
   }
 };
 
