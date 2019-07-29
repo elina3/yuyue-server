@@ -114,6 +114,32 @@ exports.autoReplyText = function(openId, callback){
   });
 };
 
+
+//主动回复文本消息
+exports.autoReplyByContent = function(openId, content, callback){
+  getAccessTokenByServer(function(err, accessToken){
+    if(err){
+      return callback(err);
+    }
+
+    var postData = {
+      touser: openId,
+      msgtype: 'text',
+      text:
+          {
+            content: content || ''
+          }
+    };
+    console.log('auto post:', postData);
+    agent.post(config.wechat.autoReplyUrl + '?access_token=' + accessToken)
+    .send(postData)
+    .end(function (err, res) {
+      console.log('wechat auto reply content：'+content);
+      return callback(err, res.body);
+    });
+  });
+};
+
 //模版消息推送
 function sendTemplateMessage(postData, callback){
   getAccessTokenByServer(function(err, accessToken){

@@ -114,8 +114,16 @@ exports.onWechatUserAction = function (req, res, next) {
     };
     return next();
   }
+  else if (wechatPostParam.Event === 'text') {
+    wechatService.autoReplyByContent(wechatPostParam.FromUserName, '', function(err){
+      console.log('用户发送文本' + wechatPostParam.FromUserName + '！');
+    });
+    req.data = {
+      success: true
+    };
+    return next();
+  }
   else {
-    console.log('用户' + wechatPostParam.FromUserName + '进入菜单页面！');
     req.data = {
       success: true
     };
