@@ -60,7 +60,6 @@ function getWechatUserInfo(openId, callback) {
   });
 }
 
-const autoReplyText = '终于等到您！谢谢关注瑞金医院古北分院！';
 //接受微信用户行为的推送接口
 exports.onWechatUserAction = function (req, res, next) {
   console.log(req.query);
@@ -92,14 +91,6 @@ exports.onWechatUserAction = function (req, res, next) {
 
   if (wechatPostParam.Event === 'subscribe') {  //订阅
     console.log('用户' + wechatPostParam.FromUserName + '已关注！');
-
-    // <xml>
-    // <ToUserName><![CDATA[toUser]]></ToUserName>
-    // <FromUserName><![CDATA[fromUser]]></FromUserName>
-    // <CreateTime>12345678</CreateTime>
-    // <MsgType><![CDATA[text]]></MsgType>
-    // <Content><![CDATA[你好]]></Content>
-    // </xml>
 
     wechatService.autoReplyText(wechatPostParam.FromUserName, function (err, result) {
       if (err) {
