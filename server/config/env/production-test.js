@@ -15,6 +15,6 @@ module.exports = {
     app_secret: "f55b2c01ab809977f21b69e615861621"
   },
   sql: {
-    host: '172.28.30.246'
+    host: 'mh-rjgb.com'
   }
 };
