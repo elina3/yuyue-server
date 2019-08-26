@@ -60,6 +60,7 @@ function getWechatUserInfo(openId, callback) {
   });
 }
 
+const autoReplyText = '终于等到您！谢谢关注瑞金医院古北分院！';
 //接受微信用户行为的推送接口
 exports.onWechatUserAction = function (req, res, next) {
   console.log(req.query);
@@ -92,20 +93,21 @@ exports.onWechatUserAction = function (req, res, next) {
   if (wechatPostParam.Event === 'subscribe') {  //订阅
     console.log('用户' + wechatPostParam.FromUserName + '已关注！');
 
-    wechatService.autoReplyText(wechatPostParam.FromUserName, function (err, result) {
-      if (err) {
-        console.error('自动回复失败');
-      } else {
-        console.error('自动回复成功');
-      }
-    });
-
-    getWechatUserInfo(wechatPostParam.FromUserName, function (err) {
-      if (err) {
-        console.error('update user base info failed', err);
-      }
-      res.send('');
-    });
+    res.send(autoReplyText);
+    // wechatService.autoReplyText(wechatPostParam.FromUserName, function (err, result) {
+    //   if (err) {
+    //     console.error('自动回复失败');
+    //   } else {
+    //     console.error('自动回复成功');
+    //   }
+    // });
+    //
+    // getWechatUserInfo(wechatPostParam.FromUserName, function (err) {
+    //   if (err) {
+    //     console.error('update user base info failed', err);
+    //   }
+    //   res.send('');
+    // });
   }
   else if (wechatPostParam.Event === 'unsubscribe') {
     console.log('用户' + wechatPostParam.FromUserName + '已取消关注！');
