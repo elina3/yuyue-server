@@ -93,7 +93,23 @@ exports.onWechatUserAction = function (req, res, next) {
   if (wechatPostParam.Event === 'subscribe') {  //订阅
     console.log('用户' + wechatPostParam.FromUserName + '已关注！');
 
-    res.send(autoReplyText);
+    // <xml>
+    // <ToUserName><![CDATA[toUser]]></ToUserName>
+    // <FromUserName><![CDATA[fromUser]]></FromUserName>
+    // <CreateTime>12345678</CreateTime>
+    // <MsgType><![CDATA[text]]></MsgType>
+    // <Content><![CDATA[你好]]></Content>
+    // </xml>
+
+    let returnString = `<xml>
+      <ToUserName><![CDATA[${wechatPostParam.FromUserName}]]></ToUserName>
+      <FromUserName><![CDATA[fromUser]]></FromUserName>
+      <CreateTime>12345678</CreateTime>
+      <MsgType><![CDATA[text]]></MsgType>
+      <Content><![CDATA[${autoReplyText}]]></Content>
+    </xml>`;
+    console.log('returnString:', returnString);
+    res.send(returnString);
     // wechatService.autoReplyText(wechatPostParam.FromUserName, function (err, result) {
     //   if (err) {
     //     console.error('自动回复失败');
