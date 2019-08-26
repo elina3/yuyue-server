@@ -64,6 +64,7 @@ function getAccessTokenByServer(callback){
   agent.get(config.wechat.getTokenUrl + '?grant_type=client_credential&appid=' + config.wechat_ext.app_id + '&secret=' + config.wechat_ext.app_secret)
   .end(function (err, res) {
 
+    console.log('getAccessTokenByServer!', res);
     var accessToken = res.body.access_token;
     if(!accessToken){
       return callback({err: {type: 'access_token_null'}});

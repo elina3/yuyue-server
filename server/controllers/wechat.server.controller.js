@@ -101,22 +101,14 @@ exports.onWechatUserAction = function (req, res, next) {
     // <Content><![CDATA[你好]]></Content>
     // </xml>
 
-    let returnString = `<xml>
-      <ToUserName><![CDATA[${wechatPostParam.FromUserName}]]></ToUserName>
-      <FromUserName><![CDATA[fromUser]]></FromUserName>
-      <CreateTime>12345678</CreateTime>
-      <MsgType><![CDATA[text]]></MsgType>
-      <Content><![CDATA[${autoReplyText}]]></Content>
-    </xml>`;
-    console.log('returnString:', returnString);
-    res.send(returnString);
-    // wechatService.autoReplyText(wechatPostParam.FromUserName, function (err, result) {
-    //   if (err) {
-    //     console.error('自动回复失败');
-    //   } else {
-    //     console.error('自动回复成功');
-    //   }
-    // });
+    wechatService.autoReplyText(wechatPostParam.FromUserName, function (err, result) {
+      if (err) {
+        console.error('自动回复失败');
+      } else {
+        console.error('自动回复成功');
+      }
+      res.send('');
+    });
     //
     // getWechatUserInfo(wechatPostParam.FromUserName, function (err) {
     //   if (err) {
