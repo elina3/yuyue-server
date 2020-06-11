@@ -30,7 +30,7 @@
     "lodash": "~2.4.1",
     "method-override": "~2.1.2",
     "moment": "^2.10.2",
-    "mongoose": "^4.1.8",
+    "mongoose": "^5.7.5",
     "mongoose-timestamp": "^0.4.0",
     "morgan": "~1.2.2",
     "multer": "^1.4.1",
