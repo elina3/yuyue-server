@@ -168,7 +168,11 @@ exports.createAppointment = function(
       return callback({ err: appointmentError.has_booked });
     }
 
-    Appointment.count(query, function(err, totalCount) {
+    //该医生这个时间段的排班总共预约了多少条
+    Appointment.count({
+      doctor_schedule: schedule._id,
+      canceled: {$ne: true}
+    }, function(err, totalCount) {
       if (err) {
         return callback({ err: systemError.database_query_error });
       }
