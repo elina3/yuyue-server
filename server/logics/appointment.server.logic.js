@@ -173,6 +173,8 @@ exports.createAppointment = function(
         return callback({ err: systemError.database_query_error });
       }
 
+      console.log('schedule.number_count:' + schedule.number_count);
+      console.log('Appointment.count:' + totalCount);
       if (schedule.number_count <= totalCount) {
         return callback({ err: appointmentError.schedule_out_of_limit });
       }

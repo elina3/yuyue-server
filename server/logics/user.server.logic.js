@@ -501,6 +501,8 @@ exports.updateDoctorSchedule = function(user, doctor, scheduleInfo, callback) {
           return callback({ err: userError.doctor_schedule_not_exist });
         }
 
+        //TODO checkExistAppointmentCount < scheduleInfo.number_count
+
         async.auto({
           otherSchedules: function(autoCallback, result) {
             var query = {
