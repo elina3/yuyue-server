@@ -218,3 +218,48 @@ exports.sendCancelAppointmentMessage = function(wechatId, redirectUrl, appointme
     return callback(null, data);
   });
 };
+
+exports.sendStoppedAppointmentMessage = function(wechatId, redirectUrl, appointmentInfo, callback){
+  var postData = {
+    touser: wechatId,
+    template_id: 'ude3bVcu-7vJmg-3R15WHQenHWmN_W1UcDLNRwL4K4s',
+    url: redirectUrl,
+    data: {
+      first: {
+        "value":"您好，很抱歉，您预约的门诊已经停诊！",
+        "color":"#173177"
+      },
+      keyword1: {
+        "value": appointmentInfo.nickname + '（' +appointmentInfo.card_number + '）',
+        "color":"#173177"
+      },
+      keyword2: {
+        "value": '民航医院',
+        "color":"#173177"
+      },
+      keyword3:{
+        "value":appointmentInfo.department.name,
+        "color":"#173177"
+      },
+      keyword4:{
+        "value":appointmentInfo.doctor.nickname,
+        "color":"#173177"
+      },
+      keyword5:{
+        "value":appointmentInfo.start_time.Format('yyyy-MM-dd hh:mm') + '~' + appointmentInfo.end_time.Format('hh:mm'),
+        "color":"#173177"
+      },
+      remark:{
+        "value":"温馨提示："+ appointmentInfo.nickname +"，很抱歉您预约的民航医院"+appointmentInfo.department.name+"门诊已经停诊，请关注其他时间段进行预约，祝您早日康复！",
+        "color":"#173177"
+      }
+    }
+  };
+  sendTemplateMessage(postData, function(err, data){
+    if(err){
+      console.error(err);
+      return callback({err: wechatError.send_template_message_error });
+    }
+    return callback(null, data);
+  });
+};

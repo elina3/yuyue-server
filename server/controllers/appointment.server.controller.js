@@ -5,7 +5,8 @@ var cryptoLib = require('../libraries/crypto'),
   enumLib = require('../enums/business');
 var userLogic  = require('../logics/user'),
   appointmentLogic = require('../logics/appointment'),
-    wechatService = require('../services/wechat');
+    wechatService = require('../services/wechat'),
+    aliSMSAPIService = require('../services/ali_sms_api');
 var systemError = require('../errors/system'),
 userError = require('../errors/user'),
 appointmentError = require('../errors/appointment');
@@ -234,6 +235,10 @@ exports.createNewAppointmentInfo = function(req, res, next){
           return autoCallback(err);
         }
 
+        if(schedule.is_stopped){
+          return autoCallback({err: appointmentError.doctor_schedule_stopped});
+        }
+
         if(schedule.start_time.getTime() <= new Date().getTime()){
           return autoCallback({err: appointmentError.appointment_over});
         }
@@ -254,6 +259,13 @@ exports.createNewAppointmentInfo = function(req, res, next){
           start_time: results.getSchedule.start_time,
           end_time: results.getSchedule.end_time,
           card_number: results.getDoctor.card_number
+        }, function(err){});
+        aliSMSAPIService.sendAppointmentSuccessBySMS({
+          name: req.member.nickname,
+          mobilePhone: req.member.mobile_phone,
+          department: results.getDoctor.department,
+          doctorName: results.getDoctor.nickname,
+          time: results.getSchedule.start_time
         }, function(err){});
         return autoCallback(null, appointment);
       });
@@ -326,6 +338,13 @@ exports.cancelAppointment = function(req, res, next){
       card_number: appointment.card_number
     }, function(err){});
 
+    aliSMSAPIService.sendAppointmentCanceledBySMS({
+      name: req.member.nickname,
+      mobilePhone: req.member.mobile_phone,
+      department: appointment.department,
+      doctorName: appointment.doctor.nickname,
+      time: appointment.start_time
+    }, function(err){});
     req.data = {
       success: true
     };

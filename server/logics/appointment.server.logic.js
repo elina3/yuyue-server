@@ -157,7 +157,7 @@ exports.createAppointment = function(
   var query = {
     member: member._id,
     doctor_schedule: schedule._id,
-    canceled: {$ne: true}
+    canceled: { $ne: true },
   };
   Appointment.findOne(query).exec(function(err, appointment) {
     if (err) {
@@ -171,7 +171,7 @@ exports.createAppointment = function(
     //该医生这个时间段的排班总共预约了多少条
     Appointment.count({
       doctor_schedule: schedule._id,
-      canceled: {$ne: true}
+      canceled: { $ne: true },
     }, function(err, totalCount) {
       if (err) {
         return callback({ err: systemError.database_query_error });
@@ -235,9 +235,12 @@ exports.getAllAppointments = function(filter, pagination, callback) {
     query.outpatient_type = filter.outpatient_type;
   }
   if (filter.appointment_time) {
-    var secondDay = new Date(filter.appointment_time.getTime() + 24 * 60 * 60 * 1000);
+    var secondDay = new Date(filter.appointment_time.getTime() + 24 * 60 * 60 *
+        1000);
     console.log(secondDay.Format('yyyy-MM-dd hh:mm:ss'));
-    query.$and = [{start_time: {$gte: filter.appointment_time}}, {end_time: {$lt: secondDay}}];
+    query.$and = [
+      { start_time: { $gte: filter.appointment_time } },
+      { end_time: { $lt: secondDay } }];
   }
   Appointment.count(query).exec(function(err, totalCount) {
     if (err) {
@@ -278,7 +281,7 @@ exports.getPickupList = function(filter, callback) {
       $or: [
         { IDcard: { $regex: filter.IDCard, $options: '$i' } },
         { card_number: { $regex: filter.card_number, $options: '$i' } },
-        { order_number: { $regex: filter.order_number, $options: '$i' } }]
+        { order_number: { $regex: filter.order_number, $options: '$i' } }],
     };
   } else {
     if (filter.IDCard) {
@@ -293,7 +296,7 @@ exports.getPickupList = function(filter, callback) {
   }
   Appointment.find(query).
       sort({ appointment_time: -1 }).
-      populate('doctor department member').
+      populate('doctor department member doctor_schedule').
       exec(function(err, appointments) {
         if (err) {
           return callback({ err: systemError.database_query_error });
@@ -307,62 +310,70 @@ exports.pickupAppointment = function(user, appointmentId, callback) {
     _id: appointmentId,
   };
 
-  Appointment.findOne(query, function(err, appointment) {
-    if (err) {
-      return callback({ err: systemError.database_query_error });
-    }
-
-    if (!appointment) {
-      return callback({ err: appointmentError.appointment_not_exist });
-    }
-
-    if (appointment.picked) {
-      return callback({ err: appointmentError.has_been_picked });
-    }
-
-    if (appointment.canceled) {
-      return callback({ err: appointmentError.has_been_canceled });
-    }
-
-    var updateObj = {
-      picked: true,
-      picked_time: new Date(),
-      picked_user: user._id,
-      status: 'picked_up',
-    };
-    Appointment.update(query, { $set: updateObj }, function(err) {
-      if (err) {
-        return callback({ err: systemError.database_update_error });
-      }
-
-      Appointment.findOne(query)//前端需要返回完整的数据用于重新渲染页面
-          .populate('doctor department member').exec(function(err, newObj) {
+  Appointment.findOne(query).
+      populate('doctor_schedule').
+      exec(function(err, appointment) {
         if (err) {
           return callback({ err: systemError.database_query_error });
         }
 
-        return callback(null, newObj);
+        if (!appointment) {
+          return callback({ err: appointmentError.appointment_not_exist });
+        }
+
+        if (appointment.picked) {
+          return callback({ err: appointmentError.has_been_picked });
+        }
+
+        if (appointment.canceled) {
+          return callback({ err: appointmentError.has_been_canceled });
+        }
+
+        if (appointment.doctor_schedule.is_stopped) {
+          return callback({ err: appointmentError.doctor_schedule_stopped });
+        }
+
+        var updateObj = {
+          picked: true,
+          picked_time: new Date(),
+          picked_user: user._id,
+          status: 'picked_up',
+        };
+        Appointment.update(query, { $set: updateObj }, function(err) {
+          if (err) {
+            return callback({ err: systemError.database_update_error });
+          }
+
+          Appointment.findOne(query)//前端需要返回完整的数据用于重新渲染页面
+              .populate('doctor department member').exec(function(err, newObj) {
+            if (err) {
+              return callback({ err: systemError.database_query_error });
+            }
+
+            return callback(null, newObj);
+          });
+        });
       });
-    });
-  });
 };
 
 //app端获取自己的所有预约内容
 exports.getMyAppointments = function(member, callback) {
   var query = {};
-  if(member.IDCard && member.card_number){
-    query.$or = [{IDCard: member.IDCard}, {card_number: member.card_number}]
-  }else{
-    if(member.IDCard){
+  if (member.IDCard && member.card_number) {
+    query.$or = [
+      { IDCard: member.IDCard },
+      { card_number: member.card_number }];
+  } else {
+    if (member.IDCard) {
       query.IDCard = member.IDCard;
     }
-    if(member.card_number){
+    if (member.card_number) {
       query.card_number = member.card_number;
     }
   }
   Appointment.find(query).
       sort({ appointment_time: -1 }).
-      populate('doctor department member').
+      populate('doctor department member doctor_schedule canceled').
       exec(function(err, appointments) {
         if (err) {
           return callback({ err: systemError.database_query_error });
@@ -377,7 +388,7 @@ exports.getAppointmentDetailById = function(appointmentId, callback) {
     _id: appointmentId,
   };
   Appointment.findOne(query).
-      populate('doctor department member').
+      populate('doctor department member doctor_schedule').
       exec(function(err, appointment) {
         if (err) {
           return callback({ err: systemError.database_query_error });
@@ -391,10 +402,10 @@ exports.getAppointmentDetailById = function(appointmentId, callback) {
       });
 };
 
-function getScheduleAppointmentCount(scheduleId, callback){
+function getScheduleAppointmentCount(scheduleId, callback) {
   var query = {
     doctor_schedule: scheduleId,
-    canceled: false
+    canceled: false,
   };
   Appointment.count(query).
       exec(function(err, totalCount) {
@@ -405,6 +416,7 @@ function getScheduleAppointmentCount(scheduleId, callback){
         return callback(null, totalCount);
       });
 }
+
 exports.getScheduleAppointmentCount = getScheduleAppointmentCount;
 
 exports.cancelAppointment = function(memberId, appointmentId, callback) {
@@ -420,24 +432,26 @@ exports.cancelAppointment = function(memberId, appointmentId, callback) {
         }
 
         if (appointment.canceled) {
-          return callback({err: appointmentError.has_been_canceled });
+          return callback({ err: appointmentError.has_been_canceled });
         }
 
         if (appointment.picked) {
           return callback({ err: appointmentError.has_been_picked });
         }
 
-        if ( new Date() >= appointment.start_time ){
-          return callback({err: appointmentError.not_cancel_for_over_time});
+        if (new Date() >= appointment.start_time) {
+          return callback({ err: appointmentError.not_cancel_for_over_time });
         }
 
-        Appointment.update({_id: appointmentId}, {$set: {
-          canceled: true,
+        Appointment.update({ _id: appointmentId }, {
+          $set: {
+            canceled: true,
             canceled_time: new Date(),
-            status: 'canceled'
-          }}, function(err){
-          if(err){
-            return callback({err: systemError.database_update_error});
+            status: 'canceled',
+          },
+        }, function(err) {
+          if (err) {
+            return callback({ err: systemError.database_update_error });
           }
 
           return callback(null, appointment);
@@ -445,34 +459,54 @@ exports.cancelAppointment = function(memberId, appointmentId, callback) {
       });
 };
 
-exports.loadScheduleAppointmentCount = function(schedules, callback){
-  async.each(schedules, function(schedule, eachCallback){
-    getScheduleAppointmentCount(schedule._id, function(err, count){
-      if(err){
+exports.loadScheduleAppointmentCount = function(schedules, callback) {
+  async.each(schedules, function(schedule, eachCallback) {
+    getScheduleAppointmentCount(schedule._id, function(err, count) {
+      if (err) {
         return eachCallback(err);
       }
       schedule._doc.booked = count;
       return eachCallback();
     });
-  }, function(err){
+  }, function(err) {
     return callback(err);
   });
 };
-exports.getAppointmentCountByDateSchedules = function(dateSchedules, callback){
-  async.each(dateSchedules, function(dateSchedule, eachCallback){
-    async.each(dateSchedule.schedules, function(schedule, innerEachCallback){
-      getScheduleAppointmentCount(schedule._id, function(err, count){
-        if(err){
+exports.getAppointmentCountByDateSchedules = function(dateSchedules, callback) {
+  async.each(dateSchedules, function(dateSchedule, eachCallback) {
+    async.each(dateSchedule.schedules, function(schedule, innerEachCallback) {
+      getScheduleAppointmentCount(schedule._id, function(err, count) {
+        if (err) {
           return innerEachCallback(err);
         }
         schedule.booked = count;
         return innerEachCallback();
       });
-    }, function(err){
+    }, function(err) {
       return eachCallback(err);
     });
-  }, function(err){
+  }, function(err) {
     return callback(err);
   });
 };
+
+exports.getScheduleAppointmentWithMemberInfo = function(
+    doctorScheduleId, callback) {
+  var query = {
+    doctor_schedule: doctorScheduleId,
+    canceled: false,
+  };
+  Appointment.find(query).
+      select(
+          'member.nickname member.mobile_phone member.open_id doctor department start_time nickname').
+      populate('member doctor department').
+      exec(function(err, appointments) {
+        if (err) {
+          return callback({ err: systemError.database_query_error });
+        }
+
+        return callback(null, appointments);
+      });
+};
+
 

@@ -52,6 +52,13 @@ var DoctorScheduleSchema = new Schema({
   },
   operator_user: {
     type: Schema.Types.ObjectId
+  },
+  is_stopped: {
+    type: Boolean,
+    default: false
+  },
+  stopped_time: {
+    type: Date
   }
 });
 DoctorScheduleSchema.plugin(timestamps, {

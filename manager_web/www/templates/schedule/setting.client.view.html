@@ -47,7 +47,7 @@
                                 <div class="col-xs-2">
                                     <span>结束挂号时间</span>
                                 </div>
-                                <div class="col-xs-2">
+                                <div class="col-xs-1">
                                     <span>预设号</span>
                                 </div>
                                 <div class="col-xs-2">
@@ -58,6 +58,9 @@
                                 </div>
                                 <div class="col-xs-1">
                                     <span>余号</span>
+                                </div>
+                                <div class="col-xs-1">
+                                    <span>停诊</span>
                                 </div>
                                 <div class="col-xs-2">
                                     <span>操作</span>
@@ -70,7 +73,7 @@
                                 <div class="col-xs-2">
                                     <span>{{schedule.endTime}}</span>
                                 </div>
-                                <div class="col-xs-2">
+                                <div class="col-xs-1">
                                     <span>{{schedule.numberCount}}</span>
                                 </div>
                                 <div class="col-xs-2">
@@ -82,9 +85,13 @@
                                 <div class="col-xs-1">
                                     <span>{{schedule.numberCount - schedule.booked}}</span>
                                 </div>
+                                <div class="col-xs-1">
+                                    <span>{{schedule.is_stopped ? '是' : ''}}</span>
+                                </div>
                                 <div class="col-xs-2 handle">
-                                    <a  ng-click="editDoctorSchedule(schedule)">编辑</a>
-                                    <a  ng-click="deleteSchedule(schedule)">删除</a>
+                                    <a ng-show="!schedule.is_stopped" ng-click="editDoctorSchedule(schedule)">编辑</a>
+                                    <a ng-show="!schedule.is_stopped" ng-click="stopDoctorSchedule(schedule)">停诊</a>
+                                    <a ng-click="deleteSchedule(schedule)">删除</a>
                                 </div>
                             </div>
                         </div>

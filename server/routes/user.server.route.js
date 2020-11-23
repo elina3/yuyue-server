@@ -27,6 +27,8 @@ module.exports = function (app) {
   app.route('/user/doctor/batch_add_schedule').post(authFilter.requireUser, userController.batchAddDoctorSchedule);
   app.route('/user/doctor/modify_schedule').post(authFilter.requireUser, userController.modifyDoctorSchedule);
   app.route('/user/doctor/delete_schedule').post(authFilter.requireUser, userController.deleteDoctorSchedule);
+  //停诊
+  app.route('/app/doctor/stop_appointment').post(authFilter.requireUser, userController.stopDoctorSchedule);
 
 
   // app.route('/user/sign_up').post(authFilter.requireUser, userController.signUp);

@@ -77,7 +77,8 @@ angular.module('YYWeb').controller('ScheduleSettingController',
                           booked: item.booked || 0,
                           price_type: item.price_type,
                           priceTypeString: data.doctor.outpatient_type === 'expert' ? priceTypeDic[item.price_type]: '普通',
-                          price: item.price / 100
+                          price: item.price / 100,
+                          is_stopped: item.is_stopped || false
                         };
                       });
                   return callback();
@@ -352,6 +353,30 @@ angular.module('YYWeb').controller('ScheduleSettingController',
 
         $scope.editDoctorSchedule = function(schedule) {
           $scope.pageConfig.popBox.open(schedule);
+        };
+
+        function stopDoctorSchedule(schedule) {
+          $scope.$emit(GlobalEvent.onShowLoading, true);
+          UserService.stopDoctorSchedule(
+              { doctor_id: $scope.pageConfig.doctorId, schedule_id: schedule.id },
+              function(err) {
+                $scope.$emit(GlobalEvent.onShowLoading, false);
+                if (err) {
+                  return $scope.$emit(GlobalEvent.onShowAlert, err);
+                }
+
+                loadDoctorSchedules($scope.pageConfig.doctorId);
+
+                return $scope.$emit(GlobalEvent.onShowAlert, '删除成功');
+              });
+        }
+
+        $scope.stopDoctorSchedule = function(schedule) {
+          $scope.$emit(GlobalEvent.onShowAlertConfirm, {
+            content: '您确定要删除该号源吗？', callback: function() {
+              stopDoctorSchedule(schedule);
+            },
+          });
         };
 
         function deleteSchedule(schedule) {

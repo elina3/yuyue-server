@@ -37,7 +37,7 @@ angular.module('YYWeb').controller('AppointmentPrintController',
               price: appointment.price > 0 ? parseInt(appointment.price / 100) + '元' : '未设置',
               payStatus: AppointmentService.translateAppointmentPayMethod(appointment.pay_method),
               payTime: appointment.paid_time ? new Date(appointment.paid_time).Format('yyyy-MM-dd hh:mm') : '--',
-              status: AppointmentService.translateAppointmentStatus(appointment.status),
+              status: !appointment.canceled && appointment.doctor_schedule.is_stopped ? '已停诊' : AppointmentService.translateAppointmentStatus(appointment.status),
               printTime: new Date().Format('yyyy/MM/dd hh:mm'),
               printer: user.nickname
             };

@@ -90,43 +90,47 @@ exports.deleteUser = function(userId, callback) {
   });
 };
 
-function userParamValid(userId, userInfo, callback){
+function userParamValid(userId, userInfo, callback) {
   async.auto({
-    validUsername: function(autoCallback){
-      User.findOne({username: userInfo.username, deleted_status: false, _id: {$ne: userId}})
-      .select('username')
-          .exec(function(err, user){
-            if(err){
-              return autoCallback({err: systemError.database_query_error});
-            }
+    validUsername: function(autoCallback) {
+      User.findOne({
+        username: userInfo.username,
+        deleted_status: false,
+        _id: { $ne: userId },
+      }).select('username').exec(function(err, user) {
+        if (err) {
+          return autoCallback({ err: systemError.database_query_error });
+        }
 
-            if(user){
-              return autoCallback({err: userError.username_exist});
-            }
+        if (user) {
+          return autoCallback({ err: userError.username_exist });
+        }
 
-            return autoCallback();
+        return autoCallback();
       });
     },
-    validIDCard: function(autoCallback){
-      if(!userInfo.IDCard){
+    validIDCard: function(autoCallback) {
+      if (!userInfo.IDCard) {
         return autoCallback();
       }
-      User.findOne({IDCard: userInfo.IDCard, deleted_status: false, _id: {$ne: userId}})
-      .select('username')
-      .exec(function(err, user){
-        if(err){
-          return autoCallback({err: systemError.database_query_error});
+      User.findOne({
+        IDCard: userInfo.IDCard,
+        deleted_status: false,
+        _id: { $ne: userId },
+      }).select('username').exec(function(err, user) {
+        if (err) {
+          return autoCallback({ err: systemError.database_query_error });
         }
 
-        if(user){
-          return autoCallback({err: userError.IDCard_exist});
+        if (user) {
+          return autoCallback({ err: userError.IDCard_exist });
         }
 
         return autoCallback();
       });
-    }
-  }, function(err){
-    if(err){
+    },
+  }, function(err) {
+    if (err) {
       return callback(err);
     }
     return callback();
@@ -143,8 +147,8 @@ exports.modifyUser = function(userId, userInfo, callback) {
       return callback({ err: userError.user_not_exist });
     }
 
-    userParamValid(userId, userInfo, function(err){
-      if(err){
+    userParamValid(userId, userInfo, function(err) {
+      if (err) {
         return callback(err);
       }
 
@@ -185,12 +189,12 @@ exports.modifyUser = function(userId, userInfo, callback) {
   });
 };
 
-exports.resetPassword = function(user, newPassword, callback){
+exports.resetPassword = function(user, newPassword, callback) {
   var updateObj = {};
-  updateObj.password=  user.hashPassword(newPassword);
-  User.update({_id: user._id}, {$set: updateObj}, function(err){
-    if(err){
-      return callback({err: systemError.database_update_error});
+  updateObj.password = user.hashPassword(newPassword);
+  User.update({ _id: user._id }, { $set: updateObj }, function(err) {
+    if (err) {
+      return callback({ err: systemError.database_update_error });
     }
 
     return callback();
@@ -350,18 +354,19 @@ exports.updateDoctorShelfStatus = function(user, doctorId, onShelf, callback) {
         return callback();
       });
 };
-exports.setDoctorPrice = function(user, doctor, newPrice, newSpecialPrice, callback) {
+exports.setDoctorPrice = function(
+    user, doctor, newPrice, newSpecialPrice, callback) {
   var oldPrice = doctor.price;
   var oldSpecialPrice = doctor.special_price;
   var updateObj = {
     price: newPrice,
-    recent_modify_user: user._id
+    recent_modify_user: user._id,
   };
-  if(newSpecialPrice >= 0){
+  if (newSpecialPrice >= 0) {
     updateObj.special_price = newSpecialPrice;
   }
   User.update({ _id: doctor._id },
-      { $set: updateObj},
+      { $set: updateObj },
       function(err) {
         if (err) {
           console.log(err);
@@ -369,9 +374,9 @@ exports.setDoctorPrice = function(user, doctor, newPrice, newSpecialPrice, callb
         }
 
         var historyObj = {
-          oldPrice: oldPrice, newPrice: newPrice
+          oldPrice: oldPrice, newPrice: newPrice,
         };
-        if(newSpecialPrice > 0){
+        if (newSpecialPrice > 0) {
           historyObj.oldSpecialPrice = oldSpecialPrice;
           historyObj.newSpecialPrice = newSpecialPrice;
         }
@@ -415,7 +420,8 @@ function isInvalidScheduleRange(existsSchedules, newStartTime, newEndTime) {
       hasRange = true;
       break;
     }
-    if(newStartTime.getTime() <= item.start_time.getTime() && newEndTime.getTime() >= item.end_time.getTime()){
+    if (newStartTime.getTime() <= item.start_time.getTime() &&
+        newEndTime.getTime() >= item.end_time.getTime()) {
       hasRange = true;
       break;
     }
@@ -448,8 +454,8 @@ exports.addDoctorSchedule = function(user, doctor, scheduleInfo, callback) {
     addNew: [
       'otherSchedules', function(autoCallback) {
         var price = doctor[scheduleInfo.price_type];
-        if(price <= 0){
-          return autoCallback({err: userError.not_set_price});
+        if (price <= 0) {
+          return autoCallback({ err: userError.not_set_price });
         }
         var doctorSchedule = new DoctorSchedule({
           operator_user: user._id,
@@ -461,7 +467,7 @@ exports.addDoctorSchedule = function(user, doctor, scheduleInfo, callback) {
           end_time_string: scheduleInfo.end_time.Format('hh:mm'),
           number_count: scheduleInfo.number_count,
           price_type: scheduleInfo.price_type,
-          price: price
+          price: price,
         });
         doctorSchedule.save(function(err, saved) {
           if (err) {
@@ -476,7 +482,7 @@ exports.addDoctorSchedule = function(user, doctor, scheduleInfo, callback) {
                 end_time: scheduleInfo.end_time,
                 number_count: scheduleInfo.number_count,
                 price: price,
-                price_type: scheduleInfo.price_type
+                price_type: scheduleInfo.price_type,
               }, function() {});
           return autoCallback(null, saved);
         });
@@ -508,7 +514,7 @@ exports.updateDoctorSchedule = function(user, doctor, scheduleInfo, callback) {
             var query = {
               doctor: doctor._id,
               date_string: doctorSchedule.date_string,
-              _id: {$ne: scheduleInfo._id}
+              _id: { $ne: scheduleInfo._id },
             };
             DoctorSchedule.find(query).exec(function(err, otherSchedules) {
               if (err) {
@@ -536,7 +542,7 @@ exports.updateDoctorSchedule = function(user, doctor, scheduleInfo, callback) {
                 end_time_string: scheduleInfo.end_time.Format('hh:mm'),
                 number_count: scheduleInfo.number_count,
                 price_type: scheduleInfo.price_type,
-                price: price
+                price: price,
               };
               DoctorSchedule.update({ _id: scheduleInfo._id },
                   { $set: doctorSchedule }, function(err) {
@@ -553,7 +559,7 @@ exports.updateDoctorSchedule = function(user, doctor, scheduleInfo, callback) {
                           end_time: scheduleInfo.end_time,
                           number_count: scheduleInfo.number_count,
                           price: price,
-                          price_type: scheduleInfo.price_type
+                          price_type: scheduleInfo.price_type,
                         }, function() {});
                     return autoCallback();
                   });
@@ -567,7 +573,7 @@ exports.updateDoctorSchedule = function(user, doctor, scheduleInfo, callback) {
       });
 };
 
-exports.getScheduleDetail = function(scheduleId, callback){
+exports.getScheduleDetail = function(scheduleId, callback) {
   DoctorSchedule.findOne({ _id: scheduleId }).
       exec(function(err, doctorSchedule) {
         if (err) {
@@ -582,10 +588,10 @@ exports.getScheduleDetail = function(scheduleId, callback){
       });
 };
 
-exports.deleteDoctorSchedule  =function(user, doctorId, schedule, callback){
-  DoctorSchedule.remove({_id: schedule._id}, function(err){
-    if(err){
-      return callback({err: systemError.database_remove_error});
+exports.deleteDoctorSchedule = function(user, doctorId, schedule, callback) {
+  DoctorSchedule.remove({ _id: schedule._id }, function(err) {
+    if (err) {
+      return callback({ err: systemError.database_remove_error });
     }
 
     doctorActionHistoryLogic.addDoctorActionHistory(user,
@@ -599,4 +605,45 @@ exports.deleteDoctorSchedule  =function(user, doctorId, schedule, callback){
         }, function() {});
     return callback();
   });
+};
+
+//停诊
+exports.stopDoctorSchedule = function(user, doctorId, schedule, callback) {
+  DoctorSchedule.findOne({ _id: schedule._id }).
+      exec(function(err, doctorSchedule) {
+        if (err) {
+          return callback({ err: systemError.database_query_error });
+        }
+
+        if (!doctorSchedule) {
+          return callback({ err: userError.doctor_schedule_not_exist });
+        }
+
+        var now = new Date();
+        doctorSchedule = {
+          operator_user: user._id,
+          is_stopped: true,
+          stopped_time: now
+        };
+        DoctorSchedule.update({ _id: schedule._id },
+            { $set: doctorSchedule }, function(err) {
+              if (err) {
+                return callback(
+                    { err: systemError.database_update_error });
+              }
+              doctorActionHistoryLogic.addDoctorActionHistory(user,
+                  doctorId,
+                  'stop_doctor_schedule',
+                  {
+                    schedule_id: schedule._id,
+                    stopped_time: now,
+                  }, function(err) {
+                    if (err) {
+                      console.log(err);
+                    }
+                  });
+              return callback();
+            });
+
+      });
 };

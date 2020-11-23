@@ -16,5 +16,20 @@ module.exports = {
   },
   sql: {
     host: '172.28.30.246'//医院内部门诊报告数据库host
+  },
+  ali_sms: {
+    sign: '瑞金医院',
+    regionId: 'cn-hangzhou',
+    configuration: {
+      accessKeyId: '<accessKeyId>',
+      accessKeySecret: '<accessSecret>',
+      endpoint: 'https://dysmsapi.aliyuncs.com',
+      apiVersion: '2017-05-25'
+    },
+    templates: {
+      stop_appointment: 'SMS_205464732',
+      cancel_appointment: 'SMS_205464728',
+      appointment_success: 'SMS_205459909'
+    }
   }
 };

@@ -49,8 +49,8 @@
                         </div>
                         <div class="yy-card-right">
                              <span ng-show="item.payMethod !== 'offline'" ng-class="item.paid ? 'paid' : 'unpaid'" class="status">{{ item.paid ? '已交费' : '未缴费' }}</span>
-                            <span class="status booked">{{ item.statusString }}</span>
-                             <button ng-show="!item.picked" ng-click="pickup(item)" class="yy-default-bit-button">取号</button>
+                             <span class="status booked">{{ item.statusString }}</span>
+                             <button ng-show="!item.picked || !item.is_stopped" ng-click="pickup(item)" class="yy-default-bit-button">取号</button>
                             <button ng-show="item.picked" class="yy-default-bit-button" ng-click="goPrint(item)">打印</button>
                         </div>
                     </li>

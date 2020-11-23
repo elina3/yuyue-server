@@ -4,6 +4,7 @@
   "version": "0.0.1",
   "author": "Z",
   "dependencies": {
+    "@alicloud/pop-core": "^1.7.10",
     "async": "^1.4.2",
     "body-parser": "^1.14.0",
     "bower": "^1.5.2",

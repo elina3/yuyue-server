@@ -66,7 +66,7 @@ angular.module('YYWeb').controller('AppointmentPickUpController',
           if(data.appointment){
             appointment.picked = data.appointment.picked;
             appointment.status = data.appointment.status;
-            appointment.statusString = AppointmentService.translateAppointmentStatus(data.appointment.status);
+            appointment.statusString = !appointment.canceled && appointment.doctor_schedule.is_stopped ? '已停诊' : AppointmentService.translateAppointmentStatus(data.appointment.status);
           }
           $scope.$emit(GlobalEvent.onShowAlert, '成功取号，您可以打印您的票据');
         });

@@ -16,5 +16,20 @@ module.exports = {
   },
   sql: {
     host: 'mh-rjgb.com'
+  },
+  ali_sms: {
+    sign: '茼蒿科技',
+    regionId: 'cn-hangzhou',
+    configuration: {
+      accessKeyId: '<accessKeyId>',
+      accessKeySecret: '<accessSecret>',
+      endpoint: 'https://dysmsapi.aliyuncs.com',
+      apiVersion: '2017-05-25'
+    },
+    templates: {
+      stop_appointment: 'SMS_205464732',
+      cancel_appointment: 'SMS_205464728',
+      appointment_success: 'SMS_205459909'
+    }
   }
 };
