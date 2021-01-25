@@ -230,7 +230,7 @@ exports.sendStoppedAppointmentMessage = function(wechatId, redirectUrl, appointm
         "color":"#173177"
       },
       keyword1: {
-        "value": appointmentInfo.nickname + '（' +appointmentInfo.card_number + '）',
+        "value": appointmentInfo.nickname,
         "color":"#173177"
       },
       keyword2: {
