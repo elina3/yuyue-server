@@ -500,7 +500,7 @@ exports.getScheduleAppointmentWithMemberInfo = function(
   };
   Appointment.find(query).
       select(
-          'member.nickname member.mobile_phone member.open_id doctor department start_time nickname').
+          'member.nickname member.mobile_phone member.open_id doctor department start_time nickname end_time').
       populate('member doctor department').
       exec(function(err, appointments) {
         if (err) {

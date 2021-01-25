@@ -803,7 +803,7 @@ function noticeMembersWithStoppedSchedule(scheduleId, callback) {
         });
       });
 
-      console.log('send sms begin-----')
+      console.log('send sms begin-----');
       aliSMSAPIService.sendAppointmentStoppedBySMS(
         phones,
         appointmentInfos, function (err) {
