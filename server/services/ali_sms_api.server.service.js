@@ -105,7 +105,7 @@ exports.sendAppointmentSuccessBySMS = function (appointmentInfo, callback) {
   var templateParam = {
     name: appointmentInfo.name,
     hospitalName: aliSMSConfig.hospitalName,
-    department: appointmentInfo.department.name + '-' + appointmentInfo.doctorName,
+    department: appointmentInfo.department.name + '-' + appointmentInfo.doctorName + '医生',
     time: appointmentInfo.time.Format('yyyy-MM-dd hh:mm'),
   };
 
@@ -121,7 +121,7 @@ exports.sendAppointmentCanceledBySMS = function (appointmentInfo, callback) {
   var templateParam = {
     name: appointmentInfo.name,
     hospital: aliSMSConfig.hospitalName,
-    department: appointmentInfo.department.name + '-' + appointmentInfo.doctorName,
+    department: appointmentInfo.department.name + '-' + appointmentInfo.doctorName + '医生',
     time: appointmentInfo.time.Format('yyyy-MM-dd hh:mm'),
   };
 
@@ -136,7 +136,7 @@ exports.sendAppointmentStoppedBySMS = function (phones, appointmentInfos, callba
       return {
         name: item.name,
         hospital: aliSMSConfig.hospitalName,
-        department: item.department + item.doctorName,
+        department: item.department + '-' + item.doctorName + '医生',
         time: item.time
       };
     }), callback);
