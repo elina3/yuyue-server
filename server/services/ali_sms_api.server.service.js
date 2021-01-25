@@ -59,14 +59,16 @@ function sendBatchSms(phones, templateCode, templateParamObjs, callback) {
     'RegionId': aliSMSConfig.regionId,
     'PhoneNumberJson': JSON.stringify(phones),
     'SignNameJson': JSON.stringify(
-      phones.map(function() {return aliSMSConfig.sign;})),
+      phones.map(function () {
+        return aliSMSConfig.sign;
+      })),
     'TemplateCode': templateCode,
     'TemplateParamJson': JSON.stringify(templateParamObjs)
   };
 
   console.log(params);
 
-  client.request('SendBatchSms', params, { method: 'POST' }).then((result) => {
+  client.request('SendBatchSms', params, {method: 'POST'}).then((result) => {
     if (result.Code === 'OK') {
       return callback();
     }
@@ -94,50 +96,49 @@ function sendBatchSms(phones, templateCode, templateParamObjs, callback) {
 exports.sendSMS = sendSMS;
 exports.sendBatchSms = sendBatchSms;
 
-exports.sendAppointmentSuccessBySMS = function(appointmentInfo, callback) {
+exports.sendAppointmentSuccessBySMS = function (appointmentInfo, callback) {
   appointmentInfo = appointmentInfo || {
     name: '郭姗姗',
-    phoneNumber: '18321740710',
+    mobilePhone: '18321740710',
+  };
+  console.log(appointmentInfo);
+  var templateParam = {
+    name: appointmentInfo.name,
+    hospitalName: aliSMSConfig.hospitalName,
+    department: appointmentInfo.department.name + '-' + appointmentInfo.doctorName,
+    time: appointmentInfo.time.Format('yyyy-MM-dd hh:mm'),
+  };
+
+  sendSMS(appointmentInfo.mobilePhone,
+    aliSMSConfig.templates.appointment_success, templateParam, callback);
+};
+
+exports.sendAppointmentCanceledBySMS = function (appointmentInfo, callback) {
+  appointmentInfo = appointmentInfo || {
+    name: '郭姗姗',
+    mobilePhone: '18321740710',
   };
   var templateParam = {
     name: appointmentInfo.name,
     hospitalName: aliSMSConfig.hospitalName,
     department: appointmentInfo.department +
     appointmentInfo.doctorName,
-    time: appointmentInfo.time,
+    time: appointmentInfo.time.Format('yyyy-MM-dd hh:mm'),
   };
 
-  sendSMS(appointmentInfo.phoneNumber,
-      aliSMSConfig.templates.appointment_success, templateParam, callback);
+  sendSMS(appointmentInfo.mobilePhone,
+    aliSMSConfig.templates.cancel_appointment, templateParam, callback);
 };
 
-exports.sendAppointmentCanceledBySMS = function(appointmentInfo, callback) {
-  appointmentInfo = appointmentInfo || {
-    name: '郭姗姗',
-    phoneNumber: '18321740710',
-  };
-  var templateParam = {
-    name: appointmentInfo.name,
-    hospitalName: aliSMSConfig.hospitalName,
-    department: appointmentInfo.department +
-    appointmentInfo.doctorName,
-    time: appointmentInfo.time,
-  };
-
-  sendSMS(appointmentInfo.phoneNumber,
-      aliSMSConfig.templates.cancel_appointment, templateParam, callback);
-};
-
-exports.sendAppointmentStoppedBySMS = function(
-    phones, appointmentInfos, callback) {
+exports.sendAppointmentStoppedBySMS = function (phones, appointmentInfos, callback) {
   phones = phones || ['18321740710', '18321740710'];
   sendBatchSms(phones, aliSMSConfig.templates.stop_appointment,
-      appointmentInfos.map(function(item) {
-        return {
-          name: item.name,
-          hospital: aliSMSConfig.hospitalName,
-          department: item.department + item.doctorName,
-          time: item.time
-        };
-      }), callback);
+    appointmentInfos.map(function (item) {
+      return {
+        name: item.name,
+        hospital: aliSMSConfig.hospitalName,
+        department: item.department + item.doctorName,
+        time: item.time
+      };
+    }), callback);
 };
