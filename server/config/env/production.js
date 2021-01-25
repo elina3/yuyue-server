@@ -12,7 +12,12 @@ module.exports = {
   port: process.env.PORT || 80,
   wechat_ext: {//医院公众号信息
     app_id: 'wx84f82babe25f6b05',
-    app_secret: 'df2d1036887d6a2ecfc28d20eca0fe64'
+    app_secret: 'df2d1036887d6a2ecfc28d20eca0fe64',
+    notify_templates: {
+      appointment_success: 'Yfq-gXXiCPv9bxjOuKQ9f_s_CAdu6C7VgH22z-Wc_zE',
+      appointment_cancel: 'ude3bVcu-7vJmg-3R15WHQenHWmN_W1UcDLNRwL4K4s',
+      doctor_close: '75hkUvplEgxpv4CWkLjcLkoocLv-1djWdDbssbJKF1M'
+    }
   },
   sql: {
     host: '172.28.30.246'//医院内部门诊报告数据库host

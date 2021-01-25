@@ -136,7 +136,7 @@ function sendTemplateMessage(postData, callback){
 exports.sendAppointmentSuccess = function(wechatId, redirectUrl, appointmentInfo, callback){
   var postData = {
     touser: wechatId,
-    template_id: 'Yfq-gXXiCPv9bxjOuKQ9f_s_CAdu6C7VgH22z-Wc_zE',
+    template_id: config.wechat_ext.notify_templates.appointment_success,
     url: redirectUrl,
     data: {
       first: {
@@ -177,7 +177,7 @@ exports.sendAppointmentSuccess = function(wechatId, redirectUrl, appointmentInfo
 exports.sendCancelAppointmentMessage = function(wechatId, redirectUrl, appointmentInfo, callback){
   var postData = {
     touser: wechatId,
-    template_id: 'ude3bVcu-7vJmg-3R15WHQenHWmN_W1UcDLNRwL4K4s',
+    template_id: config.wechat_ext.notify_templates.appointment_cancel,
     url: redirectUrl,
     data: {
       first: {
@@ -222,7 +222,7 @@ exports.sendCancelAppointmentMessage = function(wechatId, redirectUrl, appointme
 exports.sendStoppedAppointmentMessage = function(wechatId, redirectUrl, appointmentInfo, callback){
   var postData = {
     touser: wechatId,
-    template_id: 'ude3bVcu-7vJmg-3R15WHQenHWmN_W1UcDLNRwL4K4s',
+    template_id: config.wechat_ext.notify_templates.doctor_close,
     url: redirectUrl,
     data: {
       first: {
@@ -234,19 +234,19 @@ exports.sendStoppedAppointmentMessage = function(wechatId, redirectUrl, appointm
         "color":"#173177"
       },
       keyword2: {
-        "value": '民航医院',
+        "value": appointmentInfo.department.name,
         "color":"#173177"
       },
       keyword3:{
-        "value":appointmentInfo.department.name,
-        "color":"#173177"
-      },
-      keyword4:{
         "value":appointmentInfo.doctor.nickname,
         "color":"#173177"
       },
-      keyword5:{
+      keyword4:{
         "value":appointmentInfo.start_time.Format('yyyy-MM-dd hh:mm') + '~' + appointmentInfo.end_time.Format('hh:mm'),
+        "color":"#173177"
+      },
+      keyword5:{
+        "value":'医生停诊',
         "color":"#173177"
       },
       remark:{

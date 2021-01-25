@@ -258,7 +258,7 @@ exports.createNewAppointmentInfo = function(req, res, next){
           department: results.getDoctor.department,
           start_time: results.getSchedule.start_time,
           end_time: results.getSchedule.end_time,
-          card_number: results.getDoctor.card_number
+          card_number: req.member.card_number
         }, function(err){});
         aliSMSAPIService.sendAppointmentSuccessBySMS({
           name: req.member.nickname,
