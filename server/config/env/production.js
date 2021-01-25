@@ -14,9 +14,9 @@ module.exports = {
     app_id: 'wx84f82babe25f6b05',
     app_secret: 'df2d1036887d6a2ecfc28d20eca0fe64',
     notify_templates: {
-      appointment_success: 'Yfq-gXXiCPv9bxjOuKQ9f_s_CAdu6C7VgH22z-Wc_zE',
-      appointment_cancel: 'ude3bVcu-7vJmg-3R15WHQenHWmN_W1UcDLNRwL4K4s',
-      doctor_close: '75hkUvplEgxpv4CWkLjcLkoocLv-1djWdDbssbJKF1M'
+      appointment_success: 'z2Ms0ilNHwXtosrpw2BzbO1UXT-UK_slYQG0TITb_BY',
+      appointment_cancel: 'r4txfb3I4ZqcQ07V-OoeOU3eoF4xCmq10u_hGkTMSsw',
+      doctor_close: 'BGVVICYsHjU4tXIY9nldxsfX09rEgxXvI5oYMW-6DhY'
     }
   },
   sql: {
