@@ -20,6 +20,7 @@ module.exports = {
   ali_sms: {
     sign: '茼蒿科技',
     regionId: 'cn-hangzhou',
+    hospitalName: '上海瑞金医院古北分院',
     configuration: {
       accessKeyId: '<accessKeyId>',
       accessKeySecret: '<accessSecret>',
@@ -27,9 +28,9 @@ module.exports = {
       apiVersion: '2017-05-25'
     },
     templates: {
-      stop_appointment: 'SMS_205464732',
-      cancel_appointment: 'SMS_205464728',
-      appointment_success: 'SMS_205459909'
+      stop_appointment: 'SMS_205585561',
+      cancel_appointment: 'SMS_205580628',
+      appointment_success: 'SMS_205580630'
     }
   }
 };
