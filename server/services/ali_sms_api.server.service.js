@@ -120,9 +120,8 @@ exports.sendAppointmentCanceledBySMS = function (appointmentInfo, callback) {
   };
   var templateParam = {
     name: appointmentInfo.name,
-    hospitalName: aliSMSConfig.hospitalName,
-    department: appointmentInfo.department +
-    appointmentInfo.doctorName,
+    hospital: aliSMSConfig.hospitalName,
+    department: appointmentInfo.department.name + '-' + appointmentInfo.doctorName,
     time: appointmentInfo.time.Format('yyyy-MM-dd hh:mm'),
   };
 
