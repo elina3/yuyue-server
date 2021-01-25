@@ -371,11 +371,13 @@ exports.getMyAppointments = function(member, callback) {
       query.card_number = member.card_number;
     }
   }
+  console.log(query);
   Appointment.find(query).
       sort({ appointment_time: -1 }).
       populate('doctor department member doctor_schedule canceled').
       exec(function(err, appointments) {
         if (err) {
+          console.log(err)
           return callback({ err: systemError.database_query_error });
         }
 

@@ -798,9 +798,9 @@ function noticeMembersWithStoppedSchedule(scheduleId, callback) {
           department: item.department.name,
           time: item.start_time.Format('yyyy/MM/dd hh:mm'),
         });
-        // wechatService.sendStoppedAppointmentMessage(item.member.open_id, 'http://datonghao.com/client/#/me/appointment', item, function () {
-        //
-        // });
+        wechatService.sendStoppedAppointmentMessage(item.member.open_id, 'http://datonghao.com/client/#/me/appointment', item, function () {
+
+        });
       });
 
       console.log('send sms begin-----')
