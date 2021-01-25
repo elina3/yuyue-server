@@ -55,15 +55,18 @@ function sendSMS(phone, templateCode, templateParamObj, callback) {
 }
 
 function sendBatchSms(phones, templateCode, templateParamObjs, callback) {
-  client.request('SendBatchSms', {
+  let params = {
     'RegionId': aliSMSConfig.regionId,
     'PhoneNumberJson': JSON.stringify(phones),
     'SignNameJson': JSON.stringify(
-        phones.map(function() {return aliSMSConfig.sign;})),
+      phones.map(function() {return aliSMSConfig.sign;})),
     'TemplateCode': templateCode,
-    'TemplateParamJson': JSON.stringify(templateParamObjs),
-  }, { method: 'POST' }).then((result) => {
-    console.log(JSON.stringify(result));
+    'TemplateParamJson': JSON.stringify(templateParamObjs)
+  };
+
+  console.log(params);
+
+  client.request('SendBatchSms', params, { method: 'POST' }).then((result) => {
     if (result.Code === 'OK') {
       return callback();
     }
@@ -132,7 +135,7 @@ exports.sendAppointmentStoppedBySMS = function(
       appointmentInfos.map(function(item) {
         return {
           name: item.name,
-          hospitalName: aliSMSConfig.hospitalName,
+          hospital: aliSMSConfig.hospitalName,
           department: item.department + item.doctorName,
           time: item.time
         };

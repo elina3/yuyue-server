@@ -395,7 +395,7 @@ exports.getDoctorSchedules = function(doctorId, date, callback) {
   };
   DoctorSchedule.find(query).
       select(
-          'date date_string start_time end_time start_time_string end_time_string number_count price_type price').
+          'date date_string start_time end_time start_time_string end_time_string number_count price_type price is_stopped stopped_time').
       exec(function(err, schedules) {
         if (err) {
           console.log(err);

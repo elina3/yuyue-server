@@ -256,9 +256,9 @@ exports.testSendSMS = function(req, res, next) {
 
 
 exports.testSendBatchSMS = function(req, res, next) {
-  var templateCode = req.body.code || 'SMS_205580630';
+  var templateCode = req.body.code || 'SMS_205585561';
   var phones = req.body.phones || ['18521555096', '18321740710'];
-  var params = [{name: '田黎锋', hospitalName: '瑞金医院古北分院', department: '肠胃科王医生的',time: '2020/10/10 10:00'},{name: '郭姗姗', hospitalName: '瑞金医院古北分院', department: '肠胃科黄小猫医生',time: '2020/10/10 12:00'}];
+  var params = [{name: '田黎锋', hospital: '瑞金医院古北分院', department: '肠胃科王医生的',time: '2020/10/10 10:00'},{name: '郭姗姗', hospital: '瑞金医院古北分院', department: '肠胃科黄小猫医生',time: '2020/10/10 12:00'}];
   aliSMSAPIServcie.sendBatchSms(phones, templateCode, params, function(err) {
     if (err) {
       req.err = err;
