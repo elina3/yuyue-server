@@ -26,8 +26,9 @@ angular.module('YYWeb').controller('AppointmentPickUpController',
           paid: item.paid,
           status: item.status,
           mobile: item.member.mobile_phone || '未绑定',
-          statusString: AppointmentService.translateAppointmentStatus(item.status),
-          picked: item.picked
+          statusString: item.doctor_schedule.is_stopped ? '已停诊' : AppointmentService.translateAppointmentStatus(item.status),
+          picked: item.picked,
+          is_stopped: item.doctor_schedule.is_stopped
         };
       }
 
