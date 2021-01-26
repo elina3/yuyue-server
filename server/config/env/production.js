@@ -23,7 +23,7 @@ module.exports = {
     host: '172.28.30.246'//医院内部门诊报告数据库host
   },
   ali_sms: {
-    sign: '瑞金医院',
+    sign: '瑞金医院古北分院',
     regionId: 'cn-hangzhou',
     hospitalName: '上海瑞金医院古北分院',
     configuration: {
