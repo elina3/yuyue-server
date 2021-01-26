@@ -43,14 +43,15 @@
                                 <label class="col-xs-4">门诊类型：<span>{{ item.outpatient_type }}</span></label>
                             </div>
                             <div class="yy-card-info row">
-                                <label class="col-xs-8">预约时间：<span>{{ item.timeRange }}</span></label>
+                                <label class="col-xs-4">预约时间：<span>{{ item.timeRange }}</span></label>
                                 <label class="col-xs-4">支付方式：<span>{{ item.payMethodString }}</span></label>
+                                <label class="col-xs-4">预约状态：<span>{{ item.statusString }}</span></label>
                             </div>
                         </div>
                         <div class="yy-card-right">
                              <span ng-show="item.payMethod !== 'offline'" ng-class="item.paid ? 'paid' : 'unpaid'" class="status">{{ item.paid ? '已交费' : '未缴费' }}</span>
-                             <span class="status booked">{{ item.statusString }}</span>
-                             <button ng-show="!item.picked || !item.is_stopped" ng-click="pickup(item)" class="yy-default-bit-button">取号</button>
+                             <span class="status booked">{{ item.doctorServiceStatusString }}</span>
+                             <button ng-show="!item.picked && !item.is_stopped" ng-click="pickup(item)" class="yy-default-bit-button">取号</button>
                             <button ng-show="item.picked" class="yy-default-bit-button" ng-click="goPrint(item)">打印</button>
                         </div>
                     </li>
