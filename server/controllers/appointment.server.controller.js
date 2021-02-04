@@ -1,18 +1,18 @@
 'use strict';
 var async = require('async');
 var cryptoLib = require('../libraries/crypto'),
-    publicLib = require('../libraries/public'),
+  publicLib = require('../libraries/public'),
   enumLib = require('../enums/business');
-var userLogic  = require('../logics/user'),
+var userLogic = require('../logics/user'),
   appointmentLogic = require('../logics/appointment'),
-    wechatService = require('../services/wechat'),
-    aliSMSAPIService = require('../services/ali_sms_api');
+  wechatService = require('../services/wechat'),
+  aliSMSAPIService = require('../services/ali_sms_api');
 var systemError = require('../errors/system'),
-userError = require('../errors/user'),
-appointmentError = require('../errors/appointment');
+  userError = require('../errors/user'),
+  appointmentError = require('../errors/appointment');
 
 //后台获取所有预约
-exports.getAllAppointments = function(req, res, next){
+exports.getAllAppointments = function (req, res, next) {
 
 
   var searchObj = {
@@ -21,15 +21,15 @@ exports.getAllAppointments = function(req, res, next){
     outpatient_type: req.query.outpatient_type
   };
   var timestamp = parseInt(req.query.appointment_timestamp) || 0;
-  if(timestamp > 0){
+  if (timestamp > 0) {
     searchObj.appointment_time = new Date(timestamp);
   }
 
-  appointmentLogic.getAllAppointments(searchObj, req.pagination, function(err, results){
-    if(err){
+  appointmentLogic.getAllAppointments(searchObj, req.pagination, function (err, results) {
+    if (err) {
       return next(err);
     }
-    req.data= {
+    req.data = {
       appointments: results.appointments,
       total_count: results.totalCount
     };
@@ -37,37 +37,37 @@ exports.getAllAppointments = function(req, res, next){
   });
 };
 
-exports.getPickupList = function(req, res, next){
+exports.getPickupList = function (req, res, next) {
   var IDCard = req.query.IDCard || '';
   var orderNumber = req.query.order_number || '';
   var cardNumber = req.query.card_number || '';
-  if(!IDCard && !orderNumber && !cardNumber){
+  if (!IDCard && !orderNumber && !cardNumber) {
     return next({err: appointmentError.id_card_order_number_error});
   }
   appointmentLogic.getPickupList({
     IDCard: IDCard,
     order_number: orderNumber,
     card_number: cardNumber
-  }, function(err, appointments){
-    if(err){
+  }, function (err, appointments) {
+    if (err) {
       return next(err);
     }
-    req.data= {
+    req.data = {
       appointments: appointments
     };
     return next();
   });
 };
-exports.pickupAppointment = function(req, res, next){
+exports.pickupAppointment = function (req, res, next) {
   var appointmentId = req.body.appointment_id || '';
-  if(!appointmentId){
+  if (!appointmentId) {
     return next({err: appointmentError.no_appointment_id});
   }
-  appointmentLogic.pickupAppointment(req.user, appointmentId, function(err, appointment){
-    if(err){
+  appointmentLogic.pickupAppointment(req.user, appointmentId, function (err, appointment) {
+    if (err) {
       return next(err);
     }
-    req.data= {
+    req.data = {
       appointment: appointment
     };
     return next();
@@ -75,20 +75,20 @@ exports.pickupAppointment = function(req, res, next){
 };
 
 //获取医生所有可预约时间段的号源--app
-exports.getAllUnBookSchedules = function(req, res, next){
+exports.getAllUnBookSchedules = function (req, res, next) {
   var doctorId = req.query.doctor_id || '';
-  if(!doctorId){
+  if (!doctorId) {
     return next({err: systemError.param_null_error});
   }
 
   async.auto({
-    getDoctor: function(autoCallback){
-      userLogic.getUserDetailById(doctorId, function(err, user){
-        if(err){
+    getDoctor: function (autoCallback) {
+      userLogic.getUserDetailById(doctorId, function (err, user) {
+        if (err) {
           return autoCallback(err);
         }
 
-        if(user.role !== 'doctor'){
+        if (user.role !== 'doctor') {
           return autoCallback({err: userError.not_a_doctor});
         }
 
@@ -102,21 +102,21 @@ exports.getAllUnBookSchedules = function(req, res, next){
         });
       });
     },
-    schedules: ['getDoctor', function(autoCallback, result){
-      appointmentLogic.getAllUnBookSchedules(result.getDoctor._id, function(err, schedules){
-        if(err){
+    schedules: ['getDoctor', function (autoCallback, result) {
+      appointmentLogic.getAllUnBookSchedules(result.getDoctor._id, function (err, schedules) {
+        if (err) {
           return autoCallback(err);
         }
         return autoCallback(null, schedules);
       });
     }],
-    loadScheduleNumbers: ['schedules', function(autoCallback, result){
-      appointmentLogic.getAppointmentCountByDateSchedules(result.schedules, function(err){
+    loadScheduleNumbers: ['schedules', function (autoCallback, result) {
+      appointmentLogic.getAppointmentCountByDateSchedules(result.schedules, function (err) {
         return autoCallback(err);
       });
     }]
-  }, function(err, results){
-    if(err){
+  }, function (err, results) {
+    if (err) {
       return next(err);
     }
 
@@ -128,25 +128,25 @@ exports.getAllUnBookSchedules = function(req, res, next){
   });
 };
 
-exports.previewAppointmentInfo = function(req, res, next){
+exports.previewAppointmentInfo = function (req, res, next) {
   var doctorId = req.query.doctor_id || '';
-  if(!doctorId){
+  if (!doctorId) {
     return next({err: systemError.param_null_error});
   }
 
   var scheduleId = req.query.schedule_id || '';
-  if(!scheduleId){
+  if (!scheduleId) {
     return next({err: systemError.param_null_error});
   }
 
   async.auto({
-    getDoctor: function(autoCallback){
-      userLogic.getUserDetailById(doctorId, function(err, user){
-        if(err){
+    getDoctor: function (autoCallback) {
+      userLogic.getUserDetailById(doctorId, function (err, user) {
+        if (err) {
           return autoCallback(err);
         }
 
-        if(user.role !== 'doctor'){
+        if (user.role !== 'doctor') {
           return autoCallback({err: userError.not_a_doctor});
         }
 
@@ -159,17 +159,17 @@ exports.previewAppointmentInfo = function(req, res, next){
         });
       });
     },
-    getSchedule: function(autoCallback){
-      userLogic.getScheduleDetail(scheduleId, function(err, schedule){
-        if(err){
+    getSchedule: function (autoCallback) {
+      userLogic.getScheduleDetail(scheduleId, function (err, schedule) {
+        if (err) {
           return autoCallback(err);
         }
 
         return autoCallback(null, schedule);
       });
     }
-  }, function(err, results){
-    if(err){
+  }, function (err, results) {
+    if (err) {
       return next(err);
     }
 
@@ -189,32 +189,67 @@ exports.previewAppointmentInfo = function(req, res, next){
   });
 };
 
+//根据身份证号获取年龄信息
+function getMemberAgeByID(idCard) {
+  var birthday;
+  try {
+    birthday = new Date([idCard.substring(6, 10), idCard.substring(10, 12), idCard.substring(12, 14)].join('/'));
+  } catch (e) {
+    return -1;//idCard解析错误
+  }
+  var now = new Date();
+  var birthYear = birthday.getFullYear();
+  var year = now.getFullYear();
+  //生日错误
+  if (birthYear > year) {
+    return -1;
+  }
+  var birthMonth = birthday.getMonth();
+  var month = now.getMonth();
+  if (month < birthMonth) {
+    return year - birthYear - 1;
+  } else if (month > birthday) {
+    return year - birthYear;
+  } else {
+    if (now.getDay() < birthday.getDay()) {
+      return year - birthYear - 1;
+    } else {
+      return year - birthYear;
+    }
+  }
+}
+
 //创建新预约
-exports.createNewAppointmentInfo = function(req, res, next){
+exports.createNewAppointmentInfo = function (req, res, next) {
   var doctorId = req.query.doctor_id || '';
-  if(!doctorId){
+  if (!doctorId) {
     return next({err: systemError.param_null_error});
   }
 
   var scheduleId = req.query.schedule_id || '';
-  if(!scheduleId){
+  if (!scheduleId) {
     return next({err: systemError.param_null_error});
   }
 
   var paymentMethod = req.query.payment_method || '';
   var isValid = enumLib.payment_methods.valid(paymentMethod);
-  if(!isValid){
+  if (!isValid) {
     return next({err: appointmentError.no_payment_method});
   }
 
+  var age = getMemberAgeByID(req.member.IDCard);
+  if (age < 16) {
+    return next({err: appointmentError.no_more_than_16});
+  }
+
   async.auto({
-    getDoctor: function(autoCallback){
-      userLogic.getUserDetailById(doctorId, function(err, user){
-        if(err){
+    getDoctor: function (autoCallback) {
+      userLogic.getUserDetailById(doctorId, function (err, user) {
+        if (err) {
           return autoCallback(err);
         }
 
-        if(user.role !== 'doctor'){
+        if (user.role !== 'doctor') {
           return autoCallback({err: userError.not_a_doctor});
         }
 
@@ -229,26 +264,26 @@ exports.createNewAppointmentInfo = function(req, res, next){
         });
       });
     },
-    getSchedule: function(autoCallback){
-      userLogic.getScheduleDetail(scheduleId, function(err, schedule){
-        if(err){
+    getSchedule: function (autoCallback) {
+      userLogic.getScheduleDetail(scheduleId, function (err, schedule) {
+        if (err) {
           return autoCallback(err);
         }
 
-        if(schedule.is_stopped){
+        if (schedule.is_stopped) {
           return autoCallback({err: appointmentError.doctor_schedule_stopped});
         }
 
-        if(schedule.start_time.getTime() <= new Date().getTime()){
+        if (schedule.start_time.getTime() <= new Date().getTime()) {
           return autoCallback({err: appointmentError.appointment_over});
         }
 
         return autoCallback(null, schedule);
       });
     },
-    createAppointment: ['getDoctor', 'getSchedule', function(autoCallback, results){
-      appointmentLogic.createAppointment(req.member, results.getDoctor, results.getSchedule, paymentMethod, function(err, appointment){
-        if(err){
+    createAppointment: ['getDoctor', 'getSchedule', function (autoCallback, results) {
+      appointmentLogic.createAppointment(req.member, results.getDoctor, results.getSchedule, paymentMethod, function (err, appointment) {
+        if (err) {
           return autoCallback(err);
         }
 
@@ -259,19 +294,21 @@ exports.createNewAppointmentInfo = function(req, res, next){
           start_time: results.getSchedule.start_time,
           end_time: results.getSchedule.end_time,
           card_number: req.member.card_number
-        }, function(err){});
+        }, function (err) {
+        });
         aliSMSAPIService.sendAppointmentSuccessBySMS({
           name: req.member.nickname,
           mobilePhone: req.member.mobile_phone,
           department: results.getDoctor.department,
           doctorName: results.getDoctor.nickname,
           time: results.getSchedule.start_time
-        }, function(err){});
+        }, function (err) {
+        });
         return autoCallback(null, appointment);
       });
     }]
-  }, function(err, results){
-    if(err){
+  }, function (err, results) {
+    if (err) {
       return next(err);
     }
 
@@ -282,35 +319,35 @@ exports.createNewAppointmentInfo = function(req, res, next){
   });
 };
 
-exports.getMyAppointments = function(req, res, next){
+exports.getMyAppointments = function (req, res, next) {
   var member = req.member;
-  if(!member.IDCard && !member.card_number){
+  if (!member.IDCard && !member.card_number) {
     req.data = {
       appointments: []
     };
     return next();
   }
-  appointmentLogic.getMyAppointments(req.member, function(err, appointments){
-    if(err){
+  appointmentLogic.getMyAppointments(req.member, function (err, appointments) {
+    if (err) {
       return next(err);
     }
-    req.data= {
+    req.data = {
       appointments: appointments
     };
     return next();
   });
 };
-exports.getAppointmentDetail  =function(req, res, next){
+exports.getAppointmentDetail = function (req, res, next) {
 
   var appointmentId = req.query.appointment_id || '';
-  if(!appointmentId){
+  if (!appointmentId) {
     return next({err: systemError.param_null_error});
   }
-  appointmentLogic.getAppointmentDetailById(appointmentId, function(err, appointment){
-    if(err){
+  appointmentLogic.getAppointmentDetailById(appointmentId, function (err, appointment) {
+    if (err) {
       return next(err);
     }
-    req.data  = {
+    req.data = {
       appointment: appointment
     };
     return next();
@@ -318,14 +355,14 @@ exports.getAppointmentDetail  =function(req, res, next){
 };
 
 //取消新预约
-exports.cancelAppointment = function(req, res, next){
+exports.cancelAppointment = function (req, res, next) {
   var appointmentId = req.query.appointment_id || '';
-  if(!appointmentId){
+  if (!appointmentId) {
     return next({err: systemError.param_null_error});
   }
 
-  appointmentLogic.cancelAppointment(req.member._id, appointmentId, function(err, appointment){
-    if(err){
+  appointmentLogic.cancelAppointment(req.member._id, appointmentId, function (err, appointment) {
+    if (err) {
       return next(err);
     }
 
@@ -336,7 +373,8 @@ exports.cancelAppointment = function(req, res, next){
       start_time: appointment.start_time,
       end_time: appointment.end_time,
       card_number: appointment.card_number
-    }, function(err){});
+    }, function (err) {
+    });
 
     aliSMSAPIService.sendAppointmentCanceledBySMS({
       name: req.member.nickname,
@@ -344,7 +382,8 @@ exports.cancelAppointment = function(req, res, next){
       department: appointment.department,
       doctorName: appointment.doctor.nickname,
       time: appointment.start_time
-    }, function(err){});
+    }, function (err) {
+    });
     req.data = {
       success: true
     };

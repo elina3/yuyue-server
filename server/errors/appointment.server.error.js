@@ -17,4 +17,5 @@ module.exports = _.extend(exports, {
   has_been_canceled: {type: 'has_been_canceled', message: 'The appointment has been canceled!', zh_message: '该预约已经取消，您不能执行此操作！'},
   no_permission_to_cancel: {type: 'no_permission_to_cancel', message: 'You have not the permission to cancel other\'s appointment!', zh_message: '您没有权限取消他人的订单！'},
   not_cancel_for_over_time: {type: 'not_cancel_for_over_time', message: 'You can not cancel the appointment because of out of the time you booked!', zh_message: '已经过了可取消订单的时间，请在预约时间以前取消！'},
+  no_more_than_16: {type: 'no_more_than_16', message: 'You are no more than 16!', zh_message: '很抱歉，未满16岁不能预约！'},
 });
