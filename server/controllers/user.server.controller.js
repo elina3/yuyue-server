@@ -197,7 +197,8 @@ exports.onShelfDoctor = function (req, res, next) {
           return autoCallback({err: userError.doctor_on_shelf});
         }
 
-        if (!user.price || user.price < 0) {
+        //支持设置为0的价格
+        if (user.price < 0) {
           return autoCallback({err: userError.doctor_no_price});
         }
 
@@ -283,11 +284,13 @@ exports.setDoctorPrice = function (req, res, next) {
   }
 
   var newPrice = parseFloat(req.body.price) || 0;
-  if (!newPrice || newPrice < 0) {//元
+  //专家价格支持设置为0
+  if (newPrice < 0) {//元
     return next({err: userError.price_error});
   }
   var newSpecialPrice = parseFloat(req.body.special_price) || 0;
-  if (!newSpecialPrice || newSpecialPrice < 0) {
+  //特需价格支持设置为0
+  if (newSpecialPrice < 0) {
     newSpecialPrice = 0;
   }
 
@@ -446,13 +449,15 @@ exports.addDoctorSchedule = function (req, res, next) {
           return autoCallback({err: userError.doctor_on_shelf});
         }
 
+        //支持设置为0
         if (priceType.price_type === 'price' &&
-          (!user.price || user.price <= 0)) {
+          (user.price < 0)) {
           return autoCallback({err: userError.doctor_no_price});
         }
 
+        //支持设置为0
         if (priceType.price_type === 'special_price' &&
-          (!user.special_price || user.special_price <= 0)) {
+          (user.special_price < 0)) {
           return autoCallback({err: userError.doctor_no_special_price});
         }
 

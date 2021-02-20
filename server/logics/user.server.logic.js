@@ -376,7 +376,7 @@ exports.setDoctorPrice = function(
         var historyObj = {
           oldPrice: oldPrice, newPrice: newPrice,
         };
-        if (newSpecialPrice > 0) {
+        if (newSpecialPrice >= 0) {
           historyObj.oldSpecialPrice = oldSpecialPrice;
           historyObj.newSpecialPrice = newSpecialPrice;
         }
@@ -454,7 +454,8 @@ exports.addDoctorSchedule = function(user, doctor, scheduleInfo, callback) {
     addNew: [
       'otherSchedules', function(autoCallback) {
         var price = doctor[scheduleInfo.price_type];
-        if (price <= 0) {
+        //支持设置为0
+        if (price < 0) {
           return autoCallback({ err: userError.not_set_price });
         }
         var doctorSchedule = new DoctorSchedule({

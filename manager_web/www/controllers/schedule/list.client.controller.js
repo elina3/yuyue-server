@@ -47,9 +47,9 @@ angular.module('YYWeb').controller('ScheduleListController',
               }
 
               $scope.pageConfig.popBox.currentDoctor.priceNumber = $scope.pageConfig.popBox.inputNumber;
-              $scope.pageConfig.popBox.currentDoctor.price = $scope.pageConfig.popBox.inputNumber === 0 ? '--' : $scope.pageConfig.popBox.inputNumber.toString();
+              $scope.pageConfig.popBox.currentDoctor.price = $scope.pageConfig.popBox.inputNumber.toString();
               $scope.pageConfig.popBox.currentDoctor.specialPriceNumber = $scope.pageConfig.popBox.specialPriceNumber;
-              $scope.pageConfig.popBox.currentDoctor.specialPrice = $scope.pageConfig.popBox.specialPriceNumber === 0 ? '--' : $scope.pageConfig.popBox.specialPriceNumber.toString();
+              $scope.pageConfig.popBox.currentDoctor.specialPrice = $scope.pageConfig.popBox.specialPriceNumber.toString();
               $scope.pageConfig.popBox.inputNumber = 0;
               $scope.pageConfig.popBox.specialPriceNumber = 0;
               $scope.pageConfig.popBox.show = false;
@@ -84,10 +84,10 @@ angular.module('YYWeb').controller('ScheduleListController',
               department: item.department.name,
               name: item.nickname,
               outpatientType: UserService.translateOutpatientType(item.outpatient_type),
-              price: price === 0 ? '--' : price,
+              price: price,
               priceNumber: price,
               hasSpecialPrice: item.outpatient_type === 'expert',
-              specialPrice: specialPrice === 0 ? '--' : specialPrice,
+              specialPrice: specialPrice,
               specialPriceNumber: specialPrice,
               statusString: item.on_shelf ? '已上架' : '未上架',
               status: item.on_shelf ? 'onShelf' : 'offShelf'
