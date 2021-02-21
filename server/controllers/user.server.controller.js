@@ -841,16 +841,17 @@ function noticeMembersWithRepeatStartSchedule(scheduleId, newSchedule, callback)
       appointments.forEach(function (item) {
         phones.push(item.member.mobile_phone);
         var startTimeString = item.start_time.Format('yyyy/MM/dd hh:mm');
-        var timeRageString = startTimeString + item.end_time.Format('~ hh:mm');
+        var timeRangeString = startTimeString + item.end_time.Format('~ hh:mm');
         appointmentInfos.push({
           name: item.nickname,
           doctorName: item.doctor.nickname,
           department: item.department.name,
           time: startTimeString,
-          timeChanged: newTimeRageString !== timeRageString, //用于微信推送
-          timeRageString: timeRageString,//用于微信推送
-          newTimeRangeString: newTimeRageString//用于微信推送
+          timeRangeString: timeRangeString
         });
+        item.timeChanged = newTimeRageString !== timeRangeString; //用于微信推送
+        item.timeRangeString = timeRangeString; //用于微信推送
+        item.newTimeRangeString = newTimeRageString; //用于微信推送
         wechatService.sendRepeatStartedAppointmentMessage(item.member.open_id, 'http://datonghao.com/client/#/me/appointment', item, function () {
 
         });

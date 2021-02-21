@@ -266,11 +266,11 @@ exports.sendStoppedAppointmentMessage = function (wechatId, redirectUrl, appoint
 exports.sendRepeatStartedAppointmentMessage = function (wechatId, redirectUrl, appointmentInfo, callback) {
   var postData = {
     touser: wechatId,
-    template_id: config.wechat_ext.notify_templates.doctor_close,
+    template_id: config.wechat_ext.notify_templates.doctor_open,
     url: redirectUrl,
     data: {
       first: {
-        "value": "您预约的" + appointmentInfo.timeRageString + "医生重新开诊" + (appointmentInfo.timeChanged ? "，就诊时间已变为" + appointmentInfo.newTimeRangeString + "，请您取消并重新预约。" : "。"),
+        "value": "您预约的" + appointmentInfo.timeRangeString + "医生重新开诊" + (appointmentInfo.timeChanged ? "，就诊时间已变为" + appointmentInfo.newTimeRangeString + "，请您取消并重新预约。" : "。"),
         "color": "#173177"
       },
       keyword1: {
@@ -290,7 +290,7 @@ exports.sendRepeatStartedAppointmentMessage = function (wechatId, redirectUrl, a
         "color": "#173177"
       },
       remark: {
-        "value":  "您预约的" + appointmentInfo.timeRageString + "医生重新开诊" + (appointmentInfo.timeChanged ? "，就诊时间已变为" + appointmentInfo.newTimeRangeString + "，请您取消并重新预约。给您带来的不变敬请谅解，祝您早日康复！如若毋需看诊，请取消预约！" : "，请关注您的预约时间，以免错过看诊，毋需看诊，请取消预约。"),
+        "value":  "您预约的" + appointmentInfo.timeRangeString + "医生重新开诊" + (appointmentInfo.timeChanged ? "，就诊时间已变为" + appointmentInfo.newTimeRangeString + "，请您取消并重新预约。给您带来的不变敬请谅解，祝您早日康复！如若毋需看诊，请取消预约！" : "，请关注您的预约时间，以免错过看诊，毋需看诊，请取消预约。"),
         "color": "#173177"
       }
     }
