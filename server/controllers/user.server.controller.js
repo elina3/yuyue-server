@@ -424,7 +424,7 @@ exports.addDoctorSchedule = function (req, res, next) {
     return next({err: userError.start_end_time_invalid});
   }
 
-  if(startTimeStamp - new Date().getTime() < 0){
+  if (startTimeStamp - new Date().getTime() < 0) {
     return next({err: systemError.start_time_past});
   }
 
@@ -508,7 +508,7 @@ function addOneDoctorSchedule(user, doctor, scheduleInfo, callback) {
     return callback({err: userError.start_end_time_invalid});
   }
 
-  if(startTimeStamp - new Date().getTime() < 0){
+  if (startTimeStamp - new Date().getTime() < 0) {
     return next({err: systemError.start_time_past});
   }
 
@@ -625,7 +625,7 @@ function noticeMembersWithModifiedSchedule(scheduleId, newStartTime, newEndTime,
       var firstAppointment = appointments[0];
       var timeString = firstAppointment.start_time.Format('yyyy/MM/dd hh:mm') + firstAppointment.end_time.Format('~ hh:mm');
       var newTimeRageString = newStartTime.Format('yyyy/MM/dd hh:mm') + newEndTime.Format('~ hh:mm');
-      if(timeString === newTimeRageString){//时间未变不推送
+      if (timeString === newTimeRageString) {//时间未变不推送
         return callback();
       }
 
@@ -663,6 +663,7 @@ function noticeMembersWithModifiedSchedule(scheduleId, newStartTime, newEndTime,
       return callback();
     });
 }
+
 exports.modifyDoctorSchedule = function (req, res, next) {
   var doctorId = req.body.doctor_id || '';
   if (!doctorId) {
@@ -685,7 +686,7 @@ exports.modifyDoctorSchedule = function (req, res, next) {
     return next({err: userError.start_end_time_invalid});
   }
 
-  if(startTimeStamp - new Date().getTime() < 0){
+  if (startTimeStamp - new Date().getTime() < 0) {
     return next({err: systemError.start_time_past});
   }
 
@@ -973,6 +974,10 @@ exports.stopDoctorSchedule = function (req, res, next) {
           return autoCallback({err: userError.doctor_schedule_stopped});
         }
 
+        if (schedule.end_time.getTime() - new Date() <= 0) {//结束时间已过，不需要停诊
+          return autoCallback({err: userError.doctor_schedule_over})
+        }
+
         return autoCallback(err, schedule);
       });
     },
@@ -1036,6 +1041,10 @@ exports.repeatStartDoctorSchedule = function (req, res, next) {
 
         if (!schedule.is_stopped) {//未停诊，不需重新开诊
           return autoCallback({err: userError.doctor_schedule_not_stopped});
+        }
+
+        if (schedule.end_time.getTime() - new Date() <= 0) {//结束时间已过，不需要重新开诊
+          return autoCallback({err: userError.doctor_schedule_over})
         }
 
         return autoCallback(err, schedule);
