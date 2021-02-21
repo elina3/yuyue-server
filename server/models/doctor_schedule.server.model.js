@@ -59,6 +59,9 @@ var DoctorScheduleSchema = new Schema({
   },
   stopped_time: {
     type: Date
+  },
+  recent_repeat_start_time: {
+    type: Date
   }
 });
 DoctorScheduleSchema.plugin(timestamps, {

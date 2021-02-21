@@ -648,3 +648,44 @@ exports.stopDoctorSchedule = function(user, doctorId, schedule, callback) {
 
       });
 };
+// 重新开诊
+exports.repeatStartDoctorSchedule = function(user, doctorId, schedule, callback) {
+  DoctorSchedule.findOne({ _id: schedule._id }).
+      exec(function(err, doctorSchedule) {
+        if (err) {
+          return callback({ err: systemError.database_query_error });
+        }
+
+        if (!doctorSchedule) {
+          return callback({ err: userError.doctor_schedule_not_exist });
+        }
+
+        var now = new Date();
+        DoctorSchedule.update({ _id: schedule._id },
+            { $set: {
+              operator_user: user._id,
+              is_stopped: false,
+              stopped_time: null,
+              recent_repeat_start_time: now//最近一次重新开诊时间
+            } }, function(err, result) {
+              if (err) {
+                return callback(
+                    { err: systemError.database_update_error });
+              }
+
+              doctorActionHistoryLogic.addDoctorActionHistory(user,
+                  doctorId,
+                  'repeat_start_doctor_schedule',
+                  {
+                    schedule_id: schedule._id,
+                    recent_repeat_start_time: now
+                  }, function(err) {
+                    if (err) {
+                      console.log(err);
+                    }
+                  });
+              return callback();
+            });
+
+      });
+};

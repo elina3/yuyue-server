@@ -24,7 +24,7 @@ var DoctorActionHistorySchema = new Schema({
   },
   action: {
     type: String,
-    enum: ['set_price', 'on_shelf', 'off_shelf', 'add_schedule', 'delete_schedule', 'update_schedule', 'stop_doctor_schedule']
+    enum: ['set_price', 'on_shelf', 'off_shelf', 'add_schedule', 'delete_schedule', 'update_schedule', 'stop_doctor_schedule', 'repeat_start_doctor_schedule']
   },
   extend_data: {//日期 2019/1/31 00:00:00
     type: Schema.Types.Mixed

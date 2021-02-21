@@ -141,3 +141,14 @@ exports.sendAppointmentStoppedBySMS = function (phones, appointmentInfos, callba
       };
     }), callback);
 };
+exports.sendAppointmentRepeatStartBySMS = function (phones, appointmentInfos, callback) {
+  phones = phones || ['18321740710', '18321740710'];
+  sendBatchSms(phones, aliSMSConfig.templates.begin_to_treat,
+    appointmentInfos.map(function (item) {
+      return {
+        name: item.name,
+        doctor: item.department + '-' + item.doctorName + '医生',
+        date: item.time
+      };
+    }), callback);
+};

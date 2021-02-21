@@ -429,6 +429,23 @@ angular.module('YYWeb').factory('UserService',
                 return callback(SystemError.network_error);
               });
         },
+        repeatStartDoctorSchedule: function(param, callback){
+          RequestSupport.executePost('/user/doctor/repeat_start_appointment', param)
+          .then(function (data) {
+                if (!callback) {
+                  return data;
+                } else {
+                  if (data.err) {
+                    return callback(data.zh_message || data.err);
+                  }
+
+                  callback(null, data);
+                }
+              },
+              function (err) {
+                return callback(SystemError.network_error);
+              });
+        },
         deleteDoctorSchedule: function(param, callback){
           RequestSupport.executePost('/user/doctor/delete_schedule', param)
           .then(function (data) {

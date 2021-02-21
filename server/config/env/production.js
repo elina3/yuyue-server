@@ -16,7 +16,8 @@ module.exports = {
     notify_templates: {
       appointment_success: 'z2Ms0ilNHwXtosrpw2BzbO1UXT-UK_slYQG0TITb_BY',
       appointment_cancel: 'r4txfb3I4ZqcQ07V-OoeOU3eoF4xCmq10u_hGkTMSsw',
-      doctor_close: 'BGVVICYsHjU4tXIY9nldxsfX09rEgxXvI5oYMW-6DhY'
+      doctor_close: 'BGVVICYsHjU4tXIY9nldxsfX09rEgxXvI5oYMW-6DhY',
+      doctor_open: 'ULePGhpi36TMYvEssA-Y152pi_PpKTjRCFukI5vP_rM'
     }
   },
   sql: {
@@ -35,7 +36,8 @@ module.exports = {
     templates: {
       stop_appointment: 'SMS_205585561',
       cancel_appointment: 'SMS_205580628',
-      appointment_success: 'SMS_205580630'
+      appointment_success: 'SMS_205580630',
+      begin_to_treat: 'SMS_211499278'
     }
   }
 };

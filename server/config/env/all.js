@@ -6,6 +6,7 @@ module.exports = {
         keywords: 'YUYUE-SYSTEM'
     },
     port: process.env.PORT || 2003,
+    hospitalName: '上海瑞金医院古北分院',
     //qiniu_a_key:'l4QmpjDXDiUySvlORpaxcU8MjJz1X3qRx1I_sTRu',
     //qiniu_s_key:'wPfmnZ9usqp0D3rxBF0MNKlj3NBd0iLH7Hxk8kkS',
     qiniu_a_key: 'Cl6lOoIMwux5wdigvdJ2nUsVOsgK_ti5miklg1dh',

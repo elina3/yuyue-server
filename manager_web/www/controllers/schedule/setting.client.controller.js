@@ -378,6 +378,30 @@ angular.module('YYWeb').controller('ScheduleSettingController',
         });
       };
 
+      function repeatStartDoctorSchedule(schedule) {
+        $scope.$emit(GlobalEvent.onShowLoading, true);
+        UserService.repeatStartDoctorSchedule(
+          {doctor_id: $scope.pageConfig.doctorId, schedule_id: schedule.id},
+          function (err) {
+            $scope.$emit(GlobalEvent.onShowLoading, false);
+            if (err) {
+              return $scope.$emit(GlobalEvent.onShowAlert, err);
+            }
+
+            loadDoctorSchedules($scope.pageConfig.doctorId);
+
+            return $scope.$emit(GlobalEvent.onShowAlert, '重新开诊成功');
+          });
+      }
+
+      $scope.repeatStartDoctorSchedule = function (schedule) {
+        $scope.$emit(GlobalEvent.onShowAlertConfirm, {
+          content: '您确定要重新开诊吗？', callback: function () {
+            repeatStartDoctorSchedule(schedule);
+          },
+        });
+      };
+
       function deleteSchedule(schedule) {
         $scope.$emit(GlobalEvent.onShowLoading, true);
         UserService.deleteDoctorSchedule(

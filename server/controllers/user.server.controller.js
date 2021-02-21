@@ -757,7 +757,7 @@ function noticeMembersWithStoppedSchedule(scheduleId, callback) {
         return callback(err);
       }
 
-      if(appointments.length === 0) {
+      if (appointments.length === 0) {
         return callback();
       }
       // appointments = [
@@ -812,9 +812,57 @@ function noticeMembersWithStoppedSchedule(scheduleId, callback) {
       aliSMSAPIService.sendAppointmentStoppedBySMS(
         phones,
         appointmentInfos, function (err) {
-          if(err){
+          if (err) {
             console.log('send sms failed!!!!');
-          }else{
+          } else {
+            console.log('send sms success!!!');
+          }
+        });
+
+      return callback();
+    });
+}
+
+function noticeMembersWithRepeatStartSchedule(scheduleId, newSchedule, callback) {
+  appointmentLogic.getScheduleAppointmentWithMemberInfo(scheduleId,
+    function (err, appointments) {
+      if (err) {
+        return callback(err);
+      }
+
+      if (appointments.length === 0) {
+        return callback();
+      }
+
+      var phones = [];
+      var appointmentInfos = [];
+      var newTimeRageString = newSchedule.start_time.Format('yyyy/MM/dd hh:mm') + newSchedule.end_time.Format('~ hh:mm');
+
+      appointments.forEach(function (item) {
+        phones.push(item.member.mobile_phone);
+        var startTimeString = item.start_time.Format('yyyy/MM/dd hh:mm');
+        var timeRageString = startTimeString + item.end_time.Format('~ hh:mm');
+        appointmentInfos.push({
+          name: item.nickname,
+          doctorName: item.doctor.nickname,
+          department: item.department.name,
+          time: startTimeString,
+          timeChanged: newTimeRageString !== timeRageString, //用于微信推送
+          timeRageString: timeRageString,//用于微信推送
+          newTimeRangeString: newTimeRageString//用于微信推送
+        });
+        wechatService.sendRepeatStartedAppointmentMessage(item.member.open_id, 'http://datonghao.com/client/#/me/appointment', item, function () {
+
+        });
+      });
+
+      console.log('send sms begin-----');
+      aliSMSAPIService.sendAppointmentRepeatStartBySMS(
+        phones,
+        appointmentInfos, function (err) {
+          if (err) {
+            console.log('send sms failed!!!!');
+          } else {
             console.log('send sms success!!!');
           }
         });
@@ -869,6 +917,71 @@ exports.stopDoctorSchedule = function (req, res, next) {
 
             //todo 通知该预约的所有病人
             noticeMembersWithStoppedSchedule(scheduleId, function (err) {
+              if (err) {
+                console.log(err);
+              }
+            });
+
+            return autoCallback(err);
+          });
+      }],
+  }, function (err) {
+    if (err) {
+      return next(err);
+    }
+
+    req.data = {
+      success: true,
+    };
+    return next();
+  });
+};
+//重新开诊
+exports.repeatStartDoctorSchedule = function (req, res, next) {
+  var doctorId = req.body.doctor_id || '';
+  if (!doctorId) {
+    return next({err: systemError.param_null_error});
+  }
+  var scheduleId = req.body.schedule_id || '';
+  if (!scheduleId) {
+    return next({err: systemError.param_null_error});
+  }
+
+  async.auto({
+    getDoctor: function (autoCallback) {
+      userLogic.getUserById(doctorId, function (err, user) {
+        if (err) {
+          return autoCallback(err);
+        }
+
+        if (user.role !== 'doctor') {
+          return autoCallback({err: userError.not_a_doctor});
+        }
+
+        return autoCallback(null, user);
+
+      });
+    },
+    getSchedule: function (autoCallback) {
+      userLogic.getScheduleDetail(scheduleId, function (err, schedule) {
+
+        if (!schedule.is_stopped) {//未停诊，不需重新开诊
+          return autoCallback({err: userError.doctor_schedule_not_stopped});
+        }
+
+        return autoCallback(err, schedule);
+      });
+    },
+    repeatStartDoctorSchedule: [
+      'getDoctor', 'getSchedule', function (autoCallback, results) {
+        userLogic.repeatStartDoctorSchedule(req.user, doctorId, results.getSchedule,
+          function (err) {
+            if (err) {
+              return autoCallback(err);
+            }
+
+            //todo 通知该预约的所有病人重新开诊
+            noticeMembersWithRepeatStartSchedule(scheduleId, results.getSchedule, function (err) {
               if (err) {
                 console.log(err);
               }

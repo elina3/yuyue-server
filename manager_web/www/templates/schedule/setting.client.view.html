@@ -91,6 +91,7 @@
                                 <div class="col-xs-2 handle">
                                     <a ng-show="!schedule.is_stopped" ng-click="editDoctorSchedule(schedule)">编辑</a>
                                     <a ng-show="!schedule.is_stopped" ng-click="stopDoctorSchedule(schedule)">停诊</a>
+                                    <a ng-show="schedule.is_stopped" ng-click="repeatStartDoctorSchedule(schedule)">重新开诊</a>
                                     <a ng-click="deleteSchedule(schedule)">删除</a>
                                 </div>
                             </div>
