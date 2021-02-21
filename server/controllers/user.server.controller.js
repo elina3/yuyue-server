@@ -644,7 +644,7 @@ function noticeMembersWithModifiedSchedule(scheduleId, newStartTime, newEndTime,
         });
         item.timeRangeString = timeRangeString; //用于微信推送
         item.newTimeRangeString = newTimeRageString; //用于微信推送
-        wechatService.sendAppointmentChangedBySMS(item.member.open_id, 'http://datonghao.com/client/#/me/appointment', item, function () {
+        wechatService.sendAppointmentChangedMessage(item.member.open_id, 'http://datonghao.com/client/#/me/appointment', item, function () {
 
         });
       });
