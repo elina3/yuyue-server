@@ -89,7 +89,7 @@
                                     <span>{{schedule.is_stopped ? '是' : ''}}</span>
                                 </div>
                                 <div class="col-xs-2 handle">
-                                    <a ng-show="!schedule.is_over && !schedule.is_stopped" ng-click="editDoctorSchedule(schedule)">编辑</a>
+                                    <a ng-show="!schedule.is_over && !pageConfig.doctor.on_shelf" ng-click="editDoctorSchedule(schedule)">编辑</a>
                                     <a ng-show="!schedule.is_over && !schedule.is_stopped" ng-click="stopDoctorSchedule(schedule)">停诊</a>
                                     <a ng-show="!schedule.is_over && schedule.is_stopped" ng-click="repeatStartDoctorSchedule(schedule)">重新开诊</a>
                                     <a ng-click="deleteSchedule(schedule)">删除</a>
