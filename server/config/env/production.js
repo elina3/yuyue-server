@@ -17,7 +17,7 @@ module.exports = {
       appointment_success: 'z2Ms0ilNHwXtosrpw2BzbO1UXT-UK_slYQG0TITb_BY',
       appointment_cancel: 'r4txfb3I4ZqcQ07V-OoeOU3eoF4xCmq10u_hGkTMSsw',
       doctor_close: 'BGVVICYsHjU4tXIY9nldxsfX09rEgxXvI5oYMW-6DhY',
-      doctor_open: 'ULePGhpi36TMYvEssA-Y152pi_PpKTjRCFukI5vP_rM'
+      doctor_open: 'kklu6Noqenib-NtbiYEaIkBA6279jer-KS-oa3W4aNA'
     }
   },
   sql: {
