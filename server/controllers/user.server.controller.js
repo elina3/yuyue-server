@@ -1059,7 +1059,7 @@ exports.repeatStartDoctorSchedule = function (req, res, next) {
             }
 
             //todo 通知该预约的所有病人重新开诊
-            noticeMembersWithRepeatStartSchedule(scheduleId, results.getSchedule, function (err) {
+            noticeMembersWithRepeatStartSchedule(scheduleId, function (err) {
               if (err) {
                 console.log(err);
               }
