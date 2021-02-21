@@ -152,3 +152,14 @@ exports.sendAppointmentRepeatStartBySMS = function (phones, appointmentInfos, ca
       };
     }), callback);
 };
+exports.sendAppointmentChangedBySMS = function (phones, appointmentInfos, callback) {
+  phones = phones || ['18321740710', '18321740710'];
+  sendBatchSms(phones, aliSMSConfig.templates.appointment_time_changed,
+    appointmentInfos.map(function (item) {
+      return {
+        name: item.name,
+        doctor: item.department + '-' + item.doctorName + '医生',
+        date: item.time
+      };
+    }), callback);
+};

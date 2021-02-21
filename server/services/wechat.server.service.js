@@ -303,3 +303,43 @@ exports.sendRepeatStartedAppointmentMessage = function (wechatId, redirectUrl, a
     return callback(null, data);
   });
 };
+exports.sendAppointmentChangedMessage = function (wechatId, redirectUrl, appointmentInfo, callback) {
+  var postData = {
+    touser: wechatId,
+    template_id: config.wechat_ext.notify_templates.doctor_open,
+    url: redirectUrl,
+    data: {
+      first: {
+        "value": "您预约的" + appointmentInfo.timeRangeString + "的医生就诊时间已变为" + appointmentInfo.newTimeRangeString + "，请您取消并重新预约。",
+        "color": "#173177"
+      },
+      keyword1: {
+        "value": appointmentInfo.nickname,
+        "color": "#173177"
+      },
+      keyword2: {
+        "value": config.hospitalName,
+        "color": "#173177"
+      },
+      keyword3: {
+        "value": appointmentInfo.department.name,
+        "color": "#173177"
+      },
+      keyword4: {
+        "value": appointmentInfo.doctor.nickname,
+        "color": "#173177"
+      },
+      remark: {
+        "value":  "您预约的" + appointmentInfo.timeRangeString + "的医生就诊时间已变为" + appointmentInfo.newTimeRangeString + "，请您取消并重新预约。给您带来的不变敬请谅解，祝您早日康复！如若毋需看诊，请取消预约！",
+        "color": "#173177"
+      }
+    }
+  };
+  sendTemplateMessage(postData, function (err, data) {
+    if (err) {
+      console.error(err);
+      return callback({err: wechatError.send_template_message_error});
+    }
+    return callback(null, data);
+  });
+};

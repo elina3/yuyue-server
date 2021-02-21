@@ -424,7 +424,7 @@ exports.addDoctorSchedule = function (req, res, next) {
     return next({err: userError.start_end_time_invalid});
   }
 
-  if(startTime >= new Date()){
+  if(startTimeStamp - new Date().getTime() < 0){
     return next({err: systemError.start_time_past});
   }
 
@@ -508,8 +508,8 @@ function addOneDoctorSchedule(user, doctor, scheduleInfo, callback) {
     return callback({err: userError.start_end_time_invalid});
   }
 
-  if(startTime >= new Date()){
-    return callback({err: systemError.start_time_past});
+  if(startTimeStamp - new Date().getTime() < 0){
+    return next({err: systemError.start_time_past});
   }
 
   var numberCount = parseInt(scheduleInfo.number_count) || 0;
@@ -609,6 +609,60 @@ exports.batchAddDoctorSchedule = function (req, res, next) {
     return next(err);
   });
 };
+
+//修改预约时间后通知时间不一致的已预约用户
+function noticeMembersWithModifiedSchedule(scheduleId, newStartTime, newEndTime, callback) {
+  appointmentLogic.getScheduleAppointmentWithMemberInfo(scheduleId,
+    function (err, appointments) {
+      if (err) {
+        return callback(err);
+      }
+
+      if (appointments.length === 0) {
+        return callback();
+      }
+
+      var firstAppointment = appointments[0];
+      var timeString = firstAppointment.start_time.Format('yyyy/MM/dd hh:mm') + firstAppointment.end_time.Format('~ hh:mm');
+      var newTimeRageString = newStartTime.Format('yyyy/MM/dd hh:mm') + newEndTime.Format('~ hh:mm');
+      if(timeString === newTimeRageString){//时间未变不推送
+        return callback();
+      }
+
+      var phones = [];
+      var appointmentInfos = [];
+      appointments.forEach(function (item) {
+        phones.push(item.member.mobile_phone);
+        var startTimeString = item.start_time.Format('yyyy/MM/dd hh:mm');
+        var timeRangeString = startTimeString + item.end_time.Format('~ hh:mm');
+        appointmentInfos.push({
+          name: item.nickname,
+          doctorName: item.doctor.nickname,
+          department: item.department.name,
+          time: startTimeString,
+          timeRangeString: timeRangeString
+        });
+        item.timeRangeString = timeRangeString; //用于微信推送
+        item.newTimeRangeString = newTimeRageString; //用于微信推送
+        wechatService.sendRepeatStartedAppointmentMessage(item.member.open_id, 'http://datonghao.com/client/#/me/appointment', item, function () {
+
+        });
+      });
+
+      console.log('send sms begin-----');
+      aliSMSAPIService.sendAppointmentChangedBySMS(
+        phones,
+        appointmentInfos, function (err) {
+          if (err) {
+            console.log('send sms failed!!!!');
+          } else {
+            console.log('send sms success!!!');
+          }
+        });
+
+      return callback();
+    });
+}
 exports.modifyDoctorSchedule = function (req, res, next) {
   var doctorId = req.body.doctor_id || '';
   if (!doctorId) {
@@ -631,7 +685,7 @@ exports.modifyDoctorSchedule = function (req, res, next) {
     return next({err: userError.start_end_time_invalid});
   }
 
-  if(startTime >= new Date()){
+  if(startTimeStamp - new Date().getTime() < 0){
     return next({err: systemError.start_time_past});
   }
 
@@ -677,6 +731,12 @@ exports.modifyDoctorSchedule = function (req, res, next) {
             if (err) {
               return autoCallback(err);
             }
+
+            noticeMembersWithModifiedSchedule(scheduleId, startTime, endTime, function (err) {
+              if (err) {
+                console.log(err);
+              }
+            });
             return autoCallback();
           });
       }],
@@ -835,7 +895,7 @@ function noticeMembersWithStoppedSchedule(scheduleId, callback) {
     });
 }
 
-function noticeMembersWithRepeatStartSchedule(scheduleId, newSchedule, callback) {
+function noticeMembersWithRepeatStartSchedule(scheduleId, callback) {
   appointmentLogic.getScheduleAppointmentWithMemberInfo(scheduleId,
     function (err, appointments) {
       if (err) {
@@ -848,7 +908,6 @@ function noticeMembersWithRepeatStartSchedule(scheduleId, newSchedule, callback)
 
       var phones = [];
       var appointmentInfos = [];
-      var newTimeRageString = newSchedule.start_time.Format('yyyy/MM/dd hh:mm') + newSchedule.end_time.Format('~ hh:mm');
 
       appointments.forEach(function (item) {
         phones.push(item.member.mobile_phone);
@@ -861,9 +920,6 @@ function noticeMembersWithRepeatStartSchedule(scheduleId, newSchedule, callback)
           time: startTimeString,
           timeRangeString: timeRangeString
         });
-        item.timeChanged = newTimeRageString !== timeRangeString; //用于微信推送
-        item.timeRangeString = timeRangeString; //用于微信推送
-        item.newTimeRangeString = newTimeRageString; //用于微信推送
         wechatService.sendRepeatStartedAppointmentMessage(item.member.open_id, 'http://datonghao.com/client/#/me/appointment', item, function () {
 
         });
