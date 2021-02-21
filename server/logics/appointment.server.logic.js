@@ -430,22 +430,29 @@ exports.cancelAppointment = function (memberId, appointmentId, callback) {
       return callback({err: appointmentError.has_been_picked});
     }
 
-    if (new Date() >= appointment.start_time) {
-      return callback({err: appointmentError.not_cancel_for_over_time});
-    }
-
-    Appointment.update({_id: appointmentId}, {
-      $set: {
-        canceled: true,
-        canceled_time: new Date(),
-        status: 'canceled',
-      },
-    }, function (err) {
+    DoctorSchedule.findOne({_id: appointment.doctor_schedule}).exec(function (err, schedule) {
       if (err) {
-        return callback({err: systemError.database_update_error});
+        return callback({err: systemError.database_query_error});
       }
 
-      return callback(null, appointment);
+      //医生就诊时间从未变更时，过了预约开始时间不允许取消；如果有医生变更了时间，都允许取消，重新预约
+      if (schedule.start_time == appointment.start_time && schedule.end_time == appointment.end_time && new Date() >= appointment.start_time) {
+        return callback({err: appointmentError.not_cancel_for_over_time});
+      }
+
+      Appointment.update({_id: appointmentId}, {
+        $set: {
+          canceled: true,
+          canceled_time: new Date(),
+          status: 'canceled',
+        },
+      }, function (err) {
+        if (err) {
+          return callback({err: systemError.database_update_error});
+        }
+
+        return callback(null, appointment);
+      });
     });
   });
 };
