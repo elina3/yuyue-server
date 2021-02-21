@@ -424,6 +424,10 @@ exports.addDoctorSchedule = function (req, res, next) {
     return next({err: userError.start_end_time_invalid});
   }
 
+  if(startTime >= new Date()){
+    return next({err: systemError.start_time_past});
+  }
+
   var numberCount = parseInt(req.body.number_count) || 0;
   if (numberCount <= 0) {
     return next({err: userError.schedule_number_count_error});
@@ -502,6 +506,10 @@ function addOneDoctorSchedule(user, doctor, scheduleInfo, callback) {
 
   if (startTimeStamp - endTimeStamp > 0) {
     return callback({err: userError.start_end_time_invalid});
+  }
+
+  if(startTime >= new Date()){
+    return callback({err: systemError.start_time_past});
   }
 
   var numberCount = parseInt(scheduleInfo.number_count) || 0;
@@ -621,6 +629,10 @@ exports.modifyDoctorSchedule = function (req, res, next) {
 
   if (startTimeStamp - endTimeStamp > 0) {
     return next({err: userError.start_end_time_invalid});
+  }
+
+  if(startTime >= new Date()){
+    return next({err: systemError.start_time_past});
   }
 
   var numberCount = parseInt(req.body.number_count) || 0;
