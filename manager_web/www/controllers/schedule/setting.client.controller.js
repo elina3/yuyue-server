@@ -78,7 +78,7 @@ angular.module('YYWeb').controller('ScheduleSettingController',
                     priceTypeString: data.doctor.outpatient_type === 'expert' ? priceTypeDic[item.price_type] : '普通',
                     price: item.price / 100,
                     is_stopped: item.is_stopped || false,
-                    is_over: item.end_time.getTime() - new Date().getTime() <= 0
+                    is_over: new Date(item.end_time).getTime() - new Date().getTime() <= 0
                   };
                 });
               return callback();
