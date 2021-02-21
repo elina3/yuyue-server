@@ -921,6 +921,7 @@ function noticeMembersWithRepeatStartSchedule(scheduleId, callback) {
           time: startTimeString,
           timeRangeString: timeRangeString
         });
+        item.timeRangeString = timeRangeString; //用于微信推送
         wechatService.sendRepeatStartedAppointmentMessage(item.member.open_id, 'http://datonghao.com/client/#/me/appointment', item, function () {
 
         });
