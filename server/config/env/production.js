@@ -38,7 +38,7 @@ module.exports = {
       cancel_appointment: 'SMS_205580628',
       appointment_success: 'SMS_205580630',
       begin_to_treat: 'SMS_211499278',
-      appointment_time_changed: 'SMS_211499278'
+      appointment_time_changed: 'SMS_211489729'
     }
   }
 };
