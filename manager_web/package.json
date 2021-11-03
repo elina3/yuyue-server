@@ -21,7 +21,7 @@
     "lodash": "~2.4.1",
     "method-override": "~2.1.2",
     "through": "^2.3.7",
-    "validator": "^3.19.0"
+    "validator": "^13.7.0"
   },
   "devDependencies": {
     "jshint-stylish": "^2.0.1",
