@@ -43,7 +43,7 @@
     "tedious": "^6.1.0",
     "through": "^2.3.7",
     "utf8": "^3.0.0",
-    "validator": "^3.19.0",
+    "validator": "^13.7.0",
     "xml2js": "^0.4.17"
   },
   "devDependencies": {
