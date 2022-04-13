@@ -4,7 +4,7 @@
   "version": "0.0.1",
   "author": "Z",
   "dependencies": {
-    "async": "^1.4.2",
+    "async": "^3.2.2",
     "bower": "^1.5.2",
     "gulp": "^3.9.1",
     "gulp-clean": "^0.3.1",
